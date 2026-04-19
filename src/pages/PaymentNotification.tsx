@@ -8,8 +8,9 @@ import { CreditCard, Upload, Send, MessageCircle, AlertCircle, Trash2, Check, Cl
 import { motion } from 'motion/react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { db, auth } from '../lib/firebase';
+import { db, auth, storage } from '../lib/firebase';
 import { collection, query, where, getDocs, addDoc, serverTimestamp, orderBy } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useAuth } from '../context/AuthContext';
 
 export default function PaymentNotification() {
@@ -25,6 +26,7 @@ export default function PaymentNotification() {
   
   const [myPayments, setMyPayments] = useState<any[]>([]);
   const [banks, setBanks] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
      const fetchInitialData = async () => {
@@ -68,7 +70,15 @@ export default function PaymentNotification() {
       return;
     }
     
+    setLoading(true);
     try {
+      let fileUrl = '';
+      if (file) {
+        const storageRef = ref(storage, `receipts/${user.uid}/${Date.now()}_${file.name}`);
+        const uploadResult = await uploadBytes(storageRef, file);
+        fileUrl = await getDownloadURL(uploadResult.ref);
+      }
+
       await addDoc(collection(db, 'payments'), {
          userId: user.uid,
          userEmail: user.email,
@@ -78,6 +88,7 @@ export default function PaymentNotification() {
          reference: formData.reference,
          amount: formData.amount,
          note: formData.note,
+         receiptUrl: fileUrl,
          status: 'pending',
          createdAt: serverTimestamp()
       });
@@ -258,10 +269,11 @@ export default function PaymentNotification() {
                 <div className="space-y-4 pt-4">
                   <button 
                     type="submit"
-                    className="w-full p-4 bg-transparent border-2 border-[#00e5ff] rounded-2xl font-black text-[#00e5ff] uppercase tracking-widest hover:bg-[#00e5ff] hover:text-white transition-all transform active:scale-95 flex items-center justify-center space-x-3"
+                    disabled={loading}
+                    className="w-full p-4 bg-transparent border-2 border-[#00e5ff] rounded-2xl font-black text-[#00e5ff] uppercase tracking-widest hover:bg-[#00e5ff] hover:text-white transition-all transform active:scale-95 flex items-center justify-center space-x-3 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Send size={18} />
-                    <span>Ödeme Bildirimini Gönder</span>
+                    <span>{loading ? 'Gönderiliyor...' : 'Ödeme Bildirimini Gönder'}</span>
                   </button>
                   
                   <div className="flex flex-col items-center space-y-2">
@@ -305,7 +317,7 @@ export default function PaymentNotification() {
                          </div>
                          <div className="flex items-center space-x-2 text-[10px] text-gray-500 uppercase tracking-widest mb-4">
                             <Clock size={12} />
-                            <span>{new Date(p.createdAt).toLocaleDateString('tr-TR')}</span>
+                            <span>{p.createdAt?.toDate ? p.createdAt.toDate().toLocaleDateString('tr-TR') : '...'}</span>
                          </div>
                          <div className="flex flex-col space-y-1">
                             <div className="flex justify-between text-xs border-b border-white/5 pb-1">

@@ -123,7 +123,7 @@ export default function PredictionDetail() {
              <div className="flex items-center space-x-4 mb-6 text-xs text-gray-500 font-bold">
                  <div className="flex items-center space-x-1">
                     <Calendar size={14} className="text-[#00e5ff]" />
-                    <span>{new Date(prediction.createdAt).toLocaleDateString('tr-TR')}</span>
+                    <span>{prediction.createdAt?.toDate ? prediction.createdAt.toDate().toLocaleDateString('tr-TR') : '...'}</span>
                  </div>
                  <div className="flex items-center space-x-1">
                     <Eye size={14} className="text-[#00e5ff]" />

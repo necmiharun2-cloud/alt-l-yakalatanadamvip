@@ -287,7 +287,7 @@ export default function App() {
           <Route path="/kayit-ol" element={<Register />} />
           <Route path="/giris-yap" element={<Login />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/giris" element={<Login />} />
           <Route path="/kayit" element={<Register />} />
           <Route path="/odeme-bildirimi" element={<PaymentNotification />} />

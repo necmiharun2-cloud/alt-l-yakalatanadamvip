@@ -18,20 +18,17 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/users/$(uid)).data;
     }
     function isAdmin() {
-      // Bootstrapped Admin or DB Checked Admin
-      return isSignedIn() && (
-        request.auth.token.email == 'necmiharun3@gmail.com' ||
-        getProfile(request.auth.uid).role == 'admin'
-      );
+      // Role-based check only
+      return isSignedIn() && getProfile(request.auth.uid).role == 'admin';
     }
     function isVip() {
       return isSignedIn() && (
-        isAdmin() || 
+        getProfile(request.auth.uid).role == 'admin' || 
         getProfile(request.auth.uid).isVip == true
       );
     }
 
-    // --- Entity Validations ---
+    // ... Entity Validations ...
     function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
     
     function isValidUser(data) {
@@ -39,7 +36,8 @@ service cloud.firestore {
              data.email is string &&
              data.role in ['user', 'vip', 'admin'] &&
              (!('phone' in data) || data.phone is string) &&
-             (!('fullName' in data) || data.fullName is string);
+             (!('fullName' in data) || data.fullName is string) &&
+             (!('isVip' in data) || data.isVip is bool);
     }
 
     function isValidPrediction(data) {
@@ -48,12 +46,13 @@ service cloud.firestore {
              data.slug is string && data.slug.size() <= 128 &&
              data.content is string && data.content.size() <= 10000 &&
              data.type in ['current', 'success'] &&
+             (!('isPublic' in data) || data.isPublic is bool) &&
              (!('ayaklar' in data) || data.ayaklar is list) &&
              (!('fiyat' in data) || data.fiyat is string) &&
              (!('commentsEnabled' in data) || data.commentsEnabled is bool);
     }
 
-    // --- match Blocks ---
+    // ... match Blocks ...
 
     // Comments Collection
     match /comments/{commentId} {
@@ -66,14 +65,14 @@ service cloud.firestore {
 
     // Users Collection
     match /users/{userId} {
-      // Public profile view (very limited)
-      allow get: if isSignedIn();
+      // Public profile view restricted
+      allow get: if isOwner(userId) || isAdmin();
       allow list: if isAdmin();
       
       allow create: if isOwner(userId) && 
                       isValidUser(incoming()) && 
                       incoming().role == 'user' && 
-                      incoming().isVip == false; // No self-elevation
+                      (!('isVip' in incoming()) || incoming().isVip == false); 
       
       allow update: if (isOwner(userId) && 
                         incoming().role == existing().role && 
@@ -85,7 +84,7 @@ service cloud.firestore {
     // Predictions Collection
     match /predictions/{predictionId} {
       allow list: if true;
-      allow get: if true; // UI handles content visibility (blur/lock)
+      allow get: if (resource.data.isPublic == true) || isVip();
       
       allow create: if isAdmin() && isValidPrediction(incoming());
       allow update: if (isAdmin() && isValidPrediction(incoming())) ||

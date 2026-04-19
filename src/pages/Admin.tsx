@@ -3,12 +3,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { motion, AnimatePresence } from 'motion/react';
-import { LayoutDashboard, FileText, CheckCircle, ListPlus, Send, ImageIcon, Type, Link as LinkIcon, Users, Eye, Lock, ShieldCheck, Database, Building2 } from 'lucide-react';
+import { LayoutDashboard, FileText, CheckCircle, ListPlus, Send, ImageIcon, Type, Link as LinkIcon, Users, Eye, Lock, ShieldCheck, Database, Building2, Clock, ExternalLink } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { db, auth } from '../lib/firebase';
 import { 
   collection, 
@@ -29,7 +30,14 @@ type Section = 'guncel' | 'basarili' | 'blog' | 'users' | 'slider' | 'banks';
 
 export default function Admin() {
   const { profile, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState<Section>('guncel');
+
+  useEffect(() => {
+    if (!authLoading && (!profile || profile.role !== 'admin')) {
+      navigate('/giris-yap');
+    }
+  }, [profile, authLoading, navigate]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [editId, setEditId] = useState<string | null>(null);
@@ -324,7 +332,7 @@ export default function Admin() {
        });
        await fetchAdminData();
        setNewUser({ fullName: '', email: '', password: '', role: 'user', isVip: false });
-       setMessage('Kullanıcı profile kaydı oluşturuldu (Auth kaydı manuel yapılmalıdır)!');
+       setMessage('Kullanıcı profil kaydı oluşturuldu! DİKKAT: Kullanıcı bu e-posta ile kayıt sayfasından hesap açtığında bu profil ile eşleşecektir.');
     } catch(err) {
        console.error(err);
        setMessage('Kullanıcı oluşturulurken bir hata oluştu');
@@ -527,7 +535,19 @@ export default function Admin() {
                             {payments.map(p => (
                                <div key={p.id} className="bg-white/5 rounded-2xl p-3 border border-white/5">
                                   <div className="text-[10px] font-bold truncate text-white mb-1">{p.fullName}</div>
-                                  <div className="text-[9px] text-gray-500 mb-2 truncate">{p.package} - {p.amount}₺</div>
+                                  <div className="text-[9px] text-gray-500 mb-2 truncate">
+                                     {p.package} - {p.amount}₺
+                                     <div className="mt-1 flex items-center space-x-2">
+                                        <Clock size={10} />
+                                        <span>{p.createdAt?.toDate ? p.createdAt.toDate().toLocaleDateString('tr-TR') : '...'}</span>
+                                        {p.receiptUrl && (
+                                           <a href={p.receiptUrl} target="_blank" rel="noreferrer" className="flex items-center space-x-1 text-[#00e5ff] hover:underline ml-2">
+                                              <ExternalLink size={10} />
+                                              <span>DEKONT</span>
+                                           </a>
+                                        )}
+                                     </div>
+                                  </div>
                                   {p.status === 'pending' ? (
                                      <div className="grid grid-cols-2 gap-2">
                                         <button onClick={() => handlePaymentAction(p.id, 'approved', p.userId, true)} className="bg-green-500/20 text-green-500 py-1.5 rounded-lg text-[8px] font-black uppercase hover:bg-green-500 hover:text-black transition-all">ONAY</button>
