@@ -4,18 +4,20 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { motion } from 'motion/react';
-import { Calendar, Eye, ThumbsUp, Heart, ChevronLeft } from 'lucide-react';
+import { Calendar, Eye, Heart, ChevronLeft, ChevronRight, Share2, Facebook, Twitter, Mail, MessageCircle, Star } from 'lucide-react';
 import { dbService } from '../services/dbService';
 import { db } from '../lib/firebase';
 import { doc, updateDoc, increment } from 'firebase/firestore';
 
 export default function BlogDetail() {
   const { slug } = useParams();
+  const navigate = useNavigate();
   const [post, setPost] = useState<any>(null);
+  const [recentPosts, setRecentPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -36,6 +38,9 @@ export default function BlogDetail() {
             });
           }
         }
+        // Fetch recent posts for sidebar
+        const allPosts = await dbService.getBlogPosts();
+        setRecentPosts(allPosts.slice(0, 10));
       } catch (err) {
         console.error('Error fetching blog detail:', err);
       } finally {
@@ -49,7 +54,7 @@ export default function BlogDetail() {
     return (
       <div className="min-h-screen bg-[#080d16] text-white">
         <Header />
-        <main className="max-w-4xl mx-auto py-40 px-4 flex justify-center">
+        <main className="max-w-7xl mx-auto py-40 px-4 flex justify-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#00e5ff]"></div>
         </main>
         <Footer />
@@ -61,7 +66,7 @@ export default function BlogDetail() {
     return (
       <div className="min-h-screen bg-[#080d16] text-white">
         <Header />
-        <main className="max-w-4xl mx-auto py-40 px-4 text-center">
+        <main className="max-w-7xl mx-auto py-40 px-4 text-center">
           <h2 className="text-3xl font-black italic">Yazı bulunamadı.</h2>
           <Link to="/blog" className="text-[#00e5ff] mt-4 block underline">Blog'a dön</Link>
         </main>
@@ -71,80 +76,161 @@ export default function BlogDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-[#080d16] text-white">
+    <div className="min-h-screen bg-[#080d16] text-white selection:bg-[#00e5ff] selection:text-white">
       <Header />
       
-      <main className="max-w-4xl mx-auto py-20 px-4">
-        {/* Back Link */}
-        <Link 
-          to="/blog" 
-          className="inline-flex items-center space-x-2 text-[#00e5ff] hover:text-white transition-colors mb-12 font-black uppercase text-[10px] tracking-widest"
-        >
-          <ChevronLeft size={16} />
-          <span>Geri Dön</span>
-        </Link>
+      <main className="max-w-7xl mx-auto pt-32 pb-20 px-4">
+        {/* Breadcrumb */}
+        <div className="flex items-center space-x-2 text-[10px] font-black uppercase tracking-widest text-gray-600 mb-8">
+          <Link to="/" className="hover:text-white transition-colors">Anasayfa</Link>
+          <ChevronRight size={12} className="text-gray-800" />
+          <Link to="/blog" className="hover:text-white transition-colors">Blog</Link>
+          <ChevronRight size={12} className="text-gray-800" />
+          <span className="text-[#00e5ff] line-clamp-1">{post.title}</span>
+        </div>
 
-        <article>
-          {/* Header */}
-          <header className="mb-12">
-            <div className="flex items-center space-x-6 mb-6">
-              <div className="flex items-center space-x-2 text-gray-500 text-[10px] font-black uppercase tracking-widest">
-                <Calendar size={12} className="text-[#00e5ff]" />
-                <span>
-                    {new Date(post.createdAt).toLocaleDateString('tr-TR')}
-                </span>
-              </div>
-              <div className="flex items-center space-x-2 text-gray-500 text-[10px] font-black uppercase tracking-widest">
-                <Eye size={12} className="text-[#00e5ff]" />
-                <span>{post.views || 0} Görüntülenme</span>
-              </div>
-            </div>
+        <div className="flex flex-col lg:flex-row gap-12">
+          {/* Sidebar - Left side on desktop */}
+          <aside className="w-full lg:w-[350px] order-2 lg:order-1 space-y-12">
             
-            <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter mb-8 leading-tight uppercase">
-              {post.title}
-            </h1>
-            
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-1 text-xs font-bold bg-[#151b27] px-4 py-2 rounded-full border border-white/5">
-                <ThumbsUp size={14} className="text-[#00e5ff]" />
-                <span>{post.likes || 0}</span>
+            {/* Son Yazılar */}
+            <div>
+              <div className="border-l-4 border-[#00e5ff] pl-6 mb-8">
+                <h3 className="text-2xl font-black italic tracking-tighter uppercase">Son <span className="text-gray-400">Yazılar</span></h3>
               </div>
-              <div className="flex items-center space-x-1 text-xs font-bold bg-[#151b27] px-4 py-2 rounded-full border border-white/5">
-                <Heart size={14} className="text-red-500" />
-                <span>{Math.floor((post.likes || 0) * 0.6)}</span>
-              </div>
-            </div>
-          </header>
-
-          {/* Featured Image */}
-          <div className="rounded-[40px] overflow-hidden mb-12 shadow-2xl border border-white/5">
-            <img 
-              src={post.image || `https://picsum.photos/seed/${post.id}/1200/600`} 
-              alt={post.title} 
-              className="w-full h-auto"
-              referrerPolicy="no-referrer"
-            />
-          </div>
-
-          {/* Content */}
-          <div className="bg-[#0a0a0a] rounded-[40px] p-8 md:p-12 shadow-2xl border border-white/5">
-            <div className="prose prose-invert max-w-none text-gray-400 font-medium leading-loose text-lg space-y-8 whitespace-pre-wrap">
-              {post.content}
               
-              <div className="pt-12 border-t border-white/5">
-                <Link 
-                  to="/iletisim" 
-                  className="inline-block px-8 py-4 bg-[#00e5ff] text-black font-black uppercase tracking-widest rounded-2xl hover:bg-white transition-all transform active:scale-95"
-                >
-                  VIP Üye Ol ve Kazanmaya Başla
-                </Link>
+              <div className="bg-[#0a0a0a] border border-white/5 rounded-[32px] overflow-hidden shadow-2xl">
+                <div className="divide-y divide-white/5">
+                  {recentPosts.map((p) => (
+                    <Link 
+                      key={p.id} 
+                      to={`/blog/${p.slug}`}
+                      className={`block px-6 py-5 text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all hover:bg-white/5 ${p.slug === slug ? 'text-[#00e5ff] bg-[#151b27]/40' : 'text-gray-500 hover:text-white'}`}
+                    >
+                      {p.title}
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
+
+            {/* VIP Member CTA Card */}
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="bg-[#0c121e]/80 border border-white/5 rounded-[40px] p-8 text-center shadow-2xl relative overflow-hidden group cursor-pointer"
+              onClick={() => navigate('/vip')}
+            >
+              <div className="absolute inset-0 bg-gradient-to-b from-[#00e5ff]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              
+              <div className="relative z-10">
+                <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                  <Star size={32} className="text-[#00e5ff]" />
+                </div>
+                <h4 className="text-xl font-black italic mb-2">Vip Üye Olun</h4>
+                <p className="text-gray-500 text-[10px] leading-relaxed font-bold uppercase tracking-widest mb-6">
+                  Artan yarış programlarından en verimli bir şekilde istifade ederek profesyonel destek almak istiyorsanız sizler de VIP Üye olabilirsiniz.
+                </p>
+                <div className="inline-block px-8 py-3 bg-[#00e5ff] text-black text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg shadow-[#00e5ff]/20">
+                  Katılın
+                </div>
+              </div>
+            </motion.div>
+          </aside>
+
+          {/* Post Content - Main Area */}
+          <div className="flex-1 order-1 lg:order-2">
+            <article>
+              {/* Featured Image with Title Overlap aesthetic */}
+              <div className="relative rounded-[40px] overflow-hidden mb-8 shadow-2xl border border-white/10 group h-[400px] md:h-[500px]">
+                <img 
+                  src={post.image || `https://picsum.photos/seed/${post.id}/1200/800`} 
+                  alt={post.title} 
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+                  referrerPolicy="no-referrer"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#080d16] via-[#080d16]/40 to-transparent" />
+                
+                <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
+                   <div className="flex items-center space-x-6 mb-4">
+                      <div className="flex items-center space-x-2 text-white/60 text-[10px] font-black uppercase tracking-widest">
+                        <Calendar size={12} className="text-[#00e5ff]" />
+                        <span>{new Date(post.createdAt || Date.now()).toLocaleDateString('tr-TR')}</span>
+                      </div>
+                      <div className="flex items-center space-x-2 text-white/60 text-[10px] font-black uppercase tracking-widest">
+                        <Eye size={12} className="text-[#00e5ff]" />
+                        <span>{post.views || 0}</span>
+                      </div>
+                      <div className="flex items-center space-x-2 text-white/60 text-[10px] font-black uppercase tracking-widest">
+                        <Heart size={12} className="text-[#00e5ff]" />
+                        <span>{post.likes || 0}</span>
+                      </div>
+                   </div>
+                   
+                   <h1 className="text-3xl md:text-5xl lg:text-6xl font-black italic tracking-tighter leading-[1.1] mb-2 uppercase drop-shadow-2xl">
+                     {post.title}
+                   </h1>
+                   <p className="text-[#00e5ff] font-bold text-xs uppercase tracking-[0.3em]">Haberler ve Tahminler</p>
+                </div>
+              </div>
+
+              {/* Content Body */}
+              <div className="bg-[#0a0a0a] border border-white/5 rounded-[40px] p-8 md:p-12 shadow-2xl">
+                <div className="prose prose-invert max-w-none">
+                  {/* Rich text container */}
+                  <div className="text-gray-300 font-medium leading-loose text-lg space-y-8 whitespace-pre-wrap">
+                    {post.content}
+                  </div>
+                </div>
+
+                {/* Social Sharing - Matching screenshot color palette and order */}
+                <div className="mt-16 pt-12 border-t border-white/5">
+                   <div className="flex flex-wrap gap-2 items-center">
+                      <button className="flex items-center space-x-2 bg-[#3b5998] hover:bg-[#3b5998]/90 text-white px-5 py-2 rounded font-bold text-[11px] transition-all">
+                        <Facebook size={14} fill="white" />
+                        <span>Paylaş</span>
+                      </button>
+                      
+                      <button className="flex items-center space-x-2 bg-black hover:bg-gray-900 border border-white/10 text-white px-5 py-2 rounded font-bold text-[11px] transition-all">
+                        <Twitter size={14} fill="white" />
+                        <span>Post</span>
+                      </button>
+                      
+                      <button className="flex items-center space-x-2 bg-[#f8f9fa] text-[#333] hover:bg-white px-5 py-2 rounded font-bold text-[11px] transition-all border border-gray-200">
+                        <Mail size={14} />
+                        <span>E-posta</span>
+                      </button>
+
+                      <button className="flex items-center space-x-2 bg-[#25d366] hover:bg-[#25d366]/90 text-white px-5 py-2 rounded font-bold text-[11px] transition-all">
+                        <MessageCircle size={14} fill="white" />
+                        <span>Paylaş</span>
+                      </button>
+
+                      <button className="flex items-center space-x-2 bg-[#25d366] hover:bg-[#25d366]/90 text-white px-5 py-2 rounded font-bold text-[11px] transition-all">
+                        <Share2 size={14} />
+                        <span>Paylaş</span>
+                      </button>
+                   </div>
+                </div>
+              </div>
+
+              {/* Related/Next section indicator if needed */}
+              <div className="mt-12 flex justify-between items-center">
+                 <Link to="/blog" className="flex items-center space-x-3 text-gray-500 hover:text-[#00e5ff] transition-colors group">
+                    <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+                    <span className="text-xs font-black uppercase tracking-widest">Tüm Yazılar</span>
+                 </Link>
+                 <div className="h-px flex-1 mx-12 bg-white/5 hidden md:block" />
+                 <Link to="/vip" className="text-[#00e5ff] text-xs font-black uppercase tracking-widest border-b border-[#00e5ff]/20 pb-1 hover:border-[#00e5ff] transition-all">
+                    VIP Kazanmaya Başla
+                 </Link>
+              </div>
+            </article>
           </div>
-        </article>
+        </div>
       </main>
 
       <Footer />
     </div>
   );
 }
+

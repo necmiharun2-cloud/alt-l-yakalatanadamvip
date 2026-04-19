@@ -161,6 +161,27 @@ export default function Admin() {
       window.scrollTo(0, 0);
   };
   
+  const handleMarkSuccess = async (prediction: any) => {
+    const winnings = window.prompt("Tebrikler! Kazanılan ikramiye tutarını giriniz (Örn: 511.589,37 TL):", prediction.winnings || "");
+    if (winnings === null) return; // User cancelled
+    
+    setLoading(true);
+    try {
+      await updateDoc(doc(db, 'predictions', prediction.id), {
+        type: 'success',
+        winnings: winnings,
+        updatedAt: serverTimestamp()
+      });
+      setMessage('Tahmin başarıyla başarılı listesine taşındı!');
+      await fetchAdminData();
+    } catch (err: any) {
+      console.error(err);
+      setMessage(err.message || 'Hata oluştu.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDelete = async (id: string, type: string) => {
       if (!window.confirm("Bu veriyi silmek istediğinize emin misiniz?")) return;
       try {
@@ -740,6 +761,15 @@ export default function Admin() {
                                       <span className="text-xs text-gray-500 font-mono mt-1">/{p.slug} - {new Date(p.createdAt).toLocaleDateString('tr-TR')}</span>
                                   </div>
                                   <div className="flex items-center space-x-2 shrink-0">
+                                    {activeSection === 'guncel' && (
+                                      <button 
+                                         type="button" 
+                                         onClick={() => handleMarkSuccess(p)} 
+                                         className="text-green-500 text-sm bg-green-500/10 px-3 py-1 rounded-lg hover:bg-green-500 hover:text-white transition-all font-black uppercase tracking-tighter"
+                                      >
+                                        BAŞARILI
+                                      </button>
+                                    )}
                                     <button type="button" onClick={() => handleEdit(p, 'prediction')} className="text-blue-500 text-sm bg-blue-500/10 px-3 py-1 rounded-lg">Düzenle</button>
                                     <button type="button" onClick={() => handleDelete(p.id, 'prediction')} className="text-red-500 text-sm bg-red-500/10 px-3 py-1 rounded-lg">Sil</button>
                                   </div>
