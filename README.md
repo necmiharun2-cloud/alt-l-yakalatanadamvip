@@ -1,34 +1,43 @@
-# ALTILIYAKALATANADAM - Horse Racing Predictions
+# ALTILIYAKALATANADAM - Horse Racing Predictions Platform
 
-This is a modern React application for horse racing predictions.
+A modern, high-performance web application for professional horse racing predictions and analysis.
 
 ## Technical Stack
 
-- **Frontend:** React 19, Vite, Tailwind CSS (v4), Lucide Icons, Framer Motion
-- **Hosting/Backend:** Firebase (Auth, Firestore)
-- **Deployment:** Netlify Compatible
+- **Frontend:** React 19, Vite, Tailwind CSS (v4), Lucide Icons, Motion (Framer Motion)
+- **Backend/Services:** Firebase
+  - **Authentication:** Secure user login and registration with role-based access.
+  - **Firestore:** Real-time NoSQL database for predictions, blogs, and users.
+  - **Storage:** Cloud storage for payment receipts and media.
+- **Hosting:** Netlify / Cloud Run Compatible
 
-## Environment Setup
+## Key Features
 
-The application uses Firebase. Configuration is managed via `firebase-applet-config.json` in the project root.
+- **VIP Prediction System:** Secure, restricted access to premium horse racing analysis.
+- **Admin Dashboard:** Full management of predictions, blog posts, sliders, bank info, and user payments.
+- **Payment Notifications:** Users can upload payment receipts (Havale/EFT) for admin approval.
+- **Responsive Design:** Polished, dark-themed UI optimized for all devices.
+- **Dynamic Content:** Real-time updates for latest race results and blog posts.
 
-## Running the Application
+## Getting Started
 
-1. **Install Dependencies:**
+1. **Setup Firebase:**
+   Ensure `firebase-applet-config.json` is present in the root directory.
+
+2. **Installation:**
    ```bash
    npm install
    ```
 
-2. **Run in Development:**
+3. **Development:**
    ```bash
    npm run dev
    ```
 
-3. **Build for Production:**
+4. **Production Build:**
    ```bash
    npm run build
    ```
 
-## Authentication
-
-Authentication is handled via Firebase Auth. The application includes custom Login and Register pages with Turkish language support.
+---
+*Developed with professionalism and security as top priorities.*

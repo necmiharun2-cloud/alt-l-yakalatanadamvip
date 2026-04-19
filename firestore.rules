@@ -83,7 +83,7 @@ service cloud.firestore {
 
     // Predictions Collection
     match /predictions/{predictionId} {
-      allow list: if true;
+      allow list: if (resource.data.isPublic == true) || isVip();
       allow get: if (resource.data.isPublic == true) || isVip();
       
       allow create: if isAdmin() && isValidPrediction(incoming());
