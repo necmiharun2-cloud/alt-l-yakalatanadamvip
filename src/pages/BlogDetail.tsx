@@ -12,6 +12,7 @@ import { Calendar, Eye, Heart, ChevronLeft, ChevronRight, Share2, Facebook, Twit
 import { dbService } from '../services/dbService';
 import { db } from '../lib/firebase';
 import { doc, updateDoc, increment } from 'firebase/firestore';
+import { formatDate } from '../lib/utils';
 
 export default function BlogDetail() {
   const { slug } = useParams();
@@ -154,7 +155,7 @@ export default function BlogDetail() {
                    <div className="flex items-center space-x-6 mb-4">
                       <div className="flex items-center space-x-2 text-white/60 text-[10px] font-black uppercase tracking-widest">
                         <Calendar size={12} className="text-[#00e5ff]" />
-                        <span>{new Date(post.createdAt || Date.now()).toLocaleDateString('tr-TR')}</span>
+                        <span>{formatDate(post.createdAt || Date.now(), { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
                       </div>
                       <div className="flex items-center space-x-2 text-white/60 text-[10px] font-black uppercase tracking-widest">
                         <Eye size={12} className="text-[#00e5ff]" />

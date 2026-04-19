@@ -10,6 +10,7 @@ import { motion } from 'motion/react';
 import { ChevronRight, Calendar, Eye, Star } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { dbService } from '../services/dbService';
+import { formatDate } from '../lib/utils';
 
 export default function Blog() {
   const [blogPosts, setBlogPosts] = useState<any[]>([]);
@@ -124,7 +125,7 @@ export default function Blog() {
                           <div className="flex items-center space-x-2 text-[#00e5ff]">
                             <Calendar size={14} />
                             <span className="text-[10px] font-black uppercase tracking-widest">
-                              {new Date(post.createdAt).toLocaleDateString('tr-TR')}
+                              {formatDate(post.createdAt, { day: '2-digit', month: '2-digit', year: 'numeric' })}
                             </span>
                           </div>
                           <div className="flex items-center space-x-2 text-gray-500">

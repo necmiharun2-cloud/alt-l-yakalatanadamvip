@@ -9,6 +9,7 @@ import Footer from '../components/Footer';
 import { motion } from 'motion/react';
 import { ChevronRight, ChevronLeft, Calendar, User, Trophy } from 'lucide-react';
 import { dbService } from '../services/dbService';
+import { formatDate } from '../lib/utils';
 
 export default function PastSuccess() {
   const [successList, setSuccessList] = useState<any[]>([]);
@@ -100,7 +101,7 @@ export default function PastSuccess() {
                         className="grid grid-cols-4 p-8 hover:bg-white/5 transition-colors group cursor-default"
                       >
                         <div className="text-gray-400 font-bold text-sm flex items-center">
-                            {new Date(item.createdAt).toLocaleDateString('tr-TR')}
+                            {formatDate(item.createdAt, { day: '2-digit', month: '2-digit', year: 'numeric' })}
                         </div>
                         <div className="flex items-center space-x-4">
                           <img src="https://i.pravatar.cc/100?u=altili" alt="ALTILIYAKALATANADAM" className="w-8 h-8 rounded-full border border-white/10 group-hover:border-[#00e5ff] transition-colors" />

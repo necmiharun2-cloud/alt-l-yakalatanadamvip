@@ -19,7 +19,6 @@ import {
   deleteDoc, 
   doc, 
   query, 
-  where, 
   orderBy, 
   serverTimestamp
 } from 'firebase/firestore';
@@ -251,7 +250,6 @@ export default function Admin() {
       }
   };
 
-  const [users, setUsers] = useState<any[]>([]);
   const [payments, setPayments] = useState<any[]>([]);
   const [sliderItems, setSliderItems] = useState<any[]>([]);
   const [predictions, setPredictions] = useState<any[]>([]);
@@ -265,14 +263,12 @@ export default function Admin() {
 
   const fetchAdminData = async () => {
     try {
-      const usersSnap = await getDocs(collection(db, 'users'));
       const paymentsSnap = await getDocs(query(collection(db, 'payments'), orderBy('createdAt', 'desc')));
       const sliderSnap = await getDocs(query(collection(db, 'slider'), orderBy('orderIndex', 'asc')));
       const predsSnap = await getDocs(query(collection(db, 'predictions'), orderBy('createdAt', 'desc')));
       const blogsSnap = await getDocs(query(collection(db, 'blogs'), orderBy('createdAt', 'desc')));
       const banksSnap = await getDocs(collection(db, 'banks'));
 
-      setUsers(usersSnap.docs.map(d => ({ id: d.id, ...d.data() })));
       setPayments(paymentsSnap.docs.map(d => ({ id: d.id, ...d.data() })));
       setSliderItems(sliderSnap.docs.map(d => ({ id: d.id, ...d.data() })));
       setPredictions(predsSnap.docs.map(d => ({ id: d.id, ...d.data() })));

@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { dbService } from '../services/dbService';
+import { formatDate } from '../lib/utils';
 
 export default function SuccessTable() {
   const navigate = useNavigate();
@@ -95,7 +96,7 @@ export default function SuccessTable() {
                     className="hover:bg-[#152846] cursor-pointer transition-colors divide-x divide-white/5 even:bg-[#071324] odd:bg-[#0b1b33]"
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
-                       {p.createdAt.includes('T') ? new Date(p.createdAt).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }) : p.createdAt}
+                       {formatDate(p.createdAt)}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-3">

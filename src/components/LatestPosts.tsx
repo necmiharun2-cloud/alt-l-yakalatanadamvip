@@ -8,6 +8,7 @@ import { Calendar } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { dbService } from '../services/dbService';
+import { formatDate } from '../lib/utils';
 
 export default function LatestPosts() {
   const [posts, setPosts] = useState<any[]>([]);
@@ -90,7 +91,7 @@ export default function LatestPosts() {
                       <div className="flex items-center space-x-2 text-[#00e5ff] mb-4">
                         <Calendar size={14} />
                         <span className="text-[10px] font-black uppercase tracking-widest">
-                           {new Date(post.createdAt).toLocaleDateString('tr-TR')}
+                           {formatDate(post.createdAt, { day: '2-digit', month: '2-digit', year: 'numeric' })}
                         </span>
                       </div>
                       <h3 className="text-xl font-black text-white mb-4 line-clamp-2 leading-tight tracking-tight group-hover:text-[#00e5ff] transition-colors uppercase italic">
