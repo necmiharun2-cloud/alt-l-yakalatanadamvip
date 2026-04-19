@@ -45,6 +45,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
 
       if (firebaseUser) {
+        // We know the user is logged in, stop the 'loading' state immediately so UI unblocks
+        setLoading(false);
+        
         // Listen for profile changes
         unsubscribeProfile = onSnapshot(doc(db, 'users', firebaseUser.uid), (docSnap) => {
           if (docSnap.exists()) {
@@ -60,7 +63,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                isVip: false
             });
           }
-          setLoading(false);
         }, (error) => {
           console.error('Profile snapshot error:', error);
           // Fallback profile if rules completely block access
@@ -71,7 +73,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
              role: 'user',
              isVip: false
           });
-          setLoading(false);
         });
       } else {
         setProfile(null);

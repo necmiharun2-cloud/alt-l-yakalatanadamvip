@@ -49,9 +49,12 @@ export default function Header() {
             </div>
           </div>
           
-          <div className="flex items-center space-x-4 md:space-x-6 overflow-x-auto max-w-full pb-1 md:pb-0 scrollbar-hide">
+          <div className="flex items-center space-x-4 md:space-x-6 overflow-x-auto max-w-full pb-1 md:pb-0 scrollbar-hide min-h-[24px]">
             {loading ? (
-              <div className="text-gray-500 italic text-[10px] animate-pulse">Yükleniyor...</div>
+              <div className="flex items-center space-x-4 animate-pulse opacity-50">
+                <div className="h-4 w-16 bg-gray-700 rounded"></div>
+                <div className="h-4 w-16 bg-gray-700 rounded"></div>
+              </div>
             ) : !user ? (
               <>
                 <Link to="/giris-yap" className="flex items-center space-x-2 hover:text-white transition-colors whitespace-nowrap">
