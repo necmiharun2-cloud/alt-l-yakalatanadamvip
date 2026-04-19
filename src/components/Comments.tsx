@@ -86,7 +86,7 @@ export default function Comments({ predictionId }: { predictionId: string }) {
       ) : (
         <div className="bg-[#151b27] border border-white/5 p-6 rounded-2xl text-center">
           <p className="text-sm font-bold text-gray-400 mb-4">Yorum yapmak için giriş yapmalısınız.</p>
-          <a href="/login" className="px-6 py-2 bg-[#00e5ff] text-black rounded-xl font-black uppercase text-xs">Giriş Yap</a>
+          <a href="/giris-yap" className="px-6 py-2 bg-[#00e5ff] text-black rounded-xl font-black uppercase text-xs">Giriş Yap</a>
         </div>
       )}
 

@@ -294,6 +294,7 @@ export default function App() {
           <Route path="/vip" element={<VipPage />} />
           <Route path="/yasal/:slug" element={<LegalPageWrapper />} />
           <Route path="/kurumsal/:slug" element={<CompliancePage />} />
+          <Route path="*" element={<HomePage />} />
         </Routes>
       </div>
     </BrowserRouter>
