@@ -1,0 +1,157 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import React, { useState } from 'react';
+import { Eye, EyeOff, Smartphone } from 'lucide-react';
+import { motion } from 'motion/react';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import { useNavigate } from 'react-router-dom';
+import { auth } from '../lib/firebase';
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
+
+export default function Login() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const [resetMessage, setResetMessage] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setResetMessage('');
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      
+      if (!userCredential.user.emailVerified) {
+        await auth.signOut();
+        setError('Lütfen e-posta adresinize gönderilen bağlantıya tıklayarak hesabınızı doğrulayın. (Spam kutusunu kontrol etmeyi unutmayın)');
+        setLoading(false);
+        return;
+      }
+
+      navigate('/');
+    } catch (err: any) {
+      console.error('Login error:', err);
+      if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+        setError('Geçersiz e-posta adresi veya şifre.');
+      } else {
+        setError('Giriş yapılırken bir hata oluştu. Lütfen tekrar deneyin.');
+      }
+    } finally {
+      if(loading) setLoading(false);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (!email) {
+      setError('Şifre sıfırlama bağlantısı göndermek için lütfen önce E-posta Adresinizi yukarıdaki alana girin.');
+      return;
+    }
+    setLoading(true);
+    setError('');
+    setResetMessage('');
+    try {
+      await sendPasswordResetEmail(auth, email);
+      setResetMessage('Şifre sıfırlama bağlantısı e-posta adresinize gönderildi. Lütfen gelen kutunuzu (ve Spam klasörünü) kontrol edin.');
+    } catch (err: any) {
+      console.error('Reset password error:', err);
+      setError('Şifre sıfırlama e-postası gönderilirken bir hata oluştu. Lütfen e-posta adresinizi kontrol edin.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#080d16] text-white">
+      <Header />
+      
+      <main className="max-w-7xl mx-auto py-32 px-4 flex justify-center">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="w-full max-w-xl"
+        >
+          <div className="border-l-4 border-[#00e5ff] pl-6 mb-12">
+            <h2 className="text-4xl font-black italic tracking-tighter">Üye Girişi</h2>
+          </div>
+
+          <div className="bg-[#0a0a0a] border border-white/5 rounded-[40px] p-8 md:p-16 shadow-2xl relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#00e5ff] blur-[100px] opacity-10 pointer-events-none" />
+            
+            <p className="text-gray-400 text-sm mb-10 text-center font-medium opacity-60 italic">
+              Lütfen üye olurken kullandığınız e-posta adresiniz ve şifreniz ile giriş yapın.
+            </p>
+
+            {error && (
+              <div className="bg-red-500/10 border border-red-500 text-red-500 p-4 rounded-2xl mb-6 text-sm font-bold">
+                {error}
+              </div>
+            )}
+            
+            {resetMessage && (
+              <div className="bg-green-500/10 border border-green-500 text-green-500 p-4 rounded-2xl mb-6 text-sm font-bold">
+                {resetMessage}
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="relative group">
+                <input 
+                  type="email" 
+                  placeholder="E-posta Adresiniz"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 focus:outline-none focus:border-[#00e5ff] transition-colors"
+                />
+              </div>
+
+              <div className="relative group">
+                <input 
+                  type={showPassword ? "text" : "password"} 
+                  placeholder="Şifre"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 focus:outline-none focus:border-[#00e5ff] transition-colors pr-14"
+                />
+                <button 
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+
+              <div className="flex justify-end">
+                <button type="button" onClick={handleResetPassword} className="flex items-center space-x-2 text-gray-500 hover:text-white transition-colors text-xs font-bold">
+                  <Smartphone size={14} className="text-[#00e5ff]" />
+                  <span className="border-b border-white/10">Şifremi Unuttum</span>
+                </button>
+              </div>
+
+              <button 
+                type="submit"
+                disabled={loading}
+                className="w-full p-5 bg-transparent border-2 border-[#00e5ff] rounded-2xl font-black text-[#00e5ff] uppercase tracking-widest hover:bg-[#00e5ff] hover:text-white transition-all transform active:scale-95 shadow-xl shadow-[#00e5ff]/5 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Giriş Yapılıyor...' : 'Giriş Yap'}
+              </button>
+            </form>
+          </div>
+        </motion.div>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}

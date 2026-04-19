@@ -1,0 +1,132 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Helpers ---
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(userId) { return isSignedIn() && request.auth.uid == userId; }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    
+    // Role Helpers (DB Lookups)
+    function getProfile(uid) {
+      return get(/databases/$(database)/documents/users/$(uid)).data;
+    }
+    function isAdmin() {
+      // Bootstrapped Admin or DB Checked Admin
+      return isSignedIn() && (
+        request.auth.token.email == 'necmiharun3@gmail.com' ||
+        getProfile(request.auth.uid).role == 'admin'
+      );
+    }
+    function isVip() {
+      return isSignedIn() && (
+        isAdmin() || 
+        getProfile(request.auth.uid).isVip == true
+      );
+    }
+
+    // --- Entity Validations ---
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    
+    function isValidUser(data) {
+      return data.keys().hasAll(['email', 'role']) &&
+             data.email is string &&
+             data.role in ['user', 'vip', 'admin'] &&
+             (!('phone' in data) || data.phone is string) &&
+             (!('fullName' in data) || data.fullName is string);
+    }
+
+    function isValidPrediction(data) {
+      return data.keys().hasAll(['title', 'slug', 'content', 'type']) &&
+             data.title is string && data.title.size() <= 200 &&
+             data.slug is string && data.slug.size() <= 128 &&
+             data.content is string && data.content.size() <= 10000 &&
+             data.type in ['current', 'success'] &&
+             (!('ayaklar' in data) || data.ayaklar is list) &&
+             (!('fiyat' in data) || data.fiyat is string) &&
+             (!('commentsEnabled' in data) || data.commentsEnabled is bool);
+    }
+
+    // --- match Blocks ---
+
+    // Comments Collection
+    match /comments/{commentId} {
+      allow read: if true;
+      allow create: if isSignedIn() && 
+                    incoming().userId == request.auth.uid &&
+                    incoming().createdAt == request.time;
+      allow delete: if isAdmin() || (isSignedIn() && existing().userId == request.auth.uid);
+    }
+
+    // Users Collection
+    match /users/{userId} {
+      // Public profile view (very limited)
+      allow get: if isSignedIn();
+      allow list: if isAdmin();
+      
+      allow create: if isOwner(userId) && 
+                      isValidUser(incoming()) && 
+                      incoming().role == 'user' && 
+                      incoming().isVip == false; // No self-elevation
+      
+      allow update: if (isOwner(userId) && 
+                        incoming().role == existing().role && 
+                        incoming().isVip == existing().isVip && 
+                        isValidUser(incoming())) ||
+                       isAdmin();
+    }
+
+    // Predictions Collection
+    match /predictions/{predictionId} {
+      allow list: if true;
+      allow get: if true; // UI handles content visibility (blur/lock)
+      
+      allow create: if isAdmin() && isValidPrediction(incoming());
+      allow update: if (isAdmin() && isValidPrediction(incoming())) ||
+                       (incoming().diff(existing()).affectedKeys().hasOnly(['views']) && 
+                        incoming().views == existing().views + 1);
+      allow delete: if isAdmin();
+    }
+
+    // Blogs Collection
+    match /blogs/{blogId} {
+      allow read: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin() ||
+                       (incoming().diff(existing()).affectedKeys().hasOnly(['views']) && 
+                        incoming().views == existing().views + 1);
+      allow delete: if isAdmin();
+    }
+
+    // Slider Collection
+    match /slider/{sliderId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Banks Collection
+    match /banks/{bankId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Payments Collection
+    match /payments/{paymentId} {
+      allow list: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow get: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
+      
+      allow create: if isSignedIn() && 
+                      incoming().userId == request.auth.uid &&
+                      incoming().status == 'pending' &&
+                      incoming().createdAt == request.time;
+      
+      allow update: if isAdmin(); // Only admin can approve/reject
+    }
+  }
+}

@@ -1,0 +1,196 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import { Mail, LayoutGrid, LogIn, UserPlus, CreditCard, ChevronDown, User, Star, MessageSquare, LogOut, Settings, Tv, Menu, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { useState, useEffect } from 'react';
+
+export default function Header() {
+  const { user, profile, signOut } = useAuth();
+  const navigate = useNavigate();
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const menuItems = [
+    { label: 'Güncel Tahminler', path: '/tahminler' },
+    { label: 'Başarılı Tahminler', path: '/basarili-tahminler' },
+    { label: 'Nasıl Vip Üye Olurum?', path: '/vip' },
+    { label: 'Blog', path: '/blog' },
+    { label: 'İletişim', path: '/iletisim' }
+  ];
+
+  return (
+    <header className="w-full flex flex-col font-sans">
+      {/* Top Bar */}
+      <div className="bg-[#05090f] text-gray-400 text-[10px] md:text-xs py-2 px-4 border-b border-gray-800">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
+          <div className="flex items-center space-x-4 md:space-x-6">
+            <a href="mailto:bilgi@ALTILIYAKALATANADAM.com" className="flex items-center space-x-2 hover:text-white transition-colors">
+              <Mail size={12} className="text-[#00e5ff]" />
+              <span className="hidden sm:inline">bilgi@ALTILIYAKALATANADAM.com</span>
+              <span className="sm:hidden">E-Posta</span>
+            </a>
+            <div className="flex items-center space-x-2 cursor-pointer hover:text-white transition-colors group">
+              <LayoutGrid size={12} className="text-[#00e5ff]" />
+              <span>Diğer Sitelerimiz</span>
+              <ChevronDown size={10} className="group-hover:translate-y-0.5 transition-transform" />
+            </div>
+          </div>
+          
+          <div className="flex items-center space-x-4 md:space-x-6 overflow-x-auto max-w-full pb-1 md:pb-0 scrollbar-hide">
+            {!user ? (
+              <>
+                <Link to="/giris-yap" className="flex items-center space-x-2 hover:text-white transition-colors whitespace-nowrap">
+                  <LogIn size={12} className="text-[#00e5ff]" />
+                  <span>Giriş Yap</span>
+                </Link>
+                <Link to="/kayit-ol" className="flex items-center space-x-2 hover:text-white transition-colors whitespace-nowrap">
+                  <UserPlus size={12} className="text-[#00e5ff]" />
+                  <span>Üye Ol</span>
+                </Link>
+                <Link to="/odeme-bildirimi" className="flex items-center space-x-2 hover:text-white transition-colors whitespace-nowrap">
+                  <CreditCard size={12} className="text-[#00e5ff]" />
+                  <span>Ödeme Bildirimi</span>
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link to="/bilgilerim" className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors whitespace-nowrap">
+                  <User size={12} className="text-[#00e5ff]" />
+                  <span className="hidden sm:inline">Hoşgeldiniz: <span className="text-white font-bold">{profile?.fullName || user?.email}</span></span>
+                  <span className="sm:hidden font-bold text-white">Profil</span>
+                </Link>
+                {profile?.role === 'admin' && (
+                  <Link to="/admin" className="flex items-center space-x-2 hover:text-white transition-colors whitespace-nowrap">
+                    <Settings size={12} className="text-[#00e5ff]" />
+                    <span>Admin</span>
+                  </Link>
+                )}
+                {!profile?.isVip && (
+                  <Link to="/vip" className="flex items-center space-x-2 hover:text-white transition-colors whitespace-nowrap">
+                    <Star size={12} className="text-[#00e5ff]" />
+                    <span>VIP Satın Al</span>
+                  </Link>
+                )}
+                <Link to="/odeme-bildirimi" className="flex items-center space-x-2 hover:text-white transition-colors whitespace-nowrap">
+                  <CreditCard size={12} className="text-[#00e5ff]" />
+                  <span>Ödeme</span>
+                </Link>
+                <button 
+                  onClick={signOut}
+                  className="flex items-center space-x-2 hover:text-white transition-colors cursor-pointer whitespace-nowrap"
+                >
+                  <LogOut size={12} className="text-[#00e5ff]" />
+                  <span>Çıkış</span>
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Main Nav */}
+      <nav className={`px-4 sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#0c121e]/90 backdrop-blur-lg shadow-[0_4px_30px_rgba(0,0,0,0.5)] py-2 border-b border-white/5' : 'bg-[#0c121e] py-4 shadow-2xl'}`}>
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          {/* Logo */}
+          <Link to="/" className="flex items-center space-x-2 group cursor-pointer">
+            <div className="relative">
+              <div className="absolute inset-0 bg-[#00e5ff] blur-lg opacity-20 group-hover:opacity-40 transition-opacity"></div>
+              <svg width="32" height="32" viewBox="0 0 40 40" className="md:w-10 md:h-10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 5L10 15V35H30V15L20 5Z" fill="#00e5ff" />
+                <path d="M15 20L20 15L25 20L20 25L15 20Z" fill="#0c121e" />
+                <path d="M20 10C20 10 15 15 15 20C15 25 20 30 20 30C20 30 25 25 25 20C25 15 20 10 20 10Z" fill="#00e5ff" />
+              </svg>
+            </div>
+            <div className="flex flex-col leading-none">
+              <span className="text-lg md:text-2xl font-black text-white tracking-tighter">
+                ALTILIYAKALATANADAM<span className="text-[#00e5ff]">.com</span>
+              </span>
+              <span className="text-[7px] md:text-[8px] text-gray-500 uppercase tracking-widest font-bold">kazanmanın gidiş hattı</span>
+            </div>
+          </Link>
+
+          {/* Desktop Menu */}
+          <ul className="hidden lg:flex items-center space-x-8 text-sm font-bold text-white uppercase tracking-tight">
+            {menuItems.map((item) => (
+              <li key={item.label} className="relative group">
+                <Link to={item.path} className="hover:text-[#00e5ff] transition-colors relative z-10">
+                  {item.label}
+                </Link>
+                <motion.div 
+                  className="absolute -bottom-1 left-0 h-0.5 bg-[#00e5ff] rounded-full"
+                  initial={{ width: 0 }}
+                  whileHover={{ width: '100%' }}
+                />
+              </li>
+            ))}
+            
+            <li className="relative group flex items-center ml-2">
+              <a href="https://webtv.tjk.org/" target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-[#0ff] hover:text-white transition-all drop-shadow-[0_0_8px_rgba(0,255,255,0.8)] border border-[#0ff]/30 px-3 py-1.5 rounded-full bg-[#0ff]/10 hover:bg-[#0ff]/20">
+                <Tv size={16} className="animate-pulse" />
+                <span className="font-black tracking-widest text-[10px]">TJK WEB TV</span>
+              </a>
+            </li>
+          </ul>
+
+          {/* Mobile Menu Button */}
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden text-white hover:text-[#00e5ff] transition-colors p-2"
+          >
+            {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+          </button>
+        </div>
+
+        {/* Mobile Menu Overlay */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="lg:hidden border-t border-white/5 bg-[#0c121e] overflow-hidden"
+            >
+              <ul className="flex flex-col space-y-4 p-6 text-sm font-bold text-white uppercase tracking-tight">
+                {menuItems.map((item) => (
+                  <li key={item.label}>
+                    <Link 
+                      to={item.path} 
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block hover:text-[#00e5ff] transition-colors"
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+                <li>
+                  <a 
+                    href="https://webtv.tjk.org/" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="flex items-center space-x-2 text-[#0ff] hover:text-white transition-all drop-shadow-[0_0_8px_rgba(0,255,255,0.8)] border border-[#0ff]/30 px-4 py-2 rounded-xl bg-[#0ff]/10 w-fit"
+                  >
+                    <Tv size={18} className="animate-pulse" />
+                    <span className="font-black tracking-widest text-xs">TJK WEB TV CANLI</span>
+                  </a>
+                </li>
+              </ul>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </nav>
+    </header>
+  );
+}
