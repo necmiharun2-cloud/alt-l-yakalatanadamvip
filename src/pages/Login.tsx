@@ -30,7 +30,7 @@ export default function Login() {
     try {
       await signInWithEmailAndPassword(auth, email, password);
       
-      navigate('/');
+      window.location.href = '/';
     } catch (err: any) {
       console.error('Login error:', err);
       if (err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {

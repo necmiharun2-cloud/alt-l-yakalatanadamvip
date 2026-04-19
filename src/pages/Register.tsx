@@ -61,7 +61,7 @@ export default function Register() {
       
       // Auto-login and navigate to homepage immediately
       setTimeout(() => {
-        navigate('/');
+        window.location.href = '/';
       }, 2000);
     } catch (err: any) {
       console.error('Registration error:', err);

@@ -10,7 +10,7 @@ import { useAuth } from '../context/AuthContext';
 import { useState, useEffect } from 'react';
 
 export default function Header() {
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -50,7 +50,9 @@ export default function Header() {
           </div>
           
           <div className="flex items-center space-x-4 md:space-x-6 overflow-x-auto max-w-full pb-1 md:pb-0 scrollbar-hide">
-            {!user ? (
+            {loading ? (
+              <div className="text-gray-500 italic text-[10px] animate-pulse">Yükleniyor...</div>
+            ) : !user ? (
               <>
                 <Link to="/giris-yap" className="flex items-center space-x-2 hover:text-white transition-colors whitespace-nowrap">
                   <LogIn size={12} className="text-[#00e5ff]" />
