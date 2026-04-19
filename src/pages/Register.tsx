@@ -40,15 +40,19 @@ export default function Register() {
       const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
       const user = userCredential.user;
 
-      // 2. Create user document in Firestore
-      await setDoc(doc(db, 'users', user.uid), {
-        email: formData.email,
-        fullName: `${formData.name} ${formData.surname}`,
-        phone: formData.phone,
-        role: 'user',
-        isVip: false,
-        createdAt: serverTimestamp()
-      });
+      // 2. Create user document in Firestore (Optional if blocked)
+      try {
+        await setDoc(doc(db, 'users', user.uid), {
+          email: formData.email,
+          fullName: `${formData.name} ${formData.surname}`,
+          phone: formData.phone,
+          role: 'user',
+          isVip: false,
+          createdAt: serverTimestamp()
+        });
+      } catch (dbErr) {
+        console.warn('Could not save user data to Firestore, defaulting to basic auth:', dbErr);
+      }
 
       // 3. Send Email Verification (Arka planda gönderilir, kullanıcıyı engellemez)
       sendEmailVerification(user).catch(console.error);

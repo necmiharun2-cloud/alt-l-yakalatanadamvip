@@ -51,11 +51,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setProfile({ id: docSnap.id, ...docSnap.data() } as UserProfile);
           } else {
             console.warn('No firestore profile found for user', firebaseUser.uid);
-            setProfile(null);
+            // Default profile creation if missing
+            setProfile({
+               id: firebaseUser.uid,
+               email: firebaseUser.email,
+               fullName: firebaseUser.email,
+               role: 'user',
+               isVip: false
+            });
           }
           setLoading(false);
         }, (error) => {
           console.error('Profile snapshot error:', error);
+          // Fallback profile if rules completely block access
+          setProfile({
+             id: firebaseUser.uid,
+             email: firebaseUser.email,
+             fullName: firebaseUser.email,
+             role: 'user',
+             isVip: false
+          });
           setLoading(false);
         });
       } else {
