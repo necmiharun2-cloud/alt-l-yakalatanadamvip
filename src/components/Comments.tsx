@@ -41,7 +41,7 @@ export default function Comments({ predictionId }: { predictionId: string }) {
     try {
       await addDoc(collection(db, 'comments'), {
         predictionId,
-        userId: profile.uid || (profile as any).id,
+        userId: profile.id,
         userName: profile.fullName || 'Anonim',
         content: newComment,
         createdAt: serverTimestamp()
@@ -106,7 +106,7 @@ export default function Comments({ predictionId }: { predictionId: string }) {
                 </div>
               </div>
               
-              {(isAdmin || profile?.uid === comment.userId) && (
+              {(isAdmin || profile?.id === comment.userId) && (
                 <button
                   onClick={() => handleDelete(comment.id)}
                   className="p-2 text-gray-600 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
