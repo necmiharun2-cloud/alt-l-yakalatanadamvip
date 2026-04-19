@@ -24,7 +24,7 @@ export default function FeatureCards() {
       hasBottomYellow: true,
     },
     {
-      title: "Altılıyı Yakalayın",
+      title: "ALTILIYAKALATANADAM",
       desc: "ALTILIYAKALATANADAM.com Farkı İle Altılı Ganyanı Yakalama Oranınızı Artırın",
       image: "https://picsum.photos/seed/happy3/400/400",
       hasRightArrow: false,

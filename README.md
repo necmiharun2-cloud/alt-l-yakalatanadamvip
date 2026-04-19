@@ -1,4 +1,4 @@
-# ALTILIYIYAKALATANADAM - Full Stack Web Application
+# ALTILIYAKALATANADAM - Full Stack Web Application
 
 This is a complete full-stack web application built for predicting horse racing outcomes.
 
