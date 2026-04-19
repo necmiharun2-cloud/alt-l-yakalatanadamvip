@@ -124,7 +124,13 @@ export default function Admin() {
           }
       }
       setMessage(editId ? 'İçerik başarıyla güncellendi!' : 'İçerik başarıyla yayınlandı!');
-      setFormData({ ...formData, title: '', subTitle: '', content: '', slug: '', winnings: '', track: 'İstanbul', bankName: '', iban: '', receiverName: '' });
+      setFormData({ 
+        title: '', subTitle: '', content: '', image: '', slug: '', 
+        track: 'İstanbul', winnings: '', views: 0, type: 'current', 
+        role: 'user', ctaText: '', ctaLink: '', orderIndex: 0, 
+        bankName: '', iban: '', receiverName: '', ayaklar: Array(6).fill(''), 
+        fiyat: '', commentsEnabled: true 
+      });
       setEditId(null);
       await fetchAdminData();
     } catch (err: any) {
@@ -136,29 +142,56 @@ export default function Admin() {
   };
 
   const handleEdit = (item: any, type: string) => {
+      if (type === 'blog') setActiveSection('blog');
+      if (type === 'prediction') {
+          setActiveSection(item.type === 'current' ? 'guncel' : 'basarili');
+      }
+      if (type === 'bank') setActiveSection('banks');
+
       setEditId(item.id);
       if (type === 'blog') {
-          setFormData({ ...formData, title: item.title, slug: item.slug, content: item.content, image: item.image, views: item.views });
+          setFormData({ 
+            title: item.title || '', 
+            slug: item.slug || '', 
+            content: item.content || '', 
+            image: item.image || '', 
+            views: item.views || 0,
+            subTitle: '', track: 'İstanbul', winnings: '', type: 'current', 
+            role: 'user', ctaText: '', ctaLink: '', orderIndex: 0, 
+            bankName: '', iban: '', receiverName: '', ayaklar: Array(6).fill(''), 
+            fiyat: '', commentsEnabled: true
+          });
       } else if (type === 'prediction') {
           setFormData({ 
-            ...formData, 
-            title: item.title, 
+            title: item.title || '', 
             subTitle: item.subTitle || '', 
-            slug: item.slug, 
+            slug: item.slug || '', 
             track: item.track || 'İstanbul',
-            content: item.content, 
-            image: item.image, 
+            content: item.content || '', 
+            image: item.image || '', 
             winnings: item.winnings || '', 
             views: item.views || 0, 
             type: item.isPublic ? 'isPublic' : '',
-            ayaklar: Array.isArray(item.ayaklar) ? [...item.ayaklar, ...Array(6 - item.ayaklar.length).fill('')] : Array(6).fill(''),
+            ayaklar: Array.isArray(item.ayaklar) ? 
+              [...item.ayaklar, ...Array(Math.max(0, 6 - (Number(item.ayaklar.length) || 0))).fill('')].slice(0, 6) 
+              : Array(6).fill(''),
             fiyat: item.fiyat || '',
-            commentsEnabled: item.commentsEnabled !== undefined ? item.commentsEnabled : true
+            commentsEnabled: item.commentsEnabled !== undefined ? item.commentsEnabled : true,
+            role: 'user', ctaText: '', ctaLink: '', orderIndex: 0, 
+            bankName: '', iban: '', receiverName: ''
           });
       } else if (type === 'bank') {
-          setFormData({ ...formData, bankName: item.bankName, iban: item.iban, receiverName: item.receiverName });
+          setFormData({ 
+            title: '', subTitle: '', content: '', image: '', slug: '', 
+            track: 'İstanbul', winnings: '', views: 0, type: 'current', 
+            role: 'user', ctaText: '', ctaLink: '', orderIndex: 0, 
+            bankName: item.bankName || '', 
+            iban: item.iban || '', 
+            receiverName: item.receiverName || '', 
+            ayaklar: Array(6).fill(''), fiyat: '', commentsEnabled: true
+          });
       }
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
   const handleMarkSuccess = async (prediction: any) => {
@@ -206,8 +239,6 @@ export default function Admin() {
 
   React.useEffect(() => {
     fetchAdminData();
-    setEditId(null);
-    setFormData({ title: '', subTitle: '', content: '', image: '', slug: '', track: 'İstanbul', winnings: '', views: 0, type: 'current', role: 'user', ctaText: '', ctaLink: '', orderIndex: 0, bankName: '', iban: '', receiverName: '', ayaklar: Array(6).fill(''), fiyat: '', commentsEnabled: true });
     setMessage('');
   }, [activeSection]);
 
@@ -370,13 +401,23 @@ export default function Admin() {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-12">
-          {/* Sidebar Tabs */}
-          <aside className="w-full lg:w-1/4">
+          {/* Sidebar Tabs & Lists */}
+          <aside className="w-full lg:w-1/3 xl:w-1/4 space-y-8">
             <div className="bg-[#0a0a0a] border border-white/5 rounded-3xl md:rounded-[32px] overflow-hidden shadow-2xl p-2 md:p-4 space-y-1 md:space-y-2 flex flex-row lg:flex-col overflow-x-auto lg:overflow-visible scrollbar-hide">
               {sections.map((section) => (
                 <button
                   key={section.id}
-                  onClick={() => setActiveSection(section.id as Section)}
+                  onClick={() => {
+                    setActiveSection(section.id as Section);
+                    setEditId(null);
+                    setFormData({ 
+                      title: '', subTitle: '', content: '', image: '', slug: '', 
+                      track: 'İstanbul', winnings: '', views: 0, type: 'current', 
+                      role: 'user', ctaText: '', ctaLink: '', orderIndex: 0, 
+                      bankName: '', iban: '', receiverName: '', ayaklar: Array(6).fill(''), 
+                      fiyat: '', commentsEnabled: true 
+                    });
+                  }}
                   className={`flex-shrink-0 lg:flex-shrink lg:w-full flex items-center space-x-3 md:space-x-4 p-4 md:p-5 rounded-xl md:rounded-2xl transition-all group ${
                     activeSection === section.id 
                     ? 'bg-[#00e5ff] text-black shadow-lg shadow-[#00e5ff]/20' 
@@ -387,6 +428,131 @@ export default function Admin() {
                   <span className="text-[10px] md:text-sm font-black uppercase tracking-tight whitespace-nowrap">{section.label}</span>
                 </button>
               ))}
+            </div>
+
+            {/* List on the left side (Desktop) */}
+            <div className="hidden lg:block bg-[#0a0a0a] border border-white/5 rounded-[40px] p-6 shadow-2xl max-h-[800px] overflow-y-auto custom-scrollbar space-y-8">
+              
+              {/* Persistent Current Predictions List */}
+              <div className="space-y-4">
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-[#00e5ff] flex items-center">
+                  <div className="w-2 h-2 bg-[#00e5ff] rounded-full mr-3 animate-pulse" />
+                  GÜNCEL TAHMİNLER
+                </h3>
+                <div className="divide-y divide-white/5">
+                  {predictions.filter(p => p.type === 'current').map(p => (
+                      <div key={p.id} className="py-4 group">
+                          <div className="flex justify-between items-start mb-2">
+                             <div className="flex-1 truncate">
+                                <span className="font-bold text-xs truncate block mb-1 group-hover:text-[#00e5ff] transition-colors">{p.title}</span>
+                                <div className="flex items-center space-x-2">
+                                  <span className="text-[9px] text-gray-500 uppercase font-black bg-white/5 px-1.5 py-0.5 rounded">{p.track}</span>
+                                </div>
+                             </div>
+                             <div className="flex flex-col space-y-1 ml-2 shrink-0">
+                                <button onClick={() => handleMarkSuccess(p)} className="p-1.5 bg-green-500/10 text-green-500 rounded-lg hover:bg-green-500 hover:text-black transition-all" title="Başarılı Yap">
+                                  <CheckCircle size={12}/>
+                                </button>
+                                <button onClick={() => handleEdit(p, 'prediction')} className="p-1.5 bg-blue-500/10 text-blue-500 rounded-lg hover:bg-blue-500 hover:text-white transition-all"><FileText size={12}/></button>
+                                <button onClick={() => handleDelete(p.id, 'prediction')} className="p-1.5 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all"><Database size={12}/></button>
+                             </div>
+                          </div>
+                      </div>
+                  ))}
+                  {predictions.filter(p => p.type === 'current').length === 0 && (
+                    <div className="text-[9px] text-gray-700 italic py-2">Henüz kayıt yok.</div>
+                  )}
+                </div>
+              </div>
+
+              {/* Dynamic Other Content List */}
+              {activeSection !== 'guncel' && (
+                <div className="space-y-4 pt-6 border-t border-white/10">
+                  <h3 className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center">
+                    <div className="w-2 h-2 bg-gray-700 rounded-full mr-3" />
+                    {sections.find(s => s.id === activeSection)?.label.toUpperCase()} LİSTESİ
+                  </h3>
+                  
+                  <div className="divide-y divide-white/5">
+                    {activeSection === 'banks' && banks.map(b => (
+                        <div key={b.id} className="py-4">
+                            <div className="flex justify-between items-start mb-2">
+                               <span className="font-bold text-white text-xs truncate mr-2">{b.bankName}</span>
+                               <div className="flex space-x-1 shrink-0">
+                                   <button onClick={() => handleEdit(b, 'bank')} className="p-1.5 bg-blue-500/10 text-blue-500 rounded-lg hover:bg-blue-500 transition-all"><FileText size={12}/></button>
+                                   <button onClick={() => handleDelete(b.id, 'bank')} className="p-1.5 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500 transition-all"><Database size={12}/></button>
+                               </div>
+                            </div>
+                            <div className="text-[9px] text-gray-500 font-mono truncate">{b.iban}</div>
+                        </div>
+                    ))}
+
+                    {activeSection === 'slider' && sliderItems.map(s => (
+                        <div key={s.id} className="py-4 flex justify-between items-center">
+                            <span className="text-xs font-bold truncate pr-2 text-white">{s.title}</span>
+                            <button onClick={() => deleteSlider(s.id)} className="p-1.5 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500 transition-all"><Database size={12}/></button>
+                        </div>
+                    ))}
+
+                    {activeSection === 'blog' && blogs.map(b => (
+                        <div key={b.id} className="py-4">
+                            <div className="flex justify-between items-start mb-1">
+                               <span className="font-bold text-xs truncate flex-1 text-white leading-tight">{b.title}</span>
+                               <div className="flex space-x-1 ml-2 shrink-0">
+                                   <button onClick={() => handleEdit(b, 'blog')} className="p-1.5 bg-blue-500/10 text-blue-500 rounded-lg"><FileText size={12}/></button>
+                                   <button onClick={() => handleDelete(b.id, 'blog')} className="p-1.5 bg-red-500/10 text-red-500 rounded-lg"><Database size={12}/></button>
+                               </div>
+                            </div>
+                            <div className="text-[10px] text-gray-500 font-mono">/{b.slug}</div>
+                        </div>
+                    ))}
+
+                    {activeSection === 'basarili' && predictions.filter(p => p.type === 'success').map(p => (
+                        <div key={p.id} className="py-4 group">
+                            <div className="flex justify-between items-start mb-2">
+                               <div className="flex-1 truncate">
+                                  <span className="font-bold text-xs truncate block text-white group-hover:text-[#00e5ff] transition-colors">{p.title}</span>
+                               </div>
+                               <div className="flex space-x-1 ml-2 shrink-0">
+                                  <button onClick={() => handleEdit(p, 'prediction')} className="p-1.5 bg-blue-500/10 text-blue-500 rounded-lg"><FileText size={12}/></button>
+                                  <button onClick={() => handleDelete(p.id, 'prediction')} className="p-1.5 bg-red-500/10 text-red-500 rounded-lg"><Database size={12}/></button>
+                               </div>
+                            </div>
+                        </div>
+                    ))}
+
+                    {activeSection === 'users' && (
+                      <div className="space-y-6">
+                         <div className="space-y-3">
+                            {payments.map(p => (
+                               <div key={p.id} className="bg-white/5 rounded-2xl p-3 border border-white/5">
+                                  <div className="text-[10px] font-bold truncate text-white mb-1">{p.fullName}</div>
+                                  <div className="text-[9px] text-gray-500 mb-2 truncate">{p.package} - {p.amount}₺</div>
+                                  {p.status === 'pending' ? (
+                                     <div className="grid grid-cols-2 gap-2">
+                                        <button onClick={() => handlePaymentAction(p.id, 'approved', p.userId, true)} className="bg-green-500/20 text-green-500 py-1.5 rounded-lg text-[8px] font-black uppercase hover:bg-green-500 hover:text-black transition-all">ONAY</button>
+                                        <button onClick={() => handlePaymentAction(p.id, 'rejected', p.userId, false)} className="bg-red-500/20 text-red-500 py-1.5 rounded-lg text-[8px] font-black uppercase hover:bg-red-500 hover:text-white transition-all">RED</button>
+                                     </div>
+                                  ) : (
+                                     <div className={`text-center py-1 rounded-lg text-[8px] font-black uppercase ${p.status === 'approved' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
+                                        {p.status === 'approved' ? 'ONAYLANDI' : 'REDDEDİLDİ'}
+                                     </div>
+                                  )}
+                               </div>
+                            ))}
+                         </div>
+                      </div>
+                    )}
+
+                    {((activeSection === 'banks' && banks.length === 0) || 
+                      (activeSection === 'slider' && sliderItems.length === 0) ||
+                      (activeSection === 'blog' && blogs.length === 0) ||
+                      (activeSection === 'basarili' && predictions.filter(p => p.type === 'success').length === 0)) && (
+                      <div className="text-[9px] text-gray-700 italic py-2">Henüz kayıt yok.</div>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
           </aside>
 
@@ -430,22 +596,6 @@ export default function Admin() {
                                {editId && <button type="button" onClick={() => { setEditId(null); setFormData({...formData, bankName: '', iban: '', receiverName: ''}); }} className="px-6 bg-gray-700 text-white font-bold p-4 rounded-xl uppercase hover:bg-gray-600 transition-colors">İptal</button>}
                              </div>
                          </form>
-                         <div className="bg-[#151b27] p-6 rounded-2xl border border-white/5 divide-y divide-white/5">
-                             {banks.map(b => (
-                                 <div key={b.id} className="flex justify-between items-center py-4">
-                                     <div className="flex flex-col">
-                                         <span className="font-bold text-[#00e5ff]">{b.bankName}</span>
-                                         <span className="text-xs text-gray-500 font-mono mt-1">{b.iban}</span>
-                                         <span className="text-xs text-gray-400 mt-1">{b.receiverName}</span>
-                                     </div>
-                                     <div className="flex items-center space-x-2">
-                                       <button onClick={() => handleEdit(b, 'bank')} className="text-blue-500 text-sm bg-blue-500/10 px-3 py-1 rounded-lg">Düzenle</button>
-                                       <button onClick={() => handleDelete(b.id, 'bank')} className="text-red-500 text-sm bg-red-500/10 px-3 py-1 rounded-lg">Sil</button>
-                                     </div>
-                                 </div>
-                             ))}
-                             {banks.length === 0 && <div className="text-gray-500 text-sm italic py-4">Banka bilgisi yok.</div>}
-                         </div>
                       </div>
                   ) : activeSection === 'slider' ? (
                       <div className="space-y-8">
@@ -458,18 +608,6 @@ export default function Admin() {
                              <input type="number" placeholder="Sıralama (0-9)" value={formData.orderIndex} onChange={e => setFormData({...formData, orderIndex: Number(e.target.value)})} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-sm" />
                              <button type="submit" disabled={loading} className="w-full bg-[#00e5ff] text-black font-bold p-4 rounded-xl uppercase hover:bg-white transition-colors">Ekle</button>
                          </form>
-                         <div className="bg-[#151b27] p-6 rounded-2xl border border-white/5 divide-y divide-white/5">
-                             {sliderItems.map(s => (
-                                 <div key={s.id} className="flex justify-between items-center py-4">
-                                     <div className="flex flex-col">
-                                         <span className="font-bold">{s.title}</span>
-                                         <span className="text-xs text-gray-500">{s.subTitle}</span>
-                                     </div>
-                                     <button onClick={() => deleteSlider(s.id)} className="text-red-500 text-sm bg-red-500/10 px-3 py-1 rounded-lg">Sil</button>
-                                 </div>
-                             ))}
-                             {sliderItems.length === 0 && <div className="text-gray-500 text-sm italic py-4">Slider öğesi yok.</div>}
-                         </div>
                       </div>
                   ) : activeSection !== 'users' ? (
                     <div className="space-y-12">
@@ -732,55 +870,16 @@ export default function Admin() {
                           <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
                         </button>
                         {editId && (
-                           <button type="button" onClick={() => { setEditId(null); setFormData({ ...formData, title: '', subTitle: '', content: '', image: '', slug: '', winnings: '' }); }} className="px-8 bg-gray-700 text-white font-black p-5 rounded-2xl uppercase hover:bg-gray-600 transition-colors">İptal</button>
+                           <button type="button" onClick={() => { 
+                             setEditId(null); 
+                             setFormData({ 
+                               ...formData, title: '', subTitle: '', content: '', image: '', 
+                               slug: '', winnings: '', ayaklar: Array(6).fill('') 
+                             }); 
+                           }} className="px-8 bg-gray-700 text-white font-black p-5 rounded-2xl uppercase hover:bg-gray-600 transition-colors">İptal</button>
                         )}
                       </div>
                     </form>
-                    
-                    {/* Item Lists */}
-                    <div className="bg-[#151b27] border border-white/5 rounded-2xl p-6">
-                        <h3 className="text-xl font-bold mb-4">{sections.find(s => s.id === activeSection)?.label} Listesi</h3>
-                        <div className="divide-y divide-white/5">
-                           {(activeSection === 'blog') && blogs.map(b => (
-                              <div key={b.id} className="flex justify-between items-center py-4">
-                                  <div className="flex flex-col flex-1 truncate pr-4">
-                                      <span className="font-bold truncate">{b.title}</span>
-                                      <span className="text-xs text-gray-500 font-mono mt-1">/{b.slug}</span>
-                                  </div>
-                                  <div className="flex items-center space-x-2 shrink-0">
-                                    <button type="button" onClick={() => handleEdit(b, 'blog')} className="text-blue-500 text-sm bg-blue-500/10 px-3 py-1 rounded-lg">Düzenle</button>
-                                    <button type="button" onClick={() => handleDelete(b.id, 'blog')} className="text-red-500 text-sm bg-red-500/10 px-3 py-1 rounded-lg">Sil</button>
-                                  </div>
-                              </div>
-                           ))}
-                           {(activeSection === 'guncel' || activeSection === 'basarili') && predictions.filter(p => activeSection === 'guncel' ? p.type === 'current' : p.type === 'success').map(p => (
-                              <div key={p.id} className="flex justify-between items-center py-4">
-                                  <div className="flex flex-col flex-1 truncate pr-4">
-                                      <span className="font-bold truncate">{p.title} {p.track ? `(${p.track})` : ''}</span>
-                                      {p.subTitle && <span className="text-xs text-gray-400 mt-1 truncate">{p.subTitle}</span>}
-                                      <span className="text-xs text-gray-500 font-mono mt-1">/{p.slug} - {p.createdAt?.toDate ? p.createdAt.toDate().toLocaleDateString('tr-TR') : (p.createdAt ? new Date(p.createdAt).toLocaleDateString('tr-TR') : '')}</span>
-                                  </div>
-                                  <div className="flex items-center space-x-2 shrink-0">
-                                    {p.type === 'current' && (
-                                      <button 
-                                         type="button" 
-                                         onClick={() => handleMarkSuccess(p)} 
-                                         className="text-green-500 text-xs bg-green-500/10 border border-green-500/20 px-3 py-1.5 rounded-lg hover:bg-green-500 hover:text-white transition-all font-black uppercase tracking-tight"
-                                      >
-                                        BAŞARILI YAP
-                                      </button>
-                                    )}
-                                    <button type="button" onClick={() => handleEdit(p, 'prediction')} className="text-blue-500 text-sm bg-blue-500/10 px-3 py-1 rounded-lg">Düzenle</button>
-                                    <button type="button" onClick={() => handleDelete(p.id, 'prediction')} className="text-red-500 text-sm bg-red-500/10 px-3 py-1 rounded-lg">Sil</button>
-                                  </div>
-                              </div>
-                           ))}
-                           
-                           {activeSection === 'blog' && blogs.length === 0 && <div className="text-gray-500 text-sm italic py-4">İçerik yok.</div>}
-                           {activeSection === 'guncel' && predictions.filter(p => p.type === 'current').length === 0 && <div className="text-gray-500 text-sm italic py-4">İçerik yok.</div>}
-                           {activeSection === 'basarili' && predictions.filter(p => p.type === 'success').length === 0 && <div className="text-gray-500 text-sm italic py-4">İçerik yok.</div>}
-                        </div>
-                    </div>
                   </div>
                   ) : (
                     <div className="space-y-8">
@@ -805,71 +904,9 @@ export default function Admin() {
                              </div>
                            </div>
                            <button type="submit" disabled={loading} className="w-full bg-[#00e5ff] text-black font-bold p-4 rounded-xl uppercase hover:bg-white transition-colors">
-                              Ekle
-                           </button>
-                        </form>
-                      </div>
-
-                      <div>
-                        <h3 className="text-xl font-bold mb-4">Ödeme Bildirimleri</h3>
-                        <div className="bg-[#151b27] border border-white/5 rounded-2xl overflow-hidden divide-y divide-white/5">
-                           {payments.map(p => (
-                             <div key={p.id} className="p-4 flex flex-col md:flex-row justify-between md:items-center space-y-4 md:space-y-0">
-                                <div>
-                                   <div className="font-bold text-[#00e5ff]">{p.fullName} ({p.email})</div>
-                                   <div className="text-sm text-gray-400">Paket: {p.package} | Tutar: {p.amount} ₺</div>
-                                   <div className="text-xs text-gray-500 mb-2">Ref: {p.reference} | Banka: {p.bank}</div>
-                                   {p.phone && (
-                                     <a href={`https://wa.me/${p.phone.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="inline-flex items-center space-x-1 text-xs text-green-500 bg-green-500/10 px-2 py-1 rounded-lg">
-                                       <Send size={10} />
-                                       <span>WhatsApp Mesaj At</span>
-                                     </a>
-                                   )}
-                                </div>
-                                <div className="flex space-x-2">
-                                  {p.status === 'pending' ? (
-                                    <>
-                                       <button onClick={() => handlePaymentAction(p.id, 'approved', p.userId, true)} className="bg-green-500/20 text-green-500 hover:bg-green-500 hover:text-white px-4 py-2 rounded-lg text-xs font-bold transition-colors">Onayla (VIP Yap)</button>
-                                       <button onClick={() => handlePaymentAction(p.id, 'rejected', p.userId, false)} className="bg-red-500/20 text-red-500 hover:bg-red-500 hover:text-white px-4 py-2 rounded-lg text-xs font-bold transition-colors">Reddet</button>
-                                    </>
-                                  ) : (
-                                    <span className={`text-xs font-bold px-3 py-1 rounded-full ${p.status === 'approved' ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}`}>
-                                       {p.status === 'approved' ? 'Onaylandı' : 'Reddedildi'}
-                                    </span>
-                                  )}
-                                </div>
-                             </div>
-                           ))}
-                           {payments.length === 0 && <div className="p-4 text-gray-500 italic">Ödeme bildirimi yok.</div>}
-                        </div>
-                      </div>
-
-                      <div>
-                        <h3 className="text-xl font-bold mb-4">Kullanıcı Listesi</h3>
-                        <div className="bg-[#151b27] border border-white/5 rounded-2xl overflow-hidden divide-y divide-white/5 max-h-96 overflow-y-auto">
-                           {users.map(u => (
-                             <div key={u.id} className="p-4 flex justify-between items-center">
-                                <div>
-                                   <div className="font-bold">{u.fullName}</div>
-                                   <div className="text-xs text-gray-400 mb-2">{u.email}</div>
-                                   {u.phone && (
-                                     <a href={`https://wa.me/${u.phone.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="inline-flex items-center space-x-1 text-xs text-green-500 bg-green-500/10 px-2 py-1 rounded-lg">
-                                       <Send size={10} />
-                                       <span>WhatsApp Mesaj At</span>
-                                     </a>
-                                   )}
-                                </div>
-                                <div className="flex space-x-4 items-center">
-                                   <div className="text-xs font-bold uppercase text-gray-500">{u.role}</div>
-                                   {u.isVip ? (
-                                      <span className="bg-[#00e5ff]/20 text-[#00e5ff] px-2 py-1 rounded text-xs font-bold flex items-center"><CheckCircle size={12} className="mr-1" /> VIP</span>
-                                   ) : (
-                                      <span className="bg-gray-500/20 text-gray-500 px-2 py-1 rounded text-xs font-bold">NORMAL</span>
-                                   )}
-                                </div>
-                             </div>
-                           ))}
-                        </div>
+                               Ekle
+                            </button>
+                         </form>
                       </div>
                     </div>
                   )}
