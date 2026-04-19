@@ -226,7 +226,7 @@ export default function PaymentNotification() {
                       <>
                         <Upload size={32} className="text-gray-600 mb-4 group-hover:text-[#00e5ff] transition-colors" />
                         <p className="text-xs text-gray-500 font-bold">Dekont yüklemek için tıklayın</p>
-                        <p className="text-[10px] text-gray-600 mt-1">JPG, PNG (Max 5MB)</p>
+                        <p className="text-[10px] text-gray-600 mt-1">JPG, PNG, PDF (Max 5MB)</p>
                       </>
                     ) : (
                       <div className="flex flex-col items-center">

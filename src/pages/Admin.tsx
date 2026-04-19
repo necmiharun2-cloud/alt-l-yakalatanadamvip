@@ -7,10 +7,10 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { motion, AnimatePresence } from 'motion/react';
-import { LayoutDashboard, FileText, CheckCircle, ListPlus, Send, ImageIcon, Type, Link as LinkIcon, Users, Eye, Lock, ShieldCheck, Database, Building2, Clock, ExternalLink } from 'lucide-react';
+import { LayoutDashboard, FileText, CheckCircle, ListPlus, Send, ImageIcon, Type, Link as LinkIcon, Users, Eye, Clock, ExternalLink, Building2, Database } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { db, auth } from '../lib/firebase';
+import { db } from '../lib/firebase';
 import { 
   collection, 
   getDocs, 
@@ -21,10 +21,8 @@ import {
   query, 
   where, 
   orderBy, 
-  serverTimestamp,
-  setDoc
+  serverTimestamp
 } from 'firebase/firestore';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
 
 type Section = 'guncel' | 'basarili' | 'blog' | 'users' | 'slider' | 'banks';
 
@@ -38,6 +36,7 @@ export default function Admin() {
       navigate('/giris-yap');
     }
   }, [profile, authLoading, navigate]);
+
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [editId, setEditId] = useState<string | null>(null);
@@ -107,7 +106,7 @@ export default function Admin() {
           winnings: formData.winnings,
           views: Number(formData.views),
           authorName: 'ALTILIYAKALATANADAM',
-          isPublic: formData.type === 'isPublic', // Using type as a temp flag for isPublic checkbox
+          isPublic: formData.type === 'isPublic', 
           ayaklar: Array.isArray(formData.ayaklar) ? formData.ayaklar.filter(l => l.trim()) : [],
           fiyat: formData.fiyat,
           commentsEnabled: formData.commentsEnabled,
@@ -155,6 +154,7 @@ export default function Admin() {
           setActiveSection(item.type === 'current' ? 'guncel' : 'basarili');
       }
       if (type === 'bank') setActiveSection('banks');
+      if (type === 'slider') setActiveSection('slider');
 
       setEditId(item.id);
       if (type === 'blog') {
@@ -198,13 +198,28 @@ export default function Admin() {
             receiverName: item.receiverName || '', 
             ayaklar: Array(6).fill(''), fiyat: '', commentsEnabled: true
           });
+      } else if (type === 'slider') {
+          setFormData({ 
+            title: item.title || '', 
+            subTitle: item.subTitle || '', 
+            content: '', 
+            image: item.imageUrl || '', 
+            slug: '', 
+            track: 'İstanbul', winnings: '', views: 0, type: 'current', 
+            role: 'user', 
+            ctaText: item.ctaText || '', 
+            ctaLink: item.ctaLink || '', 
+            orderIndex: item.orderIndex || 0, 
+            bankName: '', iban: '', receiverName: '', 
+            ayaklar: Array(6).fill(''), fiyat: '', commentsEnabled: true
+          });
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
   const handleMarkSuccess = async (prediction: any) => {
     const winnings = window.prompt("Tebrikler! Kazanılan ikramiye tutarını giriniz (Örn: 511.589,37 TL):", prediction.winnings || "");
-    if (winnings === null) return; // User cancelled
+    if (winnings === null) return; 
     
     setLoading(true);
     try {
@@ -243,8 +258,6 @@ export default function Admin() {
   const [blogs, setBlogs] = useState<any[]>([]);
   const [banks, setBanks] = useState<any[]>([]);
 
-  const [newUser, setNewUser] = useState({ fullName: '', email: '', password: '', role: 'user', isVip: false });
-
   React.useEffect(() => {
     fetchAdminData();
     setMessage('');
@@ -274,7 +287,7 @@ export default function Admin() {
     e.preventDefault();
     setLoading(true);
     try {
-        await addDoc(collection(db, 'slider'), {
+        const payload = {
             title: formData.title,
             subTitle: formData.subTitle,
             ctaText: formData.ctaText,
@@ -282,13 +295,20 @@ export default function Admin() {
             imageUrl: formData.image,
             orderIndex: Number(formData.orderIndex),
             active: true
-        });
+        };
+        if (editId) {
+            await updateDoc(doc(db, 'slider', editId), payload);
+            setMessage('Slider öğesi başarıyla güncellendi!');
+        } else {
+            await addDoc(collection(db, 'slider'), payload);
+            setMessage('Slider öğesi başarıyla eklendi!');
+        }
         await fetchAdminData();
-        setMessage('Slider öğesi başarıyla eklendi!');
         setFormData({ ...formData, title: '', subTitle: '', ctaText: '', ctaLink: '', image: '', orderIndex: 0 });
+        setEditId(null);
     } catch (err) {
         console.error(err);
-        setMessage('Slider eklenirken hata oluştu');
+        setMessage('Slider işleminde hata oluştu');
     } finally {
         setLoading(false);
     }
@@ -304,7 +324,7 @@ export default function Admin() {
       }
   };
 
-  const handlePaymentAction = async (paymentId: string, status: string, userId: string, isVip: boolean) => {
+  const handlePaymentAction = async (paymentId: string, status: string, userId: string) => {
     try {
       await updateDoc(doc(db, 'payments', paymentId), { status });
       if (status === 'approved') {
@@ -315,29 +335,6 @@ export default function Admin() {
     } catch (err) {
        console.error(err);
        setMessage('Hata oluştu');
-    }
-  };
-
-  const handleCreateUser = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-       // Note: Creating a user in Firebase Auth requires a separate instance or custom logic if already logged in as admin.
-       // Usually we'd use a Cloud Function, but here I'll just set it in Firestore and mention they need to use the register page or I can use a secondary auth instance if needed.
-       // For now, I'll use a placeholder logic: Admin can't easily create OTHER users in Auth easily from direct SDK without being logged out.
-       // I'll just explain. OR I'll create a doc in Firestore and assume they use the same email to register later.
-       await addDoc(collection(db, 'users'), {
-         ...newUser,
-         createdAt: serverTimestamp()
-       });
-       await fetchAdminData();
-       setNewUser({ fullName: '', email: '', password: '', role: 'user', isVip: false });
-       setMessage('Kullanıcı profil kaydı oluşturuldu! DİKKAT: Kullanıcı bu e-posta ile kayıt sayfasından hesap açtığında bu profil ile eşleşecektir.');
-    } catch(err) {
-       console.error(err);
-       setMessage('Kullanıcı oluşturulurken bir hata oluştu');
-    } finally {
-       setLoading(false);
     }
   };
 
@@ -371,12 +368,10 @@ export default function Admin() {
     }
   };
 
-  // Loading check
   if (authLoading) {
     return <div className="min-h-screen bg-[#080d16] flex items-center justify-center text-white">Yükleniyor...</div>;
   }
 
-  // Skip rendering if not admin (in real app we'd redirect)
   if (!profile || profile.role !== 'admin') {
      return <div className="min-h-screen bg-[#080d16] flex items-center justify-center text-white">Yetkisiz Erişim</div>;
   }
@@ -496,9 +491,14 @@ export default function Admin() {
                     ))}
 
                     {activeSection === 'slider' && sliderItems.map(s => (
-                        <div key={s.id} className="py-4 flex justify-between items-center">
-                            <span className="text-xs font-bold truncate pr-2 text-white">{s.title}</span>
-                            <button onClick={() => deleteSlider(s.id)} className="p-1.5 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500 transition-all"><Database size={12}/></button>
+                        <div key={s.id} className="py-4 border-b border-white/5 last:border-0">
+                            <div className="flex justify-between items-center mb-1">
+                               <span className="text-xs font-bold truncate pr-2 text-white">{s.title}</span>
+                               <div className="flex space-x-1 shrink-0">
+                                   <button onClick={() => handleEdit(s, 'slider')} className="p-1.5 bg-blue-500/10 text-blue-500 rounded-lg hover:bg-blue-500 hover:text-white transition-all"><FileText size={12}/></button>
+                                   <button onClick={() => deleteSlider(s.id)} className="p-1.5 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all"><Database size={12}/></button>
+                               </div>
+                            </div>
                         </div>
                     ))}
 
@@ -520,7 +520,7 @@ export default function Admin() {
                             <div className="flex justify-between items-start mb-2">
                                <div className="flex-1 truncate">
                                   <span className="font-bold text-xs truncate block text-white group-hover:text-[#00e5ff] transition-colors">{p.title}</span>
-                               </div>
+                                </div>
                                <div className="flex space-x-1 ml-2 shrink-0">
                                   <button onClick={() => handleEdit(p, 'prediction')} className="p-1.5 bg-blue-500/10 text-blue-500 rounded-lg"><FileText size={12}/></button>
                                   <button onClick={() => handleDelete(p.id, 'prediction')} className="p-1.5 bg-red-500/10 text-red-500 rounded-lg"><Database size={12}/></button>
@@ -550,8 +550,8 @@ export default function Admin() {
                                   </div>
                                   {p.status === 'pending' ? (
                                      <div className="grid grid-cols-2 gap-2">
-                                        <button onClick={() => handlePaymentAction(p.id, 'approved', p.userId, true)} className="bg-green-500/20 text-green-500 py-1.5 rounded-lg text-[8px] font-black uppercase hover:bg-green-500 hover:text-black transition-all">ONAY</button>
-                                        <button onClick={() => handlePaymentAction(p.id, 'rejected', p.userId, false)} className="bg-red-500/20 text-red-500 py-1.5 rounded-lg text-[8px] font-black uppercase hover:bg-red-500 hover:text-white transition-all">RED</button>
+                                        <button onClick={() => handlePaymentAction(p.id, 'approved', p.userId)} className="bg-green-500/20 text-green-500 py-1.5 rounded-lg text-[8px] font-black uppercase hover:bg-green-500 hover:text-black transition-all">ONAY</button>
+                                        <button onClick={() => handlePaymentAction(p.id, 'rejected', p.userId)} className="bg-red-500/20 text-red-500 py-1.5 rounded-lg text-[8px] font-black uppercase hover:bg-red-500 hover:text-white transition-all">RED</button>
                                      </div>
                                   ) : (
                                      <div className={`text-center py-1 rounded-lg text-[8px] font-black uppercase ${p.status === 'approved' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
@@ -600,7 +600,7 @@ export default function Admin() {
                     })()}
                   </div>
                   <div>
-                    <h2 className="text-2xl font-black italic tracking-tight">{sections.find(s => s.id === activeSection)?.label} Ekle</h2>
+                    <h2 className="text-2xl font-black italic tracking-tight">{sections.find(s => s.id === activeSection)?.label} {activeSection === 'users' ? 'Yönetimi' : (editId ? 'Güncelle' : 'Ekle')}</h2>
                     <p className="text-gray-500 text-xs font-medium">Lütfen tüm bilgileri eksiksiz doldurun.</p>
                   </div>
                 </div>
@@ -626,7 +626,10 @@ export default function Admin() {
                              <input type="text" placeholder="CTA Linki" value={formData.ctaLink} onChange={e => setFormData({...formData, ctaLink: e.target.value})} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-sm" />
                              <input type="text" placeholder="Görsel URL" value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-sm" />
                              <input type="number" placeholder="Sıralama (0-9)" value={formData.orderIndex} onChange={e => setFormData({...formData, orderIndex: Number(e.target.value)})} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-sm" />
-                             <button type="submit" disabled={loading} className="w-full bg-[#00e5ff] text-black font-bold p-4 rounded-xl uppercase hover:bg-white transition-colors">Ekle</button>
+                             <div className="flex space-x-4">
+                               <button type="submit" disabled={loading} className="flex-1 bg-[#00e5ff] text-black font-bold p-4 rounded-xl uppercase hover:bg-white transition-colors">{editId ? 'Güncelle' : 'Ekle'}</button>
+                               {editId && <button type="button" onClick={() => { setEditId(null); setFormData({ ...formData, title: '', subTitle: '', ctaText: '', ctaLink: '', image: '', orderIndex: 0 }); }} className="px-8 bg-gray-700 text-white font-bold p-4 rounded-xl uppercase hover:bg-gray-600 transition-colors">İptal</button>}
+                             </div>
                          </form>
                       </div>
                   ) : activeSection !== 'users' ? (
@@ -903,31 +906,16 @@ export default function Admin() {
                   </div>
                   ) : (
                     <div className="space-y-8">
-                      <div>
-                        <h3 className="text-xl font-bold mb-4">Manuel Kullanıcı Ekle</h3>
-                        <form onSubmit={handleCreateUser} className="bg-[#151b27] border border-white/5 rounded-2xl p-6 space-y-4">
-                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                             <input type="text" placeholder="İsim Soyisim" required value={newUser.fullName} onChange={e => setNewUser({...newUser, fullName: e.target.value})} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-sm focus:outline-none focus:border-[#00e5ff]" />
-                             <input type="email" placeholder="E-Posta" required value={newUser.email} onChange={e => setNewUser({...newUser, email: e.target.value})} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-sm focus:outline-none focus:border-[#00e5ff]" />
-                           </div>
-                           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                             <input type="password" placeholder="Şifre" required value={newUser.password} onChange={e => setNewUser({...newUser, password: e.target.value})} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-sm focus:outline-none focus:border-[#00e5ff]" />
-                             <div className="flex items-center space-x-4">
-                                <label className="flex items-center space-x-2 text-sm text-gray-400">
-                                  <input type="checkbox" checked={newUser.isVip} onChange={e => setNewUser({...newUser, isVip: e.target.checked})} className="rounded bg-[#0a0a0a] border-white/10 text-[#00e5ff]" />
-                                  <span>VIP Üye Olarak Ekle</span>
-                                </label>
-                                <label className="flex items-center space-x-2 text-sm text-gray-400">
-                                   <input type="checkbox" checked={newUser.role === 'admin'} onChange={e => setNewUser({...newUser, role: e.target.checked ? 'admin' : 'user'})} className="rounded bg-[#0a0a0a] border-white/10 text-[#00e5ff]" />
-                                   <span>Admin Yap</span>
-                                </label>
-                             </div>
-                           </div>
-                           <button type="submit" disabled={loading} className="w-full bg-[#00e5ff] text-black font-bold p-4 rounded-xl uppercase hover:bg-white transition-colors">
-                               Ekle
-                            </button>
-                         </form>
-                      </div>
+                       <h3 className="text-xl font-bold mb-4">Kullanıcı Yönetimi</h3>
+                       <div className="bg-[#151b27] border border-[#00e5ff]/20 rounded-[30px] p-8 text-center mt-4">
+                          <Users size={48} className="text-[#00e5ff] mx-auto mb-4 opacity-50" />
+                          <p className="text-sm text-gray-500 mb-2 font-medium">
+                             Yeni kullanıcılar "Kayıt Ol" sayfası üzerinden eklenmelidir.
+                          </p>
+                          <p className="text-[11px] text-gray-600 font-bold uppercase italic">
+                             Buradan mevcut kullanıcıların ödemelerini ve VIP durumlarını yönetebilirsiniz.
+                          </p>
+                       </div>
                     </div>
                   )}
               </motion.div>

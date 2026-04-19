@@ -38,7 +38,7 @@ export default function Login() {
         setError('Giriş yapılırken bir hata oluştu. Lütfen tekrar deneyin.');
       }
     } finally {
-      if(loading) setLoading(false);
+      setLoading(false);
     }
   };
 
