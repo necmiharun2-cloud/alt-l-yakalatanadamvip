@@ -758,16 +758,16 @@ export default function Admin() {
                                   <div className="flex flex-col flex-1 truncate pr-4">
                                       <span className="font-bold truncate">{p.title} {p.track ? `(${p.track})` : ''}</span>
                                       {p.subTitle && <span className="text-xs text-gray-400 mt-1 truncate">{p.subTitle}</span>}
-                                      <span className="text-xs text-gray-500 font-mono mt-1">/{p.slug} - {new Date(p.createdAt).toLocaleDateString('tr-TR')}</span>
+                                      <span className="text-xs text-gray-500 font-mono mt-1">/{p.slug} - {p.createdAt?.toDate ? p.createdAt.toDate().toLocaleDateString('tr-TR') : (p.createdAt ? new Date(p.createdAt).toLocaleDateString('tr-TR') : '')}</span>
                                   </div>
                                   <div className="flex items-center space-x-2 shrink-0">
-                                    {activeSection === 'guncel' && (
+                                    {p.type === 'current' && (
                                       <button 
                                          type="button" 
                                          onClick={() => handleMarkSuccess(p)} 
-                                         className="text-green-500 text-sm bg-green-500/10 px-3 py-1 rounded-lg hover:bg-green-500 hover:text-white transition-all font-black uppercase tracking-tighter"
+                                         className="text-green-500 text-xs bg-green-500/10 border border-green-500/20 px-3 py-1.5 rounded-lg hover:bg-green-500 hover:text-white transition-all font-black uppercase tracking-tight"
                                       >
-                                        BAŞARILI
+                                        BAŞARILI YAP
                                       </button>
                                     )}
                                     <button type="button" onClick={() => handleEdit(p, 'prediction')} className="text-blue-500 text-sm bg-blue-500/10 px-3 py-1 rounded-lg">Düzenle</button>
