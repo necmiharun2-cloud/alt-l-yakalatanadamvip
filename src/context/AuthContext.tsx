@@ -33,12 +33,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let unsubscribeProfile: (() => void) | null = null;
+
     const unsubscribeAuth = onAuthStateChanged(auth, async (firebaseUser) => {
       setUser(firebaseUser);
       
+      // Cleanup previous profile listener if it exists
+      if (unsubscribeProfile) {
+        unsubscribeProfile();
+        unsubscribeProfile = null;
+      }
+
       if (firebaseUser) {
         // Listen for profile changes
-        const unsubscribeProfile = onSnapshot(doc(db, 'users', firebaseUser.uid), (docSnap) => {
+        unsubscribeProfile = onSnapshot(doc(db, 'users', firebaseUser.uid), (docSnap) => {
           if (docSnap.exists()) {
             setProfile({ id: docSnap.id, ...docSnap.data() } as UserProfile);
           } else {
@@ -50,15 +58,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           console.error('Profile snapshot error:', error);
           setLoading(false);
         });
-
-        return () => unsubscribeProfile();
       } else {
         setProfile(null);
         setLoading(false);
       }
     });
 
-    return () => unsubscribeAuth();
+    // Cleanup auth listener and any active profile listeners
+    return () => {
+      if (unsubscribeProfile) unsubscribeProfile();
+      unsubscribeAuth();
+    };
   }, []);
 
   const signOut = async () => {

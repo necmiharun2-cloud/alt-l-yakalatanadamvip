@@ -50,16 +50,15 @@ export default function Register() {
         createdAt: serverTimestamp()
       });
 
-      // 3. Send Email Verification
-      await sendEmailVerification(user);
-      await auth.signOut();
+      // 3. Send Email Verification (Arka planda gönderilir, kullanıcıyı engellemez)
+      sendEmailVerification(user).catch(console.error);
 
-      setSuccessMessage('Kayıt başarılı! Lütfen giriş yapmadan önce e-posta adresinize (veya spam klasörüne) gelen bağlantıya tıklayarak hesabınızı doğrulayın.');
+      setSuccessMessage('Kayıt başarılı! Hesabınıza giriş yapıldı, yönlendiriliyorsunuz...');
       
-      // Let them read the message for a few seconds before redirecting, or just keep them here.
+      // Auto-login and navigate to homepage immediately
       setTimeout(() => {
-        navigate('/login');
-      }, 5000);
+        navigate('/');
+      }, 2000);
     } catch (err: any) {
       console.error('Registration error:', err);
       if (err.code === 'auth/email-already-in-use') {

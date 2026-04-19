@@ -28,15 +28,8 @@ export default function Login() {
     setError('');
     setResetMessage('');
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth, email, password);
       
-      if (!userCredential.user.emailVerified) {
-        await auth.signOut();
-        setError('Lütfen e-posta adresinize gönderilen bağlantıya tıklayarak hesabınızı doğrulayın. (Spam kutusunu kontrol etmeyi unutmayın)');
-        setLoading(false);
-        return;
-      }
-
       navigate('/');
     } catch (err: any) {
       console.error('Login error:', err);
