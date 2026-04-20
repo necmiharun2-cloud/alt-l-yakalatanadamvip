@@ -5,6 +5,7 @@
 
 import { Facebook, Twitter, Youtube, Instagram, Star, CreditCard, Send, Apple, Smartphone, ArrowUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { APP_LOGO_URL } from '../constants';
 
 export default function Footer() {
   const scrollToTop = () => {
@@ -105,9 +106,17 @@ export default function Footer() {
       <div className="bg-[#191919] py-12 px-4 shadow-2xl">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between space-y-8 md:space-y-0 text-gray-500">
-            <p className="text-[10px] font-black uppercase tracking-widest text-center md:text-left">
-              Copyright © 2026 Tüm hakları saklıdır ALTILIYAKALATANADAM.com
-            </p>
+            <div className="flex items-center space-x-4">
+              <img 
+                src={APP_LOGO_URL} 
+                alt="Logo" 
+                className="w-16 h-16 object-contain"
+                referrerPolicy="no-referrer"
+              />
+              <p className="text-[10px] font-black uppercase tracking-widest text-center md:text-left">
+                Copyright © 2026 Tüm hakları saklıdır ALTILIYAKALATANADAM.com
+              </p>
+            </div>
             
             <div className="flex items-center space-x-6">
               <a href="#" className="flex items-center space-x-2 grayscale hover:grayscale-0 transition-all opacity-70 hover:opacity-100">

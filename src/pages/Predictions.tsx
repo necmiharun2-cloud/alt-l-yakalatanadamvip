@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { motion } from 'motion/react';
+import { APP_LOGO_URL } from '../constants';
 import { ChevronRight, ChevronLeft, Eye, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -42,10 +43,18 @@ export default function Predictions() {
       <main className="max-w-7xl mx-auto py-20 px-4">
         {/* Title Section */}
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 border-l-4 border-[#ffcc00] pl-8 gap-6">
-            <div>
-              <h1 className="text-3xl md:text-5xl font-black italic tracking-tighter mb-4">
-                Güncel <span className="text-gray-400">Tahminler</span>
-              </h1>
+            <div className="flex items-center space-x-6">
+              <img 
+                src={APP_LOGO_URL} 
+                alt="Güncel Tahminler" 
+                className="w-16 h-16 object-contain"
+                referrerPolicy="no-referrer"
+              />
+              <div>
+                <h1 className="text-3xl md:text-5xl font-black italic tracking-tighter mb-4">
+                  Güncel <span className="text-gray-400">Tahminler</span>
+                </h1>
+              </div>
             </div>
             <div className="max-w-md text-xs md:text-sm text-gray-500 font-medium">
               At yarışı tutkunları için en güncel analizler, ALTILIYAKALATANADAM tahminleri ve yarış öncesi stratejiler için VIP üye olmayı unutmayın!

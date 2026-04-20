@@ -25,6 +25,12 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [isSavingPrefs, setIsSavingPrefs] = useState(false);
   
+  React.useEffect(() => {
+    if (!loading && !user && !profile) {
+      navigate('/');
+    }
+  }, [user, profile, loading, navigate]);
+
   const [notifState, setNotifState] = useState({
     email: profile?.notificationSettings?.email ?? true,
     browser: profile?.notificationSettings?.browser ?? true,

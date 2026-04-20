@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route, useNavigate, useParams } from 'react-rout
 import { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, Apple, Smartphone, Lock, Star, CheckCircle } from 'lucide-react';
 import { motion } from 'motion/react';
+import { APP_LOGO_URL } from './constants';
 
 // Components
 import Header from './components/Header';
@@ -205,11 +206,19 @@ function HomePage() {
 
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start gap-16 relative z-10">
           <div className="w-full md:w-1/2 relative z-10">
-            <div className="border-l-4 border-[#ffcc00] pl-8 mb-10">
-              <h2 className="text-5xl md:text-6xl font-black italic tracking-tighter leading-none mb-2">
-                Güncel <span className="text-gray-400">Tahminler</span>
-              </h2>
-              <p className="text-gray-500 font-bold uppercase text-[10px] tracking-[0.2em]">Profesyonel Yarış Analizleri</p>
+            <div className="border-l-4 border-[#ffcc00] pl-8 mb-10 flex items-center space-x-6">
+              <img 
+                src={APP_LOGO_URL} 
+                alt="Güncel Tahminler" 
+                className="w-16 h-16 object-contain"
+                referrerPolicy="no-referrer"
+              />
+              <div>
+                <h2 className="text-5xl md:text-6xl font-black italic tracking-tighter leading-none mb-2">
+                  Güncel <span className="text-gray-400">Tahminler</span>
+                </h2>
+                <p className="text-gray-500 font-bold uppercase text-[10px] tracking-[0.2em]">Profesyonel Yarış Analizleri</p>
+              </div>
             </div>
 
             {latestPrediction ? (
@@ -284,8 +293,12 @@ function HomePage() {
                     </div>
                     <div className="h-10 w-px bg-white/5 hidden sm:block"></div>
                     <div className="flex items-center space-x-2">
-                      <Apple size={18} className="text-white/10" />
-                      <Smartphone size={18} className="text-white/10" />
+                      <img 
+                        src={APP_LOGO_URL} 
+                        alt="Logo" 
+                        className="w-6 h-6 object-contain opacity-20"
+                        referrerPolicy="no-referrer"
+                      />
                     </div>
                   </div>
                   
@@ -300,8 +313,13 @@ function HomePage() {
                 animate={{ opacity: 1 }}
                 className="bg-[#0a0a0a] rounded-[40px] p-16 border border-white/5 shadow-2xl relative flex flex-col items-center justify-center text-center"
               >
-                  <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mb-6">
-                    <Smartphone size={32} className="text-gray-600" />
+                  <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mb-6 overflow-hidden">
+                    <img 
+                      src={APP_LOGO_URL} 
+                      alt="Logo" 
+                      className="w-12 h-12 object-contain opacity-50"
+                      referrerPolicy="no-referrer"
+                    />
                   </div>
                   <h3 className="text-2xl font-black italic text-gray-400 mb-3">Tahmin Bekleniyor</h3>
                   <p className="text-gray-500 text-sm max-w-sm leading-relaxed">Bu pist ({selectedTrack}) için şu an güncel bir tahmin girişi yapılmamıştır. Diğer pistleri inceleyebilir veya daha sonra tekrar kontrol edebilirsiniz.</p>

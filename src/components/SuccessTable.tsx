@@ -8,6 +8,7 @@ import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { dbService } from '../services/dbService';
 import { formatDate } from '../lib/utils';
+import { APP_LOGO_URL } from '../constants';
 
 export default function SuccessTable() {
   const navigate = useNavigate();
@@ -88,8 +89,8 @@ export default function SuccessTable() {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 rounded-full overflow-hidden border border-white/20">
-                          <img src={p.image || "https://i.pravatar.cc/100?u=altili"} alt={p.authorName} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                        <div className="w-8 h-8 rounded-full overflow-hidden border border-white/20 bg-black">
+                          <img src={p.image || APP_LOGO_URL} alt={p.authorName} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
                         </div>
                         <span className="font-medium">{p.authorName || 'ALTILIYAKALATANADAM'}</span>
                       </div>

@@ -6,27 +6,28 @@
 import React from 'react';
 import { Apple, Smartphone } from 'lucide-react';
 import { motion } from 'motion/react';
+import { APP_LOGO_URL } from '../constants';
 
 export default function FeatureCards() {
   const cards = [
     {
       title: "Vip Üye Olun",
       desc: "Türkiye'nin En İyi At Yarışı Sitesi ALTILIYAKALATANADAM.com'a Hemen Üye Olun",
-      image: "https://picsum.photos/seed/goldhorse/400/400",
+      image: APP_LOGO_URL,
       hasRightArrow: true,
       hasBottomYellow: false,
     },
     {
       title: "Cazip Bankoları Alın",
       desc: "Banko Tahminleri Alın Sıradışı Teklerle Ayrıcalığı Yaşayın",
-      image: "https://picsum.photos/seed/gentleman2/400/400",
+      image: APP_LOGO_URL,
       hasRightArrow: false,
       hasBottomYellow: true,
     },
     {
       title: "ALTILIYAKALATANADAM",
       desc: "ALTILIYAKALATANADAM.com Farkı İle Altılı Ganyanı Yakalama Oranınızı Artırın",
-      image: "https://picsum.photos/seed/happy3/400/400",
+      image: APP_LOGO_URL,
       hasRightArrow: false,
       hasBottomYellow: false,
     }

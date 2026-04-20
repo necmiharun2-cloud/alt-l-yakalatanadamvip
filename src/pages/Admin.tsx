@@ -11,6 +11,7 @@ import { LayoutDashboard, FileText, CheckCircle, ListPlus, Send, ImageIcon, Type
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../lib/firebase';
+import { APP_LOGO_URL } from '../constants';
 import { 
   collection, 
   getDocs, 
@@ -32,7 +33,7 @@ export default function Admin() {
 
   useEffect(() => {
     if (!authLoading && (!profile || profile.role !== 'admin')) {
-      navigate('/giris-yap');
+      navigate('/');
     }
   }, [profile, authLoading, navigate]);
 
@@ -460,11 +461,21 @@ export default function Admin() {
       
       <main className="max-w-7xl mx-auto py-20 px-4">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 border-l-4 border-[#ffcc00] pl-8">
-          <div>
-            <h1 className="text-5xl font-black italic tracking-tighter mb-4">
-              Admin <span className="text-gray-400">Paneli</span>
-            </h1>
-            <p className="text-gray-500 text-sm font-medium">Sitedeki içerikleri buradan yönetebilir ve yeni gönderiler ekleyebilirsiniz.</p>
+          <div className="flex items-center space-x-6">
+            <div className="w-16 h-16 rounded-2xl bg-[#ffcc00] p-2 flex items-center justify-center shadow-lg shadow-[#ffcc00]/20">
+              <img 
+                src={APP_LOGO_URL} 
+                alt="Admin Logo" 
+                className="w-full h-full object-contain"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+            <div>
+              <h1 className="text-5xl font-black italic tracking-tighter mb-4">
+                Admin <span className="text-gray-400">Paneli</span>
+              </h1>
+              <p className="text-gray-500 text-sm font-medium">Sitedeki içerikleri buradan yönetebilir ve yeni gönderiler ekleyebilirsiniz.</p>
+            </div>
           </div>
           <div className="flex items-center space-x-4">
             <button 

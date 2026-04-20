@@ -7,6 +7,7 @@ import { Mail, LayoutGrid, LogIn, UserPlus, CreditCard, ChevronDown, User, Star,
 import { motion, AnimatePresence } from 'motion/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { APP_LOGO_URL } from '../constants';
 import { useState, useEffect } from 'react';
 
 const getDaysRemaining = (expiryStr?: string) => {
@@ -31,6 +32,11 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
+
   const menuItems = [
     { label: 'Güncel Tahminler', path: '/tahminler' },
     { label: 'Başarılı Tahminler', path: '/basarili-tahminler' },
@@ -45,7 +51,13 @@ export default function Header() {
       <div className={`bg-[#ffcc00] py-2 px-4 border-b border-[#000]/5 transition-all duration-300 ${scrolled ? 'shadow-md py-1' : ''}`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-1 group">
+          <Link to="/" className="flex items-center space-x-2 group">
+            <img 
+              src={APP_LOGO_URL} 
+              alt="ALTILIYAKALATANADAM Logo" 
+              className="w-8 h-8 object-contain group-hover:scale-110 transition-transform"
+              referrerPolicy="no-referrer"
+            />
             <span className="text-sm md:text-lg font-black text-black italic tracking-tighter uppercase leading-none">
               ALTILIYAKALA<span className="text-gray-900 opacity-60">TANADAM</span>
             </span>
@@ -53,12 +65,18 @@ export default function Header() {
 
           {/* Right Section (Help, Login, Register) */}
           <div className="hidden lg:flex items-center space-x-3">
+            {user && (
+               <button className="relative p-2 text-black hover:opacity-70 transition-all mr-2">
+                 <Bell size={20} />
+                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-600 rounded-full border border-[#ffcc00]"></span>
+               </button>
+            )}
             {/* Yardım */}
             <Link to="/kurumsal/yardim" className="flex items-center space-x-1 text-black text-[11px] font-black uppercase tracking-tight hover:opacity-70 mr-2">
               <div className="w-5 h-5 bg-black rounded-full flex items-center justify-center">
                 <HelpCircle size={12} className="text-[#ffcc00]" />
               </div>
-              <span>YARDIM</span>
+              <span className="!text-black uppercase">YARDIM</span>
             </Link>
 
             {!user ? (
@@ -115,8 +133,8 @@ export default function Header() {
             ) : (
               <div className="flex items-center space-x-4">
                  <div className="flex flex-col items-end">
-                   <span className="text-[10px] font-bold text-black uppercase tracking-tight">Hoşgeldiniz</span>
-                   <span className="text-xs font-black text-black">{profile?.fullName || user?.email}</span>
+                   <span className="text-[10px] font-bold !text-black uppercase tracking-tight">Hoşgeldiniz</span>
+                   <span className="text-xs font-black !text-black">{profile?.fullName || user?.email}</span>
                  </div>
                  
                  {profile?.isVip && (
@@ -133,10 +151,19 @@ export default function Header() {
                         <span className="text-[10px] font-black uppercase tracking-tight hidden sm:inline">Panel</span>
                       </Link>
                     )}
-                    <Link to="/bilgilerim" className="p-2 bg-black text-[#ffcc00] rounded-lg hover:bg-gray-800 transition-colors">
-                      <User size={16} />
+                    <Link to="/bilgilerim" className="p-1 bg-black text-[#ffcc00] rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center">
+                       {profile?.role === 'admin' ? (
+                          <img 
+                            src={APP_LOGO_URL} 
+                            className="w-10 h-10 object-contain"
+                            alt="Admin"
+                            referrerPolicy="no-referrer"
+                          />
+                       ) : (
+                          <div className="p-1"><User size={16} /></div>
+                       )}
                     </Link>
-                    <button onClick={signOut} className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                    <button onClick={handleSignOut} className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
                       <LogOut size={16} />
                     </button>
                  </div>
