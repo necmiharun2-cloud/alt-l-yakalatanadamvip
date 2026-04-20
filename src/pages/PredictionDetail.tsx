@@ -196,7 +196,7 @@ export default function PredictionDetail() {
                       </div>
                     )}
 
-                    <div className="whitespace-pre-wrap">{prediction.content}</div>
+                    <div className="whitespace-pre-wrap break-all text-gray-300 leading-relaxed min-h-[100px]">{prediction.content}</div>
                 </div>
 
                 {!showContent && (

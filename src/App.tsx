@@ -191,7 +191,7 @@ function HomePage() {
                 </div>
                 <div className="flex-1">
                   <h4 className="text-2xl font-black italic tracking-tighter uppercase text-white mb-4">Bugünün <span className="text-[#00e5ff]">Ücretsiz</span> Örneği</h4>
-                  <p className="text-gray-300 font-bold whitespace-pre-wrap leading-relaxed">{latestPrediction.sampleContent}</p>
+                  <p className="text-gray-300 font-bold whitespace-pre-wrap leading-relaxed break-all">{latestPrediction.sampleContent}</p>
                 </div>
                 {!showContent && (
                   <button onClick={() => navigate('/vip')} className="px-8 py-4 bg-[#00e5ff] text-black font-black uppercase tracking-widest text-[10px] rounded-full hover:bg-white transition-all shadow-lg shadow-[#00e5ff]/20 shrink-0">
@@ -232,7 +232,7 @@ function HomePage() {
                   <div className={`transition-all duration-700 ${showContent ? 'blur-0 opacity-100' : 'blur-xl opacity-20 pointer-events-none'}`}>
                      <div className="space-y-6">
                         {latestPrediction.content?.split('\n').map((line: string, i: number) => (
-                           <p key={i} className="text-gray-400 leading-relaxed font-medium">{line}</p>
+                           <p key={i} className="text-gray-400 leading-relaxed font-medium break-all">{line}</p>
                         ))}
                         {/* If formatted content exists */}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
