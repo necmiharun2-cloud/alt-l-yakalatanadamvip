@@ -3,11 +3,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Mail, LayoutGrid, LogIn, UserPlus, CreditCard, ChevronDown, User, Star, MessageSquare, LogOut, Settings, Tv, Menu, X } from 'lucide-react';
+import { Mail, LayoutGrid, LogIn, UserPlus, CreditCard, ChevronDown, User, Star, MessageSquare, LogOut, Settings, Tv, Menu, X, Bell } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useState, useEffect } from 'react';
+
+const getDaysRemaining = (expiryStr?: string) => {
+  if (!expiryStr) return null;
+  const days = Math.ceil((new Date(expiryStr).getTime() - new Date().getTime()) / 86400000);
+  return days > 0 ? days : 0;
+};
 
 export default function Header() {
   const { user, profile, loading, signOut } = useAuth();
@@ -72,6 +78,27 @@ export default function Header() {
               </>
             ) : (
               <>
+                {profile?.isVip && profile?.vipExpiry && getDaysRemaining(profile.vipExpiry) !== null && (
+                  <div className="flex items-center space-x-1 px-2 py-0.5 bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 text-yellow-500 rounded-full border border-yellow-500/30 mr-2">
+                    <Star size={10} className="fill-yellow-500 animate-pulse" />
+                    <span className="text-[10px] font-black tracking-widest whitespace-nowrap">VIP Kalan: {getDaysRemaining(profile.vipExpiry)} Gün</span>
+                  </div>
+                )}
+                <div className="relative group cursor-pointer mr-2 pt-1 pb-1">
+                  <Bell size={14} className="text-[#00e5ff] hover:text-white transition-colors" />
+                  <div className="absolute top-0 right-[-2px] w-2 h-2 bg-red-500 rounded-full animate-pulse blur-[1px]"></div>
+                  <div className="absolute top-0 right-[-2px] w-2 h-2 bg-red-500 rounded-full"></div>
+                  {/* Dropdown */}
+                  <div className="absolute right-0 top-8 w-64 bg-[#151b27] border border-white/10 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 p-2 pointer-events-none group-hover:pointer-events-auto">
+                     <div className="text-[10px] font-black uppercase text-gray-500 mb-2 px-2 pt-1 border-b border-white/5 pb-2">Bildirimler</div>
+                     <div className="space-y-1">
+                        <div className="p-2 hover:bg-white/5 rounded-xl transition-colors">
+                          <div className="text-[10px] font-bold text-white">Yeni Tahmin Yayında</div>
+                          <div className="text-[9px] text-gray-400 mt-1 line-clamp-1">Günün bankosu ve sürprizi eklendi!</div>
+                        </div>
+                     </div>
+                  </div>
+                </div>
                 <Link to="/bilgilerim" className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors whitespace-nowrap">
                   <User size={12} className="text-[#00e5ff]" />
                   <span className="hidden sm:inline">Hoşgeldiniz: <span className="text-white font-bold">{profile?.fullName || user?.email}</span></span>

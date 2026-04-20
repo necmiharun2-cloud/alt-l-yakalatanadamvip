@@ -40,6 +40,14 @@ export default function Dashboard() {
      )
   }
 
+  const getDaysRemaining = (expiryStr?: string) => {
+    if (!expiryStr) return 0;
+    const expiryDate = new Date(expiryStr);
+    const timeDiff = expiryDate.getTime() - new Date().getTime();
+    const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    return days > 0 ? days : 0;
+  };
+  
   const handleUpdatePhone = async (e: React.FormEvent) => {
       e.preventDefault();
       setLoading(true);
@@ -127,6 +135,98 @@ export default function Dashboard() {
           {/* Main Content Area */}
           <div className="flex-1 space-y-12">
             
+            {/* VIP Status Card */}
+            {profile?.isVip && (
+              <motion.section 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-gradient-to-br from-[#0c121e] to-[#0a0a0a] border border-[#00e5ff]/20 rounded-[40px] p-8 md:p-12 shadow-[0_0_50px_-12px_rgba(0,229,255,0.15)] relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+                  <Star size={120} className="text-[#00e5ff]" />
+                </div>
+                
+                <h3 className="text-xl font-black italic mb-6 tracking-tight uppercase flex items-center space-x-3 text-[#00e5ff]">
+                  <Star size={20} />
+                  <span>VIP <span className="text-white">Abonelik Durumu</span></span>
+                </h3>
+                
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8 relative z-10">
+                   <div>
+                     <div className="text-[10px] font-black uppercase tracking-widest text-[#00e5ff] mb-1">Paket Tipi</div>
+                     <div className="font-bold text-sm">{profile.vipPackage || '1 Aylık VIP'}</div>
+                   </div>
+                   <div>
+                     <div className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">Başlangıç</div>
+                     <div className="font-bold text-sm">
+                       {profile.vipStartDate ? new Date(profile.vipStartDate).toLocaleDateString('tr-TR') : '-'}
+                     </div>
+                   </div>
+                   <div>
+                     <div className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">Bitiş</div>
+                     <div className="font-bold text-sm text-red-400">
+                       {profile.vipExpiry ? new Date(profile.vipExpiry).toLocaleDateString('tr-TR') : '-'}
+                     </div>
+                   </div>
+                   <div>
+                     <div className="text-[10px] font-black uppercase tracking-widest text-[#00e5ff] mb-1">Kalan Süre</div>
+                     <div className="font-black text-2xl italic tracking-tighter">
+                       {getDaysRemaining(profile.vipExpiry)} <span className="text-[10px] font-bold text-gray-400 not-italic">Gün</span>
+                     </div>
+                   </div>
+                </div>
+                
+                <button onClick={() => navigate('/vip')} className="w-full md:w-auto px-8 py-3 bg-[#00e5ff] text-black font-black uppercase text-[10px] tracking-widest rounded-full hover:bg-white transition-all shadow-lg shadow-[#00e5ff]/20">
+                  Şimdi Yenile
+                </button>
+              </motion.section>
+            )}
+            
+            {/* Notification and Preferences Section */}
+            <motion.section 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-[#0a0a0a] border border-white/5 rounded-[40px] p-8 md:p-12 shadow-2xl"
+            >
+              <h3 className="text-xl font-black italic mb-6 tracking-tight uppercase">
+                Bildirim <span className="text-gray-400">Ayarları</span>
+              </h3>
+              <p className="text-gray-500 text-xs font-medium mb-8">Hangi durumlarda size bildirim göndereceğimizi seçin.</p>
+              
+              <div className="space-y-4 mb-12">
+                 <div className="flex items-center space-x-3 bg-[#151b27] p-5 rounded-2xl border border-white/10">
+                    <input type="checkbox" id="emailNotif" defaultChecked className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#00e5ff] focus:ring-[#00e5ff]" />
+                    <label htmlFor="emailNotif" className="text-sm font-bold text-gray-400 cursor-pointer">E-Posta Bildirimleri Al</label>
+                 </div>
+                 <div className="flex items-center space-x-3 bg-[#151b27] p-5 rounded-2xl border border-white/10">
+                    <input type="checkbox" id="browserNotif" defaultChecked className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#00e5ff] focus:ring-[#00e5ff]" />
+                    <label htmlFor="browserNotif" className="text-sm font-bold text-gray-400 cursor-pointer">Tarayıcı (Push) Bildirimleri Al</label>
+                 </div>
+                 <div className="flex items-center space-x-3 bg-[#151b27] p-5 rounded-2xl border border-white/10">
+                    <input type="checkbox" id="vipNotif" defaultChecked className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#00e5ff] focus:ring-[#00e5ff]" />
+                    <label htmlFor="vipNotif" className="text-sm font-bold text-gray-400 cursor-pointer">Sadece VIP İçerik ve Önemli Duyuruları Al</label>
+                 </div>
+              </div>
+
+              <h3 className="text-xl font-black italic mb-6 tracking-tight uppercase">
+                Favori <span className="text-gray-400">Pistlerim</span>
+              </h3>
+              <p className="text-gray-500 text-xs font-medium mb-8">Ana sayfada öncelikli görmek istediğiniz pistleri seçin.</p>
+
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+                {['İstanbul', 'İzmir', 'Ankara', 'Adana', 'Şanlıurfa', 'Bursa'].map((track) => (
+                   <div key={track} className="flex items-center space-x-3 bg-[#151b27] p-4 rounded-xl border border-white/10">
+                      <input type="checkbox" id={`track-${track}`} defaultChecked={track === 'İstanbul' || track === 'İzmir'} className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#00e5ff] focus:ring-[#00e5ff]" />
+                      <label htmlFor={`track-${track}`} className="text-sm font-bold text-gray-400 cursor-pointer">{track}</label>
+                   </div>
+                ))}
+              </div>
+
+              <button className="w-full p-4 bg-transparent border-2 border-[#00e5ff] rounded-2xl font-black text-[#00e5ff] uppercase text-xs tracking-[0.2em] hover:bg-[#00e5ff] hover:text-white transition-all transform active:scale-95">
+                Tercihleri Kaydet
+              </button>
+            </motion.section>
+
             {/* E-Posta Değiştir */}
             <motion.section 
               initial={{ opacity: 0, y: 20 }}

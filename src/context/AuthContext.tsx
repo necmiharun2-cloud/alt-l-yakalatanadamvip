@@ -11,6 +11,8 @@ interface UserProfile {
   role: 'user' | 'vip' | 'admin';
   isVip: boolean;
   vipExpiry?: any;
+  vipPackage?: string;
+  vipStartDate?: any;
 }
 
 interface AuthContextType {

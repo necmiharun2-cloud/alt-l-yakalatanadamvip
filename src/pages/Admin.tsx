@@ -51,6 +51,11 @@ export default function Admin() {
     views: 0,
     type: 'current',
     role: 'user',
+    dailyBanko: '',
+    dailySurpriz: '',
+    dailyTemplate: '',
+    isFreeSample: false,
+    sampleContent: '',
     // slider specific
     ctaText: '',
     ctaLink: '',
@@ -101,6 +106,11 @@ export default function Admin() {
           content: formData.content,
           image: formData.image,
           track: formData.track,
+          dailyBanko: formData.dailyBanko || '',
+          dailySurpriz: formData.dailySurpriz || '',
+          dailyTemplate: formData.dailyTemplate || '',
+          isFreeSample: formData.isFreeSample || false,
+          sampleContent: formData.sampleContent || '',
           type: activeSection === 'guncel' ? 'current' : 'success',
           winnings: formData.winnings,
           views: Number(formData.views),
@@ -135,7 +145,8 @@ export default function Admin() {
         track: 'İstanbul', winnings: '', views: 0, type: 'current', 
         role: 'user', ctaText: '', ctaLink: '', orderIndex: 0, 
         bankName: '', iban: '', receiverName: '', ayaklar: Array(6).fill(''), 
-        fiyat: '', commentsEnabled: true 
+        fiyat: '', commentsEnabled: true,
+        dailyBanko: '', dailySurpriz: '', dailyTemplate: '', isFreeSample: false, sampleContent: ''
       });
       setEditId(null);
       await fetchAdminData();
@@ -166,7 +177,8 @@ export default function Admin() {
             subTitle: '', track: 'İstanbul', winnings: '', type: 'current', 
             role: 'user', ctaText: '', ctaLink: '', orderIndex: 0, 
             bankName: '', iban: '', receiverName: '', ayaklar: Array(6).fill(''), 
-            fiyat: '', commentsEnabled: true
+            fiyat: '', commentsEnabled: true,
+            dailyBanko: '', dailySurpriz: '', dailyTemplate: '', isFreeSample: false, sampleContent: ''
           });
       } else if (type === 'prediction') {
           setFormData({ 
@@ -179,6 +191,11 @@ export default function Admin() {
             winnings: item.winnings || '', 
             views: item.views || 0, 
             type: item.isPublic ? 'isPublic' : '',
+            dailyBanko: item.dailyBanko || '',
+            dailySurpriz: item.dailySurpriz || '',
+            dailyTemplate: item.dailyTemplate || '',
+            isFreeSample: item.isFreeSample || false,
+            sampleContent: item.sampleContent || '',
             ayaklar: Array.isArray(item.ayaklar) ? 
               [...item.ayaklar, ...Array(Math.max(0, 6 - (Number(item.ayaklar.length) || 0))).fill('')].slice(0, 6) 
               : Array(6).fill(''),
@@ -195,7 +212,8 @@ export default function Admin() {
             bankName: item.bankName || '', 
             iban: item.iban || '', 
             receiverName: item.receiverName || '', 
-            ayaklar: Array(6).fill(''), fiyat: '', commentsEnabled: true
+            ayaklar: Array(6).fill(''), fiyat: '', commentsEnabled: true,
+            dailyBanko: '', dailySurpriz: '', dailyTemplate: '', isFreeSample: false, sampleContent: ''
           });
       } else if (type === 'slider') {
           setFormData({ 
@@ -210,24 +228,31 @@ export default function Admin() {
             ctaLink: item.ctaLink || '', 
             orderIndex: item.orderIndex || 0, 
             bankName: '', iban: '', receiverName: '', 
-            ayaklar: Array(6).fill(''), fiyat: '', commentsEnabled: true
+            ayaklar: Array(6).fill(''), fiyat: '', commentsEnabled: true,
+            dailyBanko: '', dailySurpriz: '', dailyTemplate: '', isFreeSample: false, sampleContent: ''
           });
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
-  const handleMarkSuccess = async (prediction: any) => {
-    const winnings = window.prompt("Tebrikler! Kazanılan ikramiye tutarını giriniz (Örn: 511.589,37 TL):", prediction.winnings || "");
-    if (winnings === null) return; 
+  const handleResultMarking = async (prediction: any, result: 'won' | 'partial' | 'lost') => {
+    let winnings = prediction.winnings || "";
+    if (result === 'won' || result === 'partial') {
+        const w = window.prompt("Tebrikler! Kazanılan ikramiye tutarını giriniz (Örn: 511.589,37 TL):", winnings);
+        if (w === null) return;
+        winnings = w;
+    }
     
     setLoading(true);
     try {
       await updateDoc(doc(db, 'predictions', prediction.id), {
-        type: 'success',
+        type: (result === 'won' || result === 'partial') ? 'success' : 'current',
+        resultStatus: result,
         winnings: winnings,
-        updatedAt: serverTimestamp()
+        updatedAt: serverTimestamp(),
+        settledAt: serverTimestamp()
       });
-      setMessage('Tahmin başarıyla başarılı listesine taşındı!');
+      setMessage('Tahmin sonucu başarıyla güncellendi!');
       await fetchAdminData();
     } catch (err: any) {
       console.error(err);
@@ -320,11 +345,22 @@ export default function Admin() {
       }
   };
 
-  const handlePaymentAction = async (paymentId: string, status: string, userId: string) => {
+  const handlePaymentAction = async (paymentId: string, status: string, userId: string, paymentPackage?: string) => {
     try {
       await updateDoc(doc(db, 'payments', paymentId), { status });
       if (status === 'approved') {
-        await updateDoc(doc(db, 'users', userId), { isVip: true, role: 'vip' });
+        const pld: any = { isVip: true, role: 'vip', vipStatus: 'active' };
+        if (paymentPackage) {
+           pld.vipPackage = paymentPackage;
+           pld.vipStartDate = new Date().toISOString();
+           const now = new Date();
+           let addDays = 30;
+           if (paymentPackage.includes('3')) addDays = 90;
+           else if (paymentPackage.includes('6')) addDays = 180;
+           now.setDate(now.getDate() + addDays);
+           pld.vipExpiry = now.toISOString();
+        }
+        await updateDoc(doc(db, 'users', userId), pld);
       }
       await fetchAdminData();
       setMessage('İşlem başarılı!');
@@ -414,7 +450,8 @@ export default function Admin() {
                       track: 'İstanbul', winnings: '', views: 0, type: 'current', 
                       role: 'user', ctaText: '', ctaLink: '', orderIndex: 0, 
                       bankName: '', iban: '', receiverName: '', ayaklar: Array(6).fill(''), 
-                      fiyat: '', commentsEnabled: true 
+                      fiyat: '', commentsEnabled: true,
+                      dailyBanko: '', dailySurpriz: '', dailyTemplate: '', isFreeSample: false, sampleContent: ''
                     });
                   }}
                   className={`flex-shrink-0 lg:flex-shrink lg:w-full flex items-center space-x-3 md:space-x-4 p-4 md:p-5 rounded-xl md:rounded-2xl transition-all group ${
@@ -449,11 +486,15 @@ export default function Admin() {
                                 </div>
                              </div>
                              <div className="flex flex-col space-y-1 ml-2 shrink-0">
-                                <button onClick={() => handleMarkSuccess(p)} className="p-1.5 bg-green-500/10 text-green-500 rounded-lg hover:bg-green-500 hover:text-black transition-all" title="Başarılı Yap">
-                                  <CheckCircle size={12}/>
-                                </button>
-                                <button onClick={() => handleEdit(p, 'prediction')} className="p-1.5 bg-blue-500/10 text-blue-500 rounded-lg hover:bg-blue-500 hover:text-white transition-all"><FileText size={12}/></button>
-                                <button onClick={() => handleDelete(p.id, 'prediction')} className="p-1.5 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all"><Database size={12}/></button>
+                                <div className="flex items-center space-x-1 mb-1">
+                                  <button onClick={() => handleResultMarking(p, 'won')} className="p-1 bg-green-500/10 text-green-500 rounded hover:bg-green-500 hover:text-black transition-all" title="Tuttu">W</button>
+                                  <button onClick={() => handleResultMarking(p, 'partial')} className="p-1 bg-yellow-500/10 text-yellow-500 rounded hover:bg-yellow-500 hover:text-black transition-all" title="Kısmen Tuttu">P</button>
+                                  <button onClick={() => handleResultMarking(p, 'lost')} className="p-1 bg-red-500/10 text-red-500 rounded hover:bg-red-500 hover:text-white transition-all" title="Yattı">L</button>
+                                </div>
+                                <div className="flex items-center space-x-1">
+                                  <button onClick={() => handleEdit(p, 'prediction')} className="flex-1 p-1.5 bg-blue-500/10 text-blue-500 rounded-lg hover:bg-blue-500 hover:text-white transition-all flex justify-center"><FileText size={12}/></button>
+                                  <button onClick={() => handleDelete(p.id, 'prediction')} className="flex-1 p-1.5 bg-red-500/10 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-all flex justify-center"><Database size={12}/></button>
+                                </div>
                              </div>
                           </div>
                       </div>
@@ -546,7 +587,7 @@ export default function Admin() {
                                   </div>
                                   {p.status === 'pending' ? (
                                      <div className="grid grid-cols-2 gap-2">
-                                        <button onClick={() => handlePaymentAction(p.id, 'approved', p.userId)} className="bg-green-500/20 text-green-500 py-1.5 rounded-lg text-[8px] font-black uppercase hover:bg-green-500 hover:text-black transition-all">ONAY</button>
+                                <button onClick={() => handlePaymentAction(p.id, 'approved', p.userId, p.package)} className="bg-green-500/20 text-green-500 py-1.5 rounded-lg text-[8px] font-black uppercase hover:bg-green-500 hover:text-black transition-all">ONAY</button>
                                         <button onClick={() => handlePaymentAction(p.id, 'rejected', p.userId)} className="bg-red-500/20 text-red-500 py-1.5 rounded-lg text-[8px] font-black uppercase hover:bg-red-500 hover:text-white transition-all">RED</button>
                                      </div>
                                   ) : (
@@ -789,18 +830,46 @@ export default function Admin() {
                           </div>
 
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-2">
-                              <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Şablon Fiyatı</label>
-                              <div className="relative">
-                                <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-600 font-black italic">₺</span>
-                                <input 
-                                  type="text" 
-                                  placeholder="Örn: 1.250 ₺"
-                                  value={formData.fiyat}
-                                  onChange={e => setFormData({...formData, fiyat: e.target.value})}
-                                  className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 pl-10 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors"
-                                />
-                              </div>
+                            <div className="space-y-4">
+                                <div className="space-y-2">
+                                  <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Şablon Fiyatı</label>
+                                  <div className="relative">
+                                    <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-600 font-black italic">₺</span>
+                                    <input 
+                                      type="text" 
+                                      placeholder="Örn: 1.250 ₺"
+                                      value={formData.fiyat}
+                                      onChange={e => setFormData({...formData, fiyat: e.target.value})}
+                                      className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 pl-10 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors"
+                                    />
+                                  </div>
+                                </div>
+                                
+                                <div className="space-y-2">
+                                  <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Günün Bankosu</label>
+                                  <input type="text" placeholder="Örn: 4. Ayak 6 Nolu At" value={formData.dailyBanko} onChange={e => setFormData({...formData, dailyBanko: e.target.value})} className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors" />
+                                </div>
+                                <div className="space-y-2">
+                                  <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Günün Sürprizi</label>
+                                  <input type="text" placeholder="Örn: 2. Ayak 9 Nolu At" value={formData.dailySurpriz} onChange={e => setFormData({...formData, dailySurpriz: e.target.value})} className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors" />
+                                </div>
+                                <div className="space-y-2">
+                                  <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Hazır Altılı Şablonu</label>
+                                  <input type="text" placeholder="Örn: 1-5 / 3-6 / 2 / 6 / 1-4-8 / 5-7" value={formData.dailyTemplate} onChange={e => setFormData({...formData, dailyTemplate: e.target.value})} className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors" />
+                                </div>
+                            </div>
+                            
+                            <div className="space-y-4">
+                                <div className="flex items-center space-x-3 bg-[#151b27] p-5 rounded-2xl border border-white/10">
+                                   <input type="checkbox" id="isFreeSample" checked={formData.isFreeSample} onChange={e => setFormData({...formData, isFreeSample: e.target.checked})} className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#00e5ff] focus:ring-[#00e5ff]" />
+                                   <label htmlFor="isFreeSample" className="text-sm font-bold text-[#00e5ff] cursor-pointer">Ücretsiz Örnek Alanı Aktif</label>
+                                </div>
+                                {formData.isFreeSample && (
+                                   <div className="space-y-2">
+                                     <label className="text-[10px] font-black uppercase tracking-widest text-[#00e5ff] ml-2">Ücretsiz Örnek İçerik</label>
+                                     <textarea rows={6} placeholder="Ücretsiz gösterilecek örnek tahmini buraya giriniz..." value={formData.sampleContent} onChange={e => setFormData({...formData, sampleContent: e.target.value})} className="w-full bg-[#151b27] border border-[#00e5ff]/50 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors resize-none"></textarea>
+                                   </div>
+                                )}
                             </div>
                           </div>
 

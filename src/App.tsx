@@ -5,7 +5,7 @@
 
 import { BrowserRouter, Routes, Route, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { ChevronLeft, ChevronRight, Apple, Smartphone, Lock } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Apple, Smartphone, Lock, Star, CheckCircle } from 'lucide-react';
 import { motion } from 'motion/react';
 
 // Components
@@ -118,8 +118,8 @@ function HomePage() {
         />
         <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-[#080d16] to-transparent" />
 
-        <div className="max-w-7xl mx-auto flex flex-col items-center relative z-10 mb-12">
-           <div className="w-full flex-wrap md:flex-nowrap flex justify-center md:justify-between gap-2 border-b border-white/5 pb-8 mb-12">
+        <div className="max-w-7xl mx-auto flex flex-col items-center relative z-10 mb-8">
+           <div className="w-full flex-wrap md:flex-nowrap flex justify-center md:justify-between gap-2 border-b border-white/5 pb-8 mb-8">
               {TRACKS.map(track => {
                  const hasPrediction = predictions.some(p => (p.track || 'İstanbul') === track);
                  return (
@@ -140,6 +140,60 @@ function HomePage() {
               })}
            </div>
         </div>
+
+        {latestPrediction && (latestPrediction.dailyBanko || latestPrediction.dailySurpriz || latestPrediction.dailyTemplate) && (
+          <div className="max-w-7xl mx-auto w-full mb-12 relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {latestPrediction.dailyBanko && (
+                <div className="bg-[#0c121e]/80 backdrop-blur-md border border-[#00e5ff]/30 p-6 rounded-[32px] hover:shadow-[0_0_30px_rgba(0,229,255,0.1)] transition-all relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#00e5ff]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-[#00e5ff] mb-2 flex items-center space-x-2 relative z-10">
+                    <Star size={12} />
+                    <span>Günün Bankosu</span>
+                  </h4>
+                  <div className="font-bold text-xl italic text-white drop-shadow-md relative z-10">{latestPrediction.dailyBanko}</div>
+                </div>
+              )}
+              {latestPrediction.dailySurpriz && (
+                <div className="bg-[#0c121e]/80 backdrop-blur-md border border-[#ff00ff]/30 p-6 rounded-[32px] hover:shadow-[0_0_30px_rgba(255,0,255,0.1)] transition-all relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#ff00ff]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-[#ff00ff] mb-2 flex items-center space-x-2 relative z-10">
+                    <Star size={12} />
+                    <span>Günün Sürprizi</span>
+                  </h4>
+                  <div className="font-bold text-xl italic text-white drop-shadow-md relative z-10">{latestPrediction.dailySurpriz}</div>
+                </div>
+              )}
+              {latestPrediction.dailyTemplate && (
+                <div className="bg-[#0c121e]/80 backdrop-blur-md border border-yellow-500/30 p-6 rounded-[32px] hover:shadow-[0_0_30px_rgba(234,179,8,0.1)] transition-all relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-yellow-500 mb-2 flex items-center space-x-2 relative z-10">
+                    <CheckCircle size={12} />
+                    <span>Hazır Şablon</span>
+                  </h4>
+                  <div className="font-black text-xl italic text-white tracking-widest drop-shadow-md relative z-10">{latestPrediction.dailyTemplate}</div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {latestPrediction?.isFreeSample && latestPrediction.sampleContent && (
+             <div className="max-w-7xl mx-auto w-full mb-16 relative z-10 bg-[#0c121e]/90 backdrop-blur-md border border-[#00e5ff]/20 shadow-2xl p-8 rounded-[40px] flex flex-col md:flex-row items-center md:items-start gap-8">
+                <div className="w-16 h-16 bg-[#00e5ff]/10 rounded-full flex items-center justify-center shrink-0 border border-[#00e5ff]/30">
+                  <Star size={32} className="text-[#00e5ff] animate-pulse" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-2xl font-black italic tracking-tighter uppercase text-white mb-4">Bugünün <span className="text-[#00e5ff]">Ücretsiz</span> Örneği</h4>
+                  <p className="text-gray-300 font-bold whitespace-pre-wrap leading-relaxed">{latestPrediction.sampleContent}</p>
+                </div>
+                {!showContent && (
+                  <button onClick={() => navigate('/vip')} className="px-8 py-4 bg-[#00e5ff] text-black font-black uppercase tracking-widest text-[10px] rounded-full hover:bg-white transition-all shadow-lg shadow-[#00e5ff]/20 shrink-0">
+                    Tamamını Gör
+                  </button>
+                )}
+             </div>
+        )}
 
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start gap-16 relative z-10">
           <div className="w-full md:w-1/2 relative z-10">
