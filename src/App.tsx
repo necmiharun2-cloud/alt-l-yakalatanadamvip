@@ -85,8 +85,14 @@ const TRACKS = [
 function HomePage() {
   const navigate = useNavigate();
   const [predictions, setPredictions] = useState<any[]>([]);
-  const [selectedTrack, setSelectedTrack] = useState<string>('İstanbul');
   const { profile } = useAuth();
+  const [selectedTrack, setSelectedTrack] = useState<string>('İstanbul');
+
+  useEffect(() => {
+    if (profile?.favoriteTracks && profile.favoriteTracks.length > 0) {
+      setSelectedTrack(profile.favoriteTracks[0]);
+    }
+  }, [profile]);
 
   useEffect(() => {
     const fetchLatest = async () => {

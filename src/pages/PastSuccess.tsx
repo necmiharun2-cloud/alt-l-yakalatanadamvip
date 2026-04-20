@@ -107,7 +107,15 @@ export default function PastSuccess() {
                           <img src="https://i.pravatar.cc/100?u=altili" alt="ALTILIYAKALATANADAM" className="w-8 h-8 rounded-full border border-white/10 group-hover:border-[#00e5ff] transition-colors" />
                           <span className="text-white font-black italic text-xs uppercase group-hover:text-[#00e5ff] transition-colors">{item.authorName || 'ALTILIYAKALATANADAM'}</span>
                         </div>
-                        <div className="text-gray-400 font-bold italic text-sm flex items-center tracking-tight">{item.title}</div>
+                        <div className="text-gray-400 font-bold italic text-sm flex items-center tracking-tight">
+                          <span className="flex-1">{item.title}</span>
+                          {item.resultStatus === 'won' && (
+                            <span className="ml-2 bg-green-500/20 text-green-500 text-[10px] font-black uppercase px-2 py-1 rounded-full border border-green-500/20 whitespace-nowrap">Tuttu</span>
+                          )}
+                          {item.resultStatus === 'partial' && (
+                            <span className="ml-2 bg-orange-500/20 text-orange-500 text-[10px] font-black uppercase px-2 py-1 rounded-full border border-orange-500/20 whitespace-nowrap">Kısmen Tuttu</span>
+                          )}
+                        </div>
                         <div className="text-right text-[#00e5ff] font-black text-lg italic">{item.winnings || '0,00 TL'}</div>
                       </motion.div>
                     ))

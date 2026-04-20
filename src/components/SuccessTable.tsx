@@ -106,7 +106,17 @@ export default function SuccessTable() {
                         <span className="font-medium">{p.authorName || 'ALTILIYAKALATANADAM'}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4">{p.title}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center space-x-2">
+                        <span className="flex-1">{p.title}</span>
+                        {p.resultStatus === 'won' && (
+                          <span className="bg-green-500/20 text-green-500 text-[9px] font-black uppercase px-2 py-1 rounded-full border border-green-500/20 whitespace-nowrap">Tuttu</span>
+                        )}
+                        {p.resultStatus === 'partial' && (
+                          <span className="bg-orange-500/20 text-orange-500 text-[9px] font-black uppercase px-2 py-1 rounded-full border border-orange-500/20 whitespace-nowrap">Kısmen</span>
+                        )}
+                      </div>
+                    </td>
                     <td className="px-6 py-4 text-center font-bold tracking-wide text-[#59b1ff]">
                       {p.winnings || '0,00 TL'}
                     </td>

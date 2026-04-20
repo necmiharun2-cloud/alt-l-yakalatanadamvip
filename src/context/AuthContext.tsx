@@ -13,6 +13,12 @@ interface UserProfile {
   vipExpiry?: any;
   vipPackage?: string;
   vipStartDate?: any;
+  notificationSettings?: {
+    email: boolean;
+    browser: boolean;
+    onlyVip: boolean;
+  };
+  favoriteTracks?: string[];
 }
 
 interface AuthContextType {

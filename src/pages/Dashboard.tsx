@@ -7,12 +7,13 @@ import React, { useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { motion } from 'motion/react';
-import { User, Star, CreditCard, MessageCircle, Mail, LogOut, ChevronRight } from 'lucide-react';
+import { User, Star, CreditCard, MessageCircle, Mail, LogOut, ChevronRight, TrendingUp } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { db, auth } from '../lib/firebase';
-import { doc, updateDoc } from 'firebase/firestore';
+import { doc, updateDoc, collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
 import { updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 'firebase/auth';
+import { formatDate } from '../lib/utils';
 
 export default function Dashboard() {
   const { user, profile, signOut } = useAuth();
@@ -20,8 +21,64 @@ export default function Dashboard() {
 
   const [phone, setPhone] = useState(profile?.phone || '');
   const [passwords, setPasswords] = useState({ currentPassword: '', newPassword: '', newPasswordConfirm: '' });
-  const [messages, setMessages] = useState({ phone: '', password: '' });
+  const [messages, setMessages] = useState({ phone: '', password: '', prefs: '' });
   const [loading, setLoading] = useState(false);
+  const [isSavingPrefs, setIsSavingPrefs] = useState(false);
+  
+  const [notifState, setNotifState] = useState({
+    email: profile?.notificationSettings?.email ?? true,
+    browser: profile?.notificationSettings?.browser ?? true,
+    onlyVip: profile?.notificationSettings?.onlyVip ?? true,
+  });
+  
+  const [selectedTracks, setSelectedTracks] = useState<string[]>(
+    profile?.favoriteTracks && profile.favoriteTracks.length > 0 
+      ? profile.favoriteTracks 
+      : ['İstanbul', 'İzmir']
+  );
+  
+  const [stats, setStats] = useState({ hits7: 0, hits30: 0, total: 0, totalGain: 0 });
+  const [loadingStats, setLoadingStats] = useState(true);
+
+  React.useEffect(() => {
+    const fetchStats = async () => {
+       try {
+          const q = query(collection(db, 'predictions'), where('type', '==', 'success'), orderBy('createdAt', 'desc'), limit(100));
+          const snap = await getDocs(q);
+          const docs = snap.docs.map(d => d.data());
+          let totalSuccess = docs.length;
+          let totalWinnings = docs.reduce((acc, curr) => {
+             if (curr.winnings) {
+                const val = parseFloat(curr.winnings.replace(/[^\d]/g, '')) / 100;
+                return acc + (isNaN(val) ? 0 : val);
+             }
+             return acc;
+          }, 0);
+          
+          const now = Date.now();
+          const hits7 = docs.filter(d => {
+             if(d.createdAt && d.createdAt.toDate) {
+               return (now - d.createdAt.toDate().getTime()) < 7 * 86400000;
+             }
+             return false;
+          }).length;
+          
+          const hits30 = docs.filter(d => {
+             if(d.createdAt && d.createdAt.toDate) {
+               return (now - d.createdAt.toDate().getTime()) < 30 * 86400000;
+             }
+             return false;
+          }).length;
+
+          setStats({ hits7, hits30, total: totalSuccess, totalGain: totalWinnings });
+       } catch (err) {
+         console.error('Failed to fetch stats for dashboard', err);
+       } finally {
+         setLoadingStats(false);
+       }
+    };
+    fetchStats();
+  }, []);
   
   const menuItems = [
     { label: 'Üyelik Bilgileri', badge: profile?.isVip ? 'VIP Üye' : (profile?.role === 'admin' ? 'Admin' : 'Standart Üye'), icon: User, active: true },
@@ -46,6 +103,28 @@ export default function Dashboard() {
     const timeDiff = expiryDate.getTime() - new Date().getTime();
     const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
     return days > 0 ? days : 0;
+  };
+  
+  const handleSavePreferences = async () => {
+      setMessages({ ...messages, prefs: '' });
+      setIsSavingPrefs(true);
+      try {
+        await updateDoc(doc(db, 'users', user.uid), {
+           notificationSettings: notifState,
+           favoriteTracks: selectedTracks
+        });
+        setMessages({ ...messages, prefs: 'Tercihlerin başarıyla kaydedildi.' });
+      } catch (err: any) {
+         setMessages({ ...messages, prefs: err.message || 'Kayıt başarısız.' });
+      } finally {
+         setIsSavingPrefs(false);
+      }
+  };
+
+  const toggleTrack = (track: string) => {
+     setSelectedTracks(prev => 
+       prev.includes(track) ? prev.filter(t => t !== track) : [...prev, track]
+     );
   };
   
   const handleUpdatePhone = async (e: React.FormEvent) => {
@@ -159,13 +238,13 @@ export default function Dashboard() {
                    <div>
                      <div className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">Başlangıç</div>
                      <div className="font-bold text-sm">
-                       {profile.vipStartDate ? new Date(profile.vipStartDate).toLocaleDateString('tr-TR') : '-'}
+                       {profile.vipStartDate ? formatDate(profile.vipStartDate) : '-'}
                      </div>
                    </div>
                    <div>
                      <div className="text-[10px] font-black uppercase tracking-widest text-gray-500 mb-1">Bitiş</div>
                      <div className="font-bold text-sm text-red-400">
-                       {profile.vipExpiry ? new Date(profile.vipExpiry).toLocaleDateString('tr-TR') : '-'}
+                       {profile.vipExpiry ? formatDate(profile.vipExpiry) : '-'}
                      </div>
                    </div>
                    <div>
@@ -182,6 +261,52 @@ export default function Dashboard() {
               </motion.section>
             )}
             
+            {/* Performance Stats Array */}
+            <motion.section 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-[#0a0a0a] border border-[#00e5ff]/10 rounded-[40px] p-8 md:p-12 shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)]"
+            >
+              <h3 className="text-xl font-black italic mb-6 tracking-tight uppercase flex items-center space-x-3 text-white">
+                <TrendingUp size={20} className="text-[#00e5ff]" />
+                <span>Performansım <span className="text-gray-500">(Gözlemlerimiz)</span></span>
+              </h3>
+              <p className="text-gray-500 text-xs font-medium mb-8">Platform genelinde yorumcuların ne kadar kazandırdığının özeti.</p>
+
+              {loadingStats ? (
+                <div className="animate-pulse flex space-x-4">
+                  <div className="flex-1 space-y-4 py-1">
+                    <div className="h-4 bg-white/5 rounded w-3/4"></div>
+                    <div className="space-y-2">
+                      <div className="h-4 bg-white/5 rounded"></div>
+                      <div className="h-4 bg-white/5 rounded w-5/6"></div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="bg-[#151b27] border border-white/5 p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-green-500/50 hover:bg-green-500/5 transition-all">
+                    <div className="text-[10px] font-black uppercase text-gray-500 mb-2">Son 7 Günlük İsabet</div>
+                    <div className="text-2xl font-black text-white">{stats.hits7} <span className="text-sm font-bold text-gray-500">Adet</span></div>
+                  </div>
+                  <div className="bg-[#151b27] border border-white/5 p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-green-500/50 hover:bg-green-500/5 transition-all">
+                    <div className="text-[10px] font-black uppercase text-gray-500 mb-2">Son 30 Günlük İsabet</div>
+                    <div className="text-2xl font-black text-white">{stats.hits30} <span className="text-sm font-bold text-gray-500">Adet</span></div>
+                  </div>
+                  <div className="bg-[#151b27] border border-white/5 p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-blue-500/50 hover:bg-blue-500/5 transition-all">
+                    <div className="text-[10px] font-black uppercase text-gray-500 mb-2">Toplam İsabet</div>
+                    <div className="text-2xl font-black text-blue-400">{stats.total} <span className="text-sm font-bold text-gray-500">Adet</span></div>
+                  </div>
+                  <div className="bg-[#151b27] border border-[#00e5ff]/20 p-4 rounded-2xl flex flex-col items-center justify-center text-center shadow-[0_0_20px_rgba(0,229,255,0.1)]">
+                    <div className="text-[10px] font-black uppercase text-gray-400 mb-2">Toplam Kazanç</div>
+                    <div className="text-xl font-black text-[#00e5ff] italic">
+                       {new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(stats.totalGain)}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </motion.section>
+
             {/* Notification and Preferences Section */}
             <motion.section 
               initial={{ opacity: 0, y: 20 }}
@@ -193,17 +318,19 @@ export default function Dashboard() {
               </h3>
               <p className="text-gray-500 text-xs font-medium mb-8">Hangi durumlarda size bildirim göndereceğimizi seçin.</p>
               
+              {messages.prefs && <div className="text-[#00e5ff] text-sm mb-4 font-bold">{messages.prefs}</div>}
+              
               <div className="space-y-4 mb-12">
                  <div className="flex items-center space-x-3 bg-[#151b27] p-5 rounded-2xl border border-white/10">
-                    <input type="checkbox" id="emailNotif" defaultChecked className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#00e5ff] focus:ring-[#00e5ff]" />
+                    <input type="checkbox" id="emailNotif" checked={notifState.email} onChange={(e) => setNotifState({...notifState, email: e.target.checked})} className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#00e5ff] focus:ring-[#00e5ff]" />
                     <label htmlFor="emailNotif" className="text-sm font-bold text-gray-400 cursor-pointer">E-Posta Bildirimleri Al</label>
                  </div>
                  <div className="flex items-center space-x-3 bg-[#151b27] p-5 rounded-2xl border border-white/10">
-                    <input type="checkbox" id="browserNotif" defaultChecked className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#00e5ff] focus:ring-[#00e5ff]" />
+                    <input type="checkbox" id="browserNotif" checked={notifState.browser} onChange={(e) => setNotifState({...notifState, browser: e.target.checked})} className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#00e5ff] focus:ring-[#00e5ff]" />
                     <label htmlFor="browserNotif" className="text-sm font-bold text-gray-400 cursor-pointer">Tarayıcı (Push) Bildirimleri Al</label>
                  </div>
                  <div className="flex items-center space-x-3 bg-[#151b27] p-5 rounded-2xl border border-white/10">
-                    <input type="checkbox" id="vipNotif" defaultChecked className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#00e5ff] focus:ring-[#00e5ff]" />
+                    <input type="checkbox" id="vipNotif" checked={notifState.onlyVip} onChange={(e) => setNotifState({...notifState, onlyVip: e.target.checked})} className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#00e5ff] focus:ring-[#00e5ff]" />
                     <label htmlFor="vipNotif" className="text-sm font-bold text-gray-400 cursor-pointer">Sadece VIP İçerik ve Önemli Duyuruları Al</label>
                  </div>
               </div>
@@ -214,16 +341,20 @@ export default function Dashboard() {
               <p className="text-gray-500 text-xs font-medium mb-8">Ana sayfada öncelikli görmek istediğiniz pistleri seçin.</p>
 
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-                {['İstanbul', 'İzmir', 'Ankara', 'Adana', 'Şanlıurfa', 'Bursa'].map((track) => (
+                {['İstanbul', 'İzmir', 'Ankara', 'Adana', 'Şanlıurfa', 'Bursa', 'Kocaeli', 'Antalya'].map((track) => (
                    <div key={track} className="flex items-center space-x-3 bg-[#151b27] p-4 rounded-xl border border-white/10">
-                      <input type="checkbox" id={`track-${track}`} defaultChecked={track === 'İstanbul' || track === 'İzmir'} className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#00e5ff] focus:ring-[#00e5ff]" />
+                      <input type="checkbox" id={`track-${track}`} checked={selectedTracks.includes(track)} onChange={() => toggleTrack(track)} className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#00e5ff] focus:ring-[#00e5ff]" />
                       <label htmlFor={`track-${track}`} className="text-sm font-bold text-gray-400 cursor-pointer">{track}</label>
                    </div>
                 ))}
               </div>
 
-              <button className="w-full p-4 bg-transparent border-2 border-[#00e5ff] rounded-2xl font-black text-[#00e5ff] uppercase text-xs tracking-[0.2em] hover:bg-[#00e5ff] hover:text-white transition-all transform active:scale-95">
-                Tercihleri Kaydet
+              <button 
+                onClick={handleSavePreferences} 
+                disabled={isSavingPrefs}
+                className="w-full p-4 bg-transparent border-2 border-[#00e5ff] rounded-2xl font-black text-[#00e5ff] uppercase text-xs tracking-[0.2em] hover:bg-[#00e5ff] hover:text-white transition-all transform active:scale-95 disabled:opacity-50"
+              >
+                {isSavingPrefs ? 'Kaydediliyor...' : 'Tercihleri Kaydet'}
               </button>
             </motion.section>
 
