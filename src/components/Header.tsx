@@ -66,7 +66,10 @@ export default function Header() {
           {/* Right Section (Help, Login, Register) */}
           <div className="hidden lg:flex items-center space-x-3">
             {user && (
-               <button className="relative p-2 text-black hover:opacity-70 transition-all mr-2">
+               <button 
+                 onClick={() => alert('Henüz yeni bildiriminiz bulunmuyor.')}
+                 className="relative p-2 text-black hover:scale-110 transition-all mr-2 cursor-pointer"
+               >
                  <Bell size={20} />
                  <span className="absolute top-1 right-1 w-2 h-2 bg-red-600 rounded-full border border-[#ffcc00]"></span>
                </button>
@@ -151,16 +154,16 @@ export default function Header() {
                         <span className="text-[10px] font-black uppercase tracking-tight hidden sm:inline">Panel</span>
                       </Link>
                     )}
-                    <Link to="/bilgilerim" className="p-1 bg-black text-[#ffcc00] rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center">
+                    <Link to="/bilgilerim" className="p-0.5 bg-white border-2 border-black rounded-lg hover:border-gray-600 transition-all flex items-center justify-center overflow-hidden w-10 h-10 shadow-lg">
                        {profile?.role === 'admin' ? (
                           <img 
                             src={APP_LOGO_URL} 
-                            className="w-10 h-10 object-contain"
+                            className="w-full h-full object-contain"
                             alt="Admin"
                             referrerPolicy="no-referrer"
                           />
                        ) : (
-                          <div className="p-1"><User size={16} /></div>
+                          <div className="text-black"><User size={24} /></div>
                        )}
                     </Link>
                     <button onClick={handleSignOut} className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">

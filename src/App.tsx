@@ -313,11 +313,11 @@ function HomePage() {
                 animate={{ opacity: 1 }}
                 className="bg-[#0a0a0a] rounded-[40px] p-16 border border-white/5 shadow-2xl relative flex flex-col items-center justify-center text-center"
               >
-                  <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mb-6 overflow-hidden">
+                  <div className="w-24 h-24 rounded-full bg-white/10 flex items-center justify-center mb-6 overflow-hidden border border-white/5">
                     <img 
                       src={APP_LOGO_URL} 
                       alt="Logo" 
-                      className="w-12 h-12 object-contain opacity-50"
+                      className="w-16 h-16 object-contain opacity-80"
                       referrerPolicy="no-referrer"
                     />
                   </div>
