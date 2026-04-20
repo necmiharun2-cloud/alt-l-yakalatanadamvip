@@ -27,7 +27,7 @@ export default function Slider() {
   if (loading) {
     return (
       <section className="relative w-full h-[600px] md:h-[700px] overflow-hidden bg-[#050b14] flex items-center justify-center">
-         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#ff0000]"></div>
+         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#ffcc00]"></div>
       </section>
     );
   }
@@ -50,7 +50,7 @@ export default function Slider() {
           style={{ backgroundImage: `url("${items[index].imageUrl}")` }}
         >
           {/* Circular/Oval left dark overlay gradient mimicking the screenshot */}
-          <div className="absolute top-1/2 -translate-y-1/2 -left-[50%] md:-left-[25%] w-[150%] md:w-[70%] h-[200%] bg-[#050505] rounded-full blur-[8px] opacity-95 pointer-events-none" />
+          <div className="absolute top-1/2 -translate-y-1/2 -left-[50%] md:-left-[25%] w-[150%] md:w-[70%] h-[200%] bg-[#0f0f0f] rounded-full blur-[8px] opacity-95 pointer-events-none" />
         </motion.div>
       </AnimatePresence>
 
@@ -70,26 +70,26 @@ export default function Slider() {
                 {items[index].subTitle}
             </p>
             <div>
-              <a href={items[index].ctaLink} className="inline-flex items-center space-x-3 bg-[#111111] hover:bg-[#1a1a1a] border border-white/10 text-white px-8 py-4 rounded-[30px] font-bold text-sm transition-all group shadow-2xl">
+              <a href={items[index].ctaLink} className="inline-flex items-center space-x-3 bg-[#191919] hover:bg-[#222222] border border-white/10 text-white px-8 py-4 rounded-[30px] font-bold text-sm transition-all group shadow-2xl">
                   <span>{items[index].ctaText}</span>
-                  <ArrowRight size={16} className="text-[#ff0000] group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight size={16} className="text-[#ffcc00] group-hover:translate-x-1 transition-transform" />
               </a>
             </div>
          </motion.div>
       </div>
 
       {/* Floating 18 Years Experience Box (Bottom Left) */}
-      <div className="absolute left-4 md:left-8 lg:left-[calc(50%-600px)] bottom-12 flex items-center bg-[#ff0000] rounded-2xl overflow-hidden shadow-2xl z-20">
+      <div className="absolute left-4 md:left-8 lg:left-[calc(50%-600px)] bottom-12 flex items-center bg-[#ffcc00] rounded-2xl overflow-hidden shadow-2xl z-20">
         <div className="flex flex-col items-center justify-center py-4 px-6 text-white border-r border-[#d35400]">
           <span className="text-4xl font-black leading-none drop-shadow-md">18</span>
           <span className="text-[10px] uppercase font-black tracking-widest mt-1 text-white/90">Yıllık Deneyim</span>
         </div>
-        <div className="flex flex-col bg-[#111111]">
+        <div className="flex flex-col bg-[#191919]">
           <button onClick={next} className="p-3 bg-[#181818] hover:bg-[#252525] border-b border-black transition-colors group cursor-pointer">
-            <ChevronRight size={18} className="text-white group-hover:text-[#ff0000] transition-colors" />
+            <ChevronRight size={18} className="text-white group-hover:text-[#ffcc00] transition-colors" />
           </button>
           <button onClick={prev} className="p-3 bg-[#181818] hover:bg-[#252525] transition-colors group cursor-pointer">
-            <ChevronLeft size={18} className="text-white group-hover:text-[#ff0000] transition-colors" />
+            <ChevronLeft size={18} className="text-white group-hover:text-[#ffcc00] transition-colors" />
           </button>
         </div>
       </div>

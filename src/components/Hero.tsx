@@ -19,7 +19,7 @@ export default function Hero() {
 
       <div className="relative max-w-7xl mx-auto h-full flex items-center px-4">
         {/* Experience Box (Floating left) */}
-        <div className="absolute left-4 bottom-20 flex items-center bg-[#ff0000] rounded-xl overflow-hidden shadow-2xl z-20">
+        <div className="absolute left-4 bottom-20 flex items-center bg-[#ffcc00] rounded-xl overflow-hidden shadow-2xl z-20">
           <div className="flex flex-col items-center justify-center p-6 text-white border-r border-[#d35400]">
             <span className="text-5xl font-black leading-none">18</span>
             <span className="text-[10px] uppercase font-bold tracking-widest mt-1">Yıllık Deneyim</span>
@@ -41,19 +41,19 @@ export default function Hero() {
           transition={{ duration: 0.8 }}
           className="max-w-xl bg-black/40 backdrop-blur-md p-10 rounded-[40px] border border-white/10"
         >
-          <span className="inline-block px-4 py-1 bg-[#ff0000] text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-6 italic">
+          <span className="inline-block px-4 py-1 bg-[#ffcc00] text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-6 italic">
             ALTILIYAKALATANADAM'dan
           </span>
           <h1 className="text-4xl md:text-6xl font-black text-white leading-[1.1] mb-6 tracking-tighter">
             ALTILIYAKALATANADAM'dan Yine Büyük <br />
-            <span className="text-white">İkramiye</span> <span className="text-[#ff0000]">511.589,37 TL</span>
+            <span className="text-white">İkramiye</span> <span className="text-[#ffcc00]">511.589,37 TL</span>
           </h1>
           <p className="text-gray-300 text-lg mb-8 font-medium">
             Kazanmanın gidiş hattını takip edin, profesyonel at yarışı tahminleri ile şansınızı artırın.
           </p>
           
           <div className="flex items-center space-x-4">
-            <button className="bg-[#ff0000] hover:bg-white hover:text-black text-white px-8 py-4 rounded-full font-black uppercase tracking-wider text-xs flex items-center space-x-3 transition-all transform hover:scale-105 shadow-xl">
+            <button className="bg-[#ffcc00] hover:bg-white hover:text-black text-black px-8 py-4 rounded-full font-black uppercase tracking-wider text-xs flex items-center space-x-3 transition-all transform hover:scale-105 shadow-xl">
               <span>Hemen Başla</span>
               <ChevronRight size={18} />
             </button>
@@ -69,7 +69,7 @@ export default function Hero() {
         {[1, 2, 3].map((i) => (
           <div 
             key={i} 
-            className={`w-2 h-2 rounded-full transition-all ${i === 1 ? 'bg-[#ff0000] w-8' : 'bg-white/30'}`}
+            className={`w-2 h-2 rounded-full transition-all ${i === 1 ? 'bg-[#ffcc00] w-8' : 'bg-white/30'}`}
           />
         ))}
       </div>

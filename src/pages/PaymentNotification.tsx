@@ -107,7 +107,7 @@ export default function PaymentNotification() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[#0f0f0f] text-white">
       <Header />
       
       <main className="max-w-7xl mx-auto py-20 px-4">
@@ -122,13 +122,13 @@ export default function PaymentNotification() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-[#1a1a1a] border-l-4 border-[#ff0000] rounded-2xl p-8 mb-12 shadow-2xl relative overflow-hidden group"
+          className="bg-[#222222] border-l-4 border-[#ffcc00] rounded-2xl p-8 mb-12 shadow-2xl relative overflow-hidden group"
         >
           <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
             <CreditCard size={120} />
           </div>
           <div className="flex items-center space-x-4 mb-6">
-            <div className="bg-[#ff0000] p-2 rounded-lg">
+            <div className="bg-[#ffcc00] p-2 rounded-lg">
               <CreditCard size={20} className="text-white" />
             </div>
             <h3 className="text-xl font-black italic">Banka Bilgileri</h3>
@@ -136,7 +136,7 @@ export default function PaymentNotification() {
           <div className="flex flex-col md:flex-row gap-6 flex-wrap">
             {banks.map(bank => (
               <div key={bank.id} className="flex-1 min-w-[300px] bg-black/40 p-6 rounded-2xl border border-white/5">
-                <p className="text-[#ff0000] font-black text-lg mb-2">{bank.bankName}</p>
+                <p className="text-[#ffcc00] font-black text-lg mb-2">{bank.bankName}</p>
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-500 text-[10px] font-bold uppercase tracking-widest">IBAN:</span>
                   <span className="text-white font-mono text-xs tracking-tighter">{bank.iban}</span>
@@ -152,7 +152,7 @@ export default function PaymentNotification() {
             )}
           </div>
           <div className="mt-4 flex items-center space-x-2 text-[10px] text-gray-500 italic">
-            <AlertCircle size={12} className="text-[#ff0000]" />
+            <AlertCircle size={12} className="text-[#ffcc00]" />
             <span>Gönderilen bildirimler yönetim panelinde görünür. Onaylandığında üyeliğiniz otomatik güncellenir.</span>
           </div>
         </motion.div>
@@ -171,7 +171,7 @@ export default function PaymentNotification() {
                   <select 
                     required
                     value={formData.package}
-                    className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-4 focus:outline-none focus:border-[#ff0000] transition-colors appearance-none"
+                    className="w-full bg-[#222222] border border-white/10 rounded-2xl p-4 focus:outline-none focus:border-[#ffcc00] transition-colors appearance-none"
                     onChange={(e) => setFormData({...formData, package: e.target.value})}
                   >
                     <option value="">Paket seçin</option>
@@ -186,7 +186,7 @@ export default function PaymentNotification() {
                   <select 
                     required
                     value={formData.bank}
-                    className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-4 focus:outline-none focus:border-[#ff0000] transition-colors appearance-none"
+                    className="w-full bg-[#222222] border border-white/10 rounded-2xl p-4 focus:outline-none focus:border-[#ffcc00] transition-colors appearance-none"
                     onChange={(e) => setFormData({...formData, bank: e.target.value})}
                   >
                     <option value="">Banka seçin</option>
@@ -203,7 +203,7 @@ export default function PaymentNotification() {
                     placeholder="Örn: 123456789"
                     required
                     value={formData.reference}
-                    className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-4 focus:outline-none focus:border-[#ff0000] transition-colors"
+                    className="w-full bg-[#222222] border border-white/10 rounded-2xl p-4 focus:outline-none focus:border-[#ffcc00] transition-colors"
                     onChange={(e) => setFormData({...formData, reference: e.target.value})}
                   />
                 </div>
@@ -211,10 +211,10 @@ export default function PaymentNotification() {
                 {/* File Upload Area */}
                 <div>
                   <label className="block text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-2 flex items-center space-x-2">
-                    <MessageCircle size={10} className="text-[#ff0000]" />
+                    <MessageCircle size={10} className="text-[#ffcc00]" />
                     <span>Dekont Yüklemesi (Zorunlu)</span>
                   </label>
-                  <div className={`relative border-2 border-dashed rounded-2xl p-8 transition-all flex flex-col items-center justify-center text-center cursor-pointer group ${file ? 'border-[#ff0000] bg-[#ff0000]/5' : 'border-white/10 hover:border-white/20'}`}>
+                  <div className={`relative border-2 border-dashed rounded-2xl p-8 transition-all flex flex-col items-center justify-center text-center cursor-pointer group ${file ? 'border-[#ffcc00] bg-[#ffcc00]/5' : 'border-white/10 hover:border-white/20'}`}>
                     <input 
                       type="file" 
                       accept="image/*,.pdf"
@@ -224,18 +224,18 @@ export default function PaymentNotification() {
                     />
                     {!file ? (
                       <>
-                        <Upload size={32} className="text-gray-600 mb-4 group-hover:text-[#ff0000] transition-colors" />
+                        <Upload size={32} className="text-gray-600 mb-4 group-hover:text-[#ffcc00] transition-colors" />
                         <p className="text-xs text-gray-500 font-bold">Dekont yüklemek için tıklayın</p>
                         <p className="text-[10px] text-gray-600 mt-1">JPG, PNG, PDF (Max 5MB)</p>
                       </>
                     ) : (
                       <div className="flex flex-col items-center">
-                        <Check size={32} className="text-[#ff0000] mb-4" />
+                        <Check size={32} className="text-[#ffcc00] mb-4" />
                         <p className="text-xs text-white font-bold mb-2">{file.name}</p>
                         <button 
                           type="button" 
                           onClick={() => setFile(null)}
-                          className="text-[#ff0000] hover:text-white transition-colors"
+                          className="text-[#ffcc00] hover:text-white transition-colors"
                         >
                           <Trash2 size={20} />
                         </button>
@@ -251,7 +251,7 @@ export default function PaymentNotification() {
                     placeholder="0"
                     required
                     value={formData.amount}
-                    className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-4 focus:outline-none focus:border-[#ff0000] transition-colors"
+                    className="w-full bg-[#222222] border border-white/10 rounded-2xl p-4 focus:outline-none focus:border-[#ffcc00] transition-colors"
                     onChange={(e) => setFormData({...formData, amount: e.target.value})}
                   />
                 </div>
@@ -261,7 +261,7 @@ export default function PaymentNotification() {
                   <textarea 
                     placeholder="İşlem saati, açıklama, dekont notu..."
                     value={formData.note}
-                    className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-4 focus:outline-none focus:border-[#ff0000] transition-colors h-32 resize-none"
+                    className="w-full bg-[#222222] border border-white/10 rounded-2xl p-4 focus:outline-none focus:border-[#ffcc00] transition-colors h-32 resize-none"
                     onChange={(e) => setFormData({...formData, note: e.target.value})}
                   />
                 </div>
@@ -270,7 +270,7 @@ export default function PaymentNotification() {
                   <button 
                     type="submit"
                     disabled={loading}
-                    className="w-full p-4 bg-transparent border-2 border-[#ff0000] rounded-2xl font-black text-[#ff0000] uppercase tracking-widest hover:bg-[#ff0000] hover:text-white transition-all transform active:scale-95 flex items-center justify-center space-x-3 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full p-4 bg-transparent border-2 border-[#ffcc00] rounded-2xl font-black text-[#ffcc00] uppercase tracking-widest hover:bg-[#ffcc00] hover:text-black transition-all transform active:scale-95 flex items-center justify-center space-x-3 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Send size={18} />
                     <span>{loading ? 'Gönderiliyor...' : 'Ödeme Bildirimini Gönder'}</span>
@@ -308,9 +308,9 @@ export default function PaymentNotification() {
               ) : (
                  <div className="space-y-4">
                    {myPayments.map((p, idx) => (
-                      <div key={idx} className="bg-[#1a1a1a] border border-white/5 rounded-2xl p-6 relative group overflow-hidden">
+                      <div key={idx} className="bg-[#222222] border border-white/5 rounded-2xl p-6 relative group overflow-hidden">
                          <div className="flex justify-between items-start mb-2">
-                            <span className="text-[#ff0000] font-black uppercase tracking-widest text-sm">{p.bank}</span>
+                            <span className="text-[#ffcc00] font-black uppercase tracking-widest text-sm">{p.bank}</span>
                             <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border ${p.status === 'pending' ? 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20' : (p.status === 'approved' ? 'bg-green-500/10 text-green-500 border-green-500/20' : 'bg-red-500/10 text-red-500 border-red-500/20')}`}>
                                {p.status === 'pending' ? 'Bekliyor' : (p.status === 'approved' ? 'Onaylandı' : 'Reddedildi')}
                             </span>
@@ -330,7 +330,7 @@ export default function PaymentNotification() {
                             </div>
                             <div className="flex justify-between text-xs pt-1">
                                <span className="text-gray-500 font-bold">TUTAR:</span>
-                               <span className="text-[#ff0000] font-black">₺ {p.amount}</span>
+                               <span className="text-[#ffcc00] font-black">₺ {p.amount}</span>
                             </div>
                          </div>
                       </div>

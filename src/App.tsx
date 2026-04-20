@@ -119,12 +119,12 @@ function HomePage() {
       <FeatureCards />
       <SuccessTable />
       
-      <section className="bg-[#050505] py-24 px-4 overflow-hidden relative">
+      <section className="bg-[#0f0f0f] py-24 px-4 overflow-hidden relative">
         <div 
           className="absolute right-0 top-0 bottom-0 w-2/3 bg-cover bg-left opacity-20 blur-sm brightness-50" 
           style={{ backgroundImage: 'url("https://picsum.photos/seed/horseracing/1920/1080")' }} 
         />
-        <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-[#050505] to-transparent" />
+        <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-[#0f0f0f] to-transparent" />
 
         <div className="max-w-7xl mx-auto flex flex-col items-center relative z-10 mb-8">
            <div className="w-full flex-wrap md:flex-nowrap flex justify-center md:justify-between gap-2 border-b border-white/5 pb-8 mb-8">
@@ -136,9 +136,9 @@ function HomePage() {
                      onClick={() => setSelectedTrack(track)}
                      className={`flex-1 px-4 py-4 rounded-2xl text-[10px] lg:text-xs font-black uppercase tracking-widest transition-all text-center whitespace-nowrap border-b-2 ${
                        selectedTrack === track
-                         ? 'bg-[#ff0000]/10 text-[#ff0000] border-[#ff0000]'
+                         ? 'bg-[#ffcc00]/10 text-[#ffcc00] border-[#ffcc00]'
                          : hasPrediction 
-                           ? 'bg-transparent text-white border-white/20 hover:bg-white/5 hover:border-white/40'
+                           ? 'bg-transparent text-black border-white/20 hover:bg-white/5 hover:border-white/40'
                            : 'bg-transparent text-gray-600 border-transparent hover:bg-white/5 opacity-50'
                      }`}
                    >
@@ -153,9 +153,9 @@ function HomePage() {
           <div className="max-w-7xl mx-auto w-full mb-12 relative z-10">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {latestPrediction.dailyBanko && (
-                <div className="bg-[#111111]/80 backdrop-blur-md border border-[#ff0000]/30 p-6 rounded-[32px] hover:shadow-[0_0_30px_rgba(255,0,0,0.1)] transition-all relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#ff0000]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-[#ff0000] mb-2 flex items-center space-x-2 relative z-10">
+                <div className="bg-[#191919]/80 backdrop-blur-md border border-[#ffcc00]/30 p-6 rounded-[32px] hover:shadow-[0_0_30px_rgba(255, 199, 0,0.1)] transition-all relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#ffcc00]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-[#ffcc00] mb-2 flex items-center space-x-2 relative z-10">
                     <Star size={12} />
                     <span>Günün Bankosu</span>
                   </h4>
@@ -163,9 +163,9 @@ function HomePage() {
                 </div>
               )}
               {latestPrediction.dailySurpriz && (
-                <div className="bg-[#111111]/80 backdrop-blur-md border border-[#ff00ff]/30 p-6 rounded-[32px] hover:shadow-[0_0_30px_rgba(255,0,255,0.1)] transition-all relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#ff00ff]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-[#ff00ff] mb-2 flex items-center space-x-2 relative z-10">
+                <div className="bg-[#191919]/80 backdrop-blur-md border border-[#ffcc00]/30 p-6 rounded-[32px] hover:shadow-[0_0_30px_rgba(255,204,0,0.1)] transition-all relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#ffcc00]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-[#ffcc00] mb-2 flex items-center space-x-2 relative z-10">
                     <Star size={12} />
                     <span>Günün Sürprizi</span>
                   </h4>
@@ -173,9 +173,9 @@ function HomePage() {
                 </div>
               )}
               {latestPrediction.dailyTemplate && (
-                <div className="bg-[#111111]/80 backdrop-blur-md border border-yellow-500/30 p-6 rounded-[32px] hover:shadow-[0_0_30px_rgba(234,179,8,0.1)] transition-all relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-yellow-500 mb-2 flex items-center space-x-2 relative z-10">
+                <div className="bg-[#191919]/80 backdrop-blur-md border border-[#ffcc00]/30 p-6 rounded-[32px] hover:shadow-[0_0_30px_rgba(255,204,0,0.1)] transition-all relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#ffcc00]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-[#ffcc00] mb-2 flex items-center space-x-2 relative z-10">
                     <CheckCircle size={12} />
                     <span>Hazır Şablon</span>
                   </h4>
@@ -187,16 +187,16 @@ function HomePage() {
         )}
 
         {latestPrediction?.isFreeSample && latestPrediction.sampleContent && (
-             <div className="max-w-7xl mx-auto w-full mb-16 relative z-10 bg-[#111111]/90 backdrop-blur-md border border-[#ff0000]/20 shadow-2xl p-8 rounded-[40px] flex flex-col md:flex-row items-center md:items-start gap-8">
-                <div className="w-16 h-16 bg-[#ff0000]/10 rounded-full flex items-center justify-center shrink-0 border border-[#ff0000]/30">
-                  <Star size={32} className="text-[#ff0000] animate-pulse" />
+             <div className="max-w-7xl mx-auto w-full mb-16 relative z-10 bg-[#191919]/90 backdrop-blur-md border border-[#ffcc00]/20 shadow-2xl p-8 rounded-[40px] flex flex-col md:flex-row items-center md:items-start gap-8">
+                <div className="w-16 h-16 bg-[#ffcc00]/10 rounded-full flex items-center justify-center shrink-0 border border-[#ffcc00]/30">
+                  <Star size={32} className="text-[#ffcc00] animate-pulse" />
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-2xl font-black italic tracking-tighter uppercase text-white mb-4">Bugünün <span className="text-[#ff0000]">Ücretsiz</span> Örneği</h4>
+                  <h4 className="text-2xl font-black italic tracking-tighter uppercase text-white mb-4">Bugünün <span className="text-[#ffcc00]">Ücretsiz</span> Örneği</h4>
                   <p className="text-gray-300 font-bold whitespace-pre-wrap leading-relaxed break-all">{latestPrediction.sampleContent}</p>
                 </div>
                 {!showContent && (
-                  <button onClick={() => navigate('/vip')} className="px-8 py-4 bg-[#ff0000] text-black font-black uppercase tracking-widest text-[10px] rounded-full hover:bg-white transition-all shadow-lg shadow-[#ff0000]/20 shrink-0">
+                  <button onClick={() => navigate('/vip')} className="px-8 py-4 bg-[#ffcc00] text-black font-black uppercase tracking-widest text-[10px] rounded-full hover:bg-white transition-all shadow-lg shadow-[#ffcc00]/20 shrink-0">
                     Tamamını Gör
                   </button>
                 )}
@@ -205,7 +205,7 @@ function HomePage() {
 
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start gap-16 relative z-10">
           <div className="w-full md:w-1/2 relative z-10">
-            <div className="border-l-4 border-[#ff0000] pl-8 mb-10">
+            <div className="border-l-4 border-[#ffcc00] pl-8 mb-10">
               <h2 className="text-5xl md:text-6xl font-black italic tracking-tighter leading-none mb-2">
                 Güncel <span className="text-gray-400">Tahminler</span>
               </h2>
@@ -219,14 +219,14 @@ function HomePage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-[#0a0a0a] rounded-[40px] p-8 md:p-12 border border-white/5 shadow-2xl relative group"
               >
-                <div className="absolute top-0 right-12 translate-y-[-50%] bg-[#ff0000] text-black px-6 py-2 rounded-full font-black text-[10px] uppercase tracking-widest shadow-xl">
+                <div className="absolute top-0 right-12 translate-y-[-50%] bg-[#ffcc00] text-black px-6 py-2 rounded-full font-black text-[10px] uppercase tracking-widest shadow-xl">
                   {latestPrediction.date || 'BUGÜN'}
                 </div>
 
                 <div className="flex flex-col md:flex-row justify-between mb-8 pb-8 border-b border-white/5">
                   <div>
                     <h3 className="text-3xl font-black italic mb-1">{latestPrediction.track}</h3>
-                    <p className="text-[#ff0000] font-bold text-xs uppercase tracking-widest">Günün Başlama Saati: {latestPrediction.startTime || '14:00'}</p>
+                    <p className="text-[#ffcc00] font-bold text-xs uppercase tracking-widest">Günün Başlama Saati: {latestPrediction.startTime || '14:00'}</p>
                   </div>
                 </div>
 
@@ -243,8 +243,8 @@ function HomePage() {
                               const raceData = latestPrediction[raceKey];
                               if (!raceData) return null;
                               return (
-                                 <div key={raceNum} className="bg-[#1a1a1a] p-4 rounded-2xl border border-white/5">
-                                    <span className="text-[10px] font-black text-[#ff0000] uppercase mb-2 block">{raceNum}. AYAK</span>
+                                 <div key={raceNum} className="bg-[#222222] p-4 rounded-2xl border border-white/5">
+                                    <span className="text-[10px] font-black text-[#ffcc00] uppercase mb-2 block">{raceNum}. AYAK</span>
                                     <div className="flex flex-wrap gap-2">
                                        {raceData.split(/[,\s]+/).map((horse: string, hi: number) => (
                                           <span key={hi} className="bg-black/40 px-3 py-1 rounded-lg text-xs font-bold border border-white/5">{horse}</span>
@@ -259,15 +259,15 @@ function HomePage() {
 
                   {!showContent && (
                     <div className="absolute inset-0 flex items-center justify-center p-4 z-20">
-                      <div className="bg-black/90 p-10 rounded-3xl border border-[#ff0000]/20 text-center shadow-2xl backdrop-blur-md">
-                          <div className="w-16 h-16 bg-[#ff0000]/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <Lock size={32} className="text-[#ff0000]" />
+                      <div className="bg-black/90 p-10 rounded-3xl border border-[#ffcc00]/20 text-center shadow-2xl backdrop-blur-md">
+                          <div className="w-16 h-16 bg-[#ffcc00]/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <Lock size={32} className="text-[#ffcc00]" />
                           </div>
                           <h4 className="text-2xl font-black italic mb-4">İçerik Kilitli</h4>
                           <p className="text-gray-400 text-sm mb-8 max-w-[240px]">Bu analizin tamamını görmek için VIP üyeliğinizin olması gerekmektedir.</p>
                           <button 
                             onClick={(e) => { e.stopPropagation(); navigate('/vip'); }} 
-                            className="bg-[#ff0000] text-black px-8 py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:scale-105 transition-transform"
+                            className="bg-[#ffcc00] text-black px-8 py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:scale-105 transition-transform"
                           >
                             VIP Üye Ol
                           </button>
@@ -289,7 +289,7 @@ function HomePage() {
                     </div>
                   </div>
                   
-                  <button onClick={() => navigate(`/tahmin/${latestPrediction.id}`)} className="mt-4 sm:mt-0 text-[#ff0000] text-xs font-black uppercase tracking-widest hover:underline underline-offset-8 transition-all">
+                  <button onClick={() => navigate(`/tahmin/${latestPrediction.id}`)} className="mt-4 sm:mt-0 text-[#ffcc00] text-xs font-black uppercase tracking-widest hover:underline underline-offset-8 transition-all">
                     Detaylı Analiz
                   </button>
                 </div>
@@ -310,7 +310,7 @@ function HomePage() {
           </div>
 
           <div className="w-full md:w-1/2 relative hidden md:block">
-             <div className="absolute inset-0 bg-[#ff0000]/5 blur-[120px] rounded-full" />
+             <div className="absolute inset-0 bg-[#ffcc00]/5 blur-[120px] rounded-full" />
              <div className="relative z-10">
                 <motion.div
                   animate={{ y: [0, -20, 0] }}
@@ -325,7 +325,7 @@ function HomePage() {
                 </motion.div>
                 
                 {/* Float Card */}
-                <div className="absolute -bottom-6 -right-6 bg-[#ff0000] p-8 rounded-[32px] text-black shadow-2xl max-w-[200px]">
+                <div className="absolute -bottom-6 -right-6 bg-[#ffcc00] p-8 rounded-[32px] text-black shadow-2xl max-w-[200px]">
                    <span className="text-4xl font-black italic block mb-1">98%</span>
                    <span className="text-[10px] font-black uppercase tracking-widest">İsabet Oranı İle Analiz</span>
                 </div>
@@ -343,7 +343,7 @@ function HomePage() {
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-[#050505] text-white selection:bg-[#ff0000] selection:text-white">
+      <div className="min-h-screen bg-[#0f0f0f] text-white selection:bg-[#ffcc00] selection:text-black">
         <Routes>
           <Route path="/" element={<><Header /><main><HomePage /></main><Footer /></>} />
           <Route path="/kayit-ol" element={<Register />} />

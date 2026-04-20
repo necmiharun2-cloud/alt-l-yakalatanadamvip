@@ -1,1 +1,26 @@
 @import "tailwindcss";
+
+@layer base {
+  ::selection {
+    @apply bg-[#ffcc00] text-black;
+  }
+}
+
+/* Custom Scrollbar for Nesine Theme */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111111;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 5px;
+  border: 2px solid #111111;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ffcc00;
+}

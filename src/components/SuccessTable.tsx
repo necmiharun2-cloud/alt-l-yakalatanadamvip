@@ -38,22 +38,22 @@ export default function SuccessTable() {
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight flex items-end">
               <span className="font-extrabold relative pb-1 mr-2 inline-block">
                 Başarılı
-                <span className="absolute bottom-0 left-0 w-full h-[4px] bg-[#ff0000]"></span>
+                <span className="absolute bottom-0 left-0 w-full h-[4px] bg-[#ffcc00]"></span>
               </span>
               <span className="font-light">Tahminler</span>
             </h2>
           </div>
           
-          <div className="md:max-w-md border-l-[3px] border-[#ff0000] pl-6 py-1 h-full flex items-center">
+          <div className="md:max-w-md border-l-[3px] border-[#ffcc00] pl-6 py-1 h-full flex items-center">
             <p className="text-[#647c9f] text-[13px] md:text-sm font-medium leading-relaxed">
-              ALTILIYAKALATANADAM.com Vip üyelerine bugüne kadar toplam <span className="text-[#ff0000] font-black">5.791</span> koşuda<br/>
-              <span className="text-[#ff0000] font-black">6.177.230,75</span> TL kazandırdı
+              ALTILIYAKALATANADAM.com Vip üyelerine bugüne kadar toplam <span className="text-[#ffcc00] font-black">5.791</span> koşuda<br/>
+              <span className="text-[#ffcc00] font-black">6.177.230,75</span> TL kazandırdı
             </p>
           </div>
         </div>
 
         {/* Table Area */}
-        <div className="w-full rounded-2xl shadow-2xl border border-white/5 bg-[#111111] overflow-hidden">
+        <div className="w-full rounded-2xl shadow-2xl border border-white/5 bg-[#191919] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[700px] text-left text-sm md:text-base border-collapse">
               <thead className="bg-[#222222] text-white/90 font-semibold border-b border-white/10">
@@ -81,7 +81,7 @@ export default function SuccessTable() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
                     onClick={() => navigate(`/tahmin/${p.slug}`)}
-                    className="hover:bg-[#1a1a1a] cursor-pointer transition-colors divide-x divide-white/5 even:bg-[#050505] odd:bg-[#111111]"
+                    className="hover:bg-[#222222] cursor-pointer transition-colors divide-x divide-white/5 even:bg-[#0f0f0f] odd:bg-[#191919]"
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
                        {formatDate(p.createdAt)}
@@ -105,7 +105,7 @@ export default function SuccessTable() {
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-center font-bold tracking-wide text-[#ff0000]">
+                    <td className="px-6 py-4 text-center font-bold tracking-wide text-[#ffcc00]">
                       {p.winnings || '0,00 TL'}
                     </td>
                   </motion.tr>

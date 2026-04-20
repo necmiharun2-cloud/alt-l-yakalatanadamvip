@@ -53,10 +53,10 @@ export default function BlogDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#050505] text-white">
+      <div className="min-h-screen bg-[#0f0f0f] text-white">
         <Header />
         <main className="max-w-7xl mx-auto py-40 px-4 flex justify-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#ff0000]"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#ffcc00]"></div>
         </main>
         <Footer />
       </div>
@@ -65,11 +65,11 @@ export default function BlogDetail() {
 
   if (!post) {
     return (
-      <div className="min-h-screen bg-[#050505] text-white">
+      <div className="min-h-screen bg-[#0f0f0f] text-white">
         <Header />
         <main className="max-w-7xl mx-auto py-40 px-4 text-center">
           <h2 className="text-3xl font-black italic">Yazı bulunamadı.</h2>
-          <Link to="/blog" className="text-[#ff0000] mt-4 block underline">Blog'a dön</Link>
+          <Link to="/blog" className="text-[#ffcc00] mt-4 block underline">Blog'a dön</Link>
         </main>
         <Footer />
       </div>
@@ -77,7 +77,7 @@ export default function BlogDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white selection:bg-[#ff0000] selection:text-white">
+    <div className="min-h-screen bg-[#0f0f0f] text-white selection:bg-[#ffcc00] selection:text-black">
       <Header />
       
       <main className="max-w-7xl mx-auto pt-32 pb-20 px-4">
@@ -87,7 +87,7 @@ export default function BlogDetail() {
           <ChevronRight size={12} className="text-gray-800" />
           <Link to="/blog" className="hover:text-white transition-colors">Blog</Link>
           <ChevronRight size={12} className="text-gray-800" />
-          <span className="text-[#ff0000] line-clamp-1">{post.title}</span>
+          <span className="text-[#ffcc00] line-clamp-1">{post.title}</span>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-12">
@@ -96,7 +96,7 @@ export default function BlogDetail() {
             
             {/* Son Yazılar */}
             <div>
-              <div className="border-l-4 border-[#ff0000] pl-6 mb-8">
+              <div className="border-l-4 border-[#ffcc00] pl-6 mb-8">
                 <h3 className="text-2xl font-black italic tracking-tighter uppercase">Son <span className="text-gray-400">Yazılar</span></h3>
               </div>
               
@@ -106,7 +106,7 @@ export default function BlogDetail() {
                     <Link 
                       key={p.id} 
                       to={`/blog/${p.slug}`}
-                      className={`block px-6 py-5 text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all hover:bg-white/5 ${p.slug === slug ? 'text-[#ff0000] bg-[#1a1a1a]/40' : 'text-gray-500 hover:text-white'}`}
+                      className={`block px-6 py-5 text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all hover:bg-white/5 ${p.slug === slug ? 'text-[#ffcc00] bg-[#222222]/40' : 'text-gray-500 hover:text-white'}`}
                     >
                       {p.title}
                     </Link>
@@ -118,20 +118,20 @@ export default function BlogDetail() {
             {/* VIP Member CTA Card */}
             <motion.div 
               whileHover={{ y: -5 }}
-              className="bg-[#111111]/80 border border-white/5 rounded-[40px] p-8 text-center shadow-2xl relative overflow-hidden group cursor-pointer"
+              className="bg-[#191919]/80 border border-white/5 rounded-[40px] p-8 text-center shadow-2xl relative overflow-hidden group cursor-pointer"
               onClick={() => navigate('/vip')}
             >
-              <div className="absolute inset-0 bg-gradient-to-b from-[#ff0000]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-gradient-to-b from-[#ffcc00]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               
               <div className="relative z-10">
                 <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-                  <Star size={32} className="text-[#ff0000]" />
+                  <Star size={32} className="text-[#ffcc00]" />
                 </div>
                 <h4 className="text-xl font-black italic mb-2">Vip Üye Olun</h4>
                 <p className="text-gray-500 text-[10px] leading-relaxed font-bold uppercase tracking-widest mb-6">
                   Artan yarış programlarından en verimli bir şekilde istifade ederek profesyonel destek almak istiyorsanız sizler de VIP Üye olabilirsiniz.
                 </p>
-                <div className="inline-block px-8 py-3 bg-[#ff0000] text-black text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg shadow-[#ff0000]/20">
+                <div className="inline-block px-8 py-3 bg-[#ffcc00] text-black text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg shadow-[#ffcc00]/20">
                   Katılın
                 </div>
               </div>
@@ -149,20 +149,20 @@ export default function BlogDetail() {
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
                   referrerPolicy="no-referrer"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0f0f0f] via-[#0f0f0f]/40 to-transparent" />
                 
                 <div className="absolute bottom-0 left-0 right-0 p-8 md:p-12">
                    <div className="flex items-center space-x-6 mb-4">
                       <div className="flex items-center space-x-2 text-white/60 text-[10px] font-black uppercase tracking-widest">
-                        <Calendar size={12} className="text-[#ff0000]" />
+                        <Calendar size={12} className="text-[#ffcc00]" />
                         <span>{formatDate(post.createdAt || Date.now(), { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
                       </div>
                       <div className="flex items-center space-x-2 text-white/60 text-[10px] font-black uppercase tracking-widest">
-                        <Eye size={12} className="text-[#ff0000]" />
+                        <Eye size={12} className="text-[#ffcc00]" />
                         <span>{post.views || 0}</span>
                       </div>
                       <div className="flex items-center space-x-2 text-white/60 text-[10px] font-black uppercase tracking-widest">
-                        <Heart size={12} className="text-[#ff0000]" />
+                        <Heart size={12} className="text-[#ffcc00]" />
                         <span>{post.likes || 0}</span>
                       </div>
                    </div>
@@ -170,7 +170,7 @@ export default function BlogDetail() {
                    <h1 className="text-3xl md:text-5xl lg:text-6xl font-black italic tracking-tighter leading-[1.1] mb-2 uppercase drop-shadow-2xl">
                      {post.title}
                    </h1>
-                   <p className="text-[#ff0000] font-bold text-xs uppercase tracking-[0.3em]">Haberler ve Tahminler</p>
+                   <p className="text-[#ffcc00] font-bold text-xs uppercase tracking-[0.3em]">Haberler ve Tahminler</p>
                 </div>
               </div>
 
@@ -216,12 +216,12 @@ export default function BlogDetail() {
 
               {/* Related/Next section indicator if needed */}
               <div className="mt-12 flex justify-between items-center">
-                 <Link to="/blog" className="flex items-center space-x-3 text-gray-500 hover:text-[#ff0000] transition-colors group">
+                 <Link to="/blog" className="flex items-center space-x-3 text-gray-500 hover:text-[#ffcc00] transition-colors group">
                     <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
                     <span className="text-xs font-black uppercase tracking-widest">Tüm Yazılar</span>
                  </Link>
                  <div className="h-px flex-1 mx-12 bg-white/5 hidden md:block" />
-                 <Link to="/vip" className="text-[#ff0000] text-xs font-black uppercase tracking-widest border-b border-[#ff0000]/20 pb-1 hover:border-[#ff0000] transition-all">
+                 <Link to="/vip" className="text-[#ffcc00] text-xs font-black uppercase tracking-widest border-b border-[#ffcc00]/20 pb-1 hover:border-[#ffcc00] transition-all">
                     VIP Kazanmaya Başla
                  </Link>
               </div>

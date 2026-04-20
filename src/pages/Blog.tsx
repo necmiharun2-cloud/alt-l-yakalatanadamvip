@@ -32,7 +32,7 @@ export default function Blog() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white selection:bg-[#ff0000] selection:text-white">
+    <div className="min-h-screen bg-[#0f0f0f] text-white selection:bg-[#ffcc00] selection:text-black">
       <Header />
       
       <main className="max-w-7xl mx-auto pt-32 pb-20 px-4">
@@ -40,14 +40,14 @@ export default function Blog() {
         <div className="flex items-center space-x-2 text-[10px] font-black uppercase tracking-widest text-gray-600 mb-8">
           <Link to="/" className="hover:text-white transition-colors">Anasayfa</Link>
           <ChevronRight size={12} className="text-gray-800" />
-          <span className="text-[#ff0000]">Blog</span>
+          <span className="text-[#ffcc00]">Blog</span>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-12">
           {/* Sidebar */}
           <aside className="w-full lg:w-[350px] space-y-12">
             <div>
-              <div className="border-l-4 border-[#ff0000] pl-6 mb-8">
+              <div className="border-l-4 border-[#ffcc00] pl-6 mb-8">
                 <h3 className="text-2xl font-black italic tracking-tighter uppercase">Son <span className="text-gray-400">Yazılar</span></h3>
               </div>
               
@@ -69,19 +69,19 @@ export default function Blog() {
 
             <motion.div 
               whileHover={{ y: -5 }}
-              className="bg-[#111111]/80 border border-white/5 rounded-[40px] p-8 text-center shadow-2xl relative overflow-hidden group cursor-pointer"
+              className="bg-[#191919]/80 border border-white/5 rounded-[40px] p-8 text-center shadow-2xl relative overflow-hidden group cursor-pointer"
               onClick={() => navigate('/vip')}
             >
-              <div className="absolute inset-0 bg-gradient-to-b from-[#ff0000]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-gradient-to-b from-[#ffcc00]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative z-10">
                 <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-                  <Star size={32} className="text-[#ff0000]" />
+                  <Star size={32} className="text-[#ffcc00]" />
                 </div>
                 <h4 className="text-xl font-black italic mb-2">Vip Üye Olun</h4>
                 <p className="text-gray-500 text-[10px] leading-relaxed font-bold uppercase tracking-widest mb-6">
                   Profesyonel destek ve günlük analizler için VIP Üye olabilirsiniz.
                 </p>
-                <div className="inline-block px-8 py-3 bg-[#ff0000] text-black text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg">
+                <div className="inline-block px-8 py-3 bg-[#ffcc00] text-black text-[10px] font-black uppercase tracking-widest rounded-full shadow-lg">
                   Katılın
                 </div>
               </div>
@@ -90,7 +90,7 @@ export default function Blog() {
 
           {/* Blog Grid */}
           <div className="flex-1">
-            <div className="border-l-4 border-[#ff0000] pl-8 mb-12">
+            <div className="border-l-4 border-[#ffcc00] pl-8 mb-12">
               <h1 className="text-5xl font-black italic tracking-tighter uppercase leading-none">
                 Güncel <span className="text-gray-400 font-bold">Blog</span>
               </h1>
@@ -98,7 +98,7 @@ export default function Blog() {
 
             {loading ? (
               <div className="flex justify-center py-20">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#ff0000]"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#ffcc00]"></div>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -122,24 +122,24 @@ export default function Blog() {
                       </div>
                       <div className="p-8 flex-1 flex flex-col">
                         <div className="flex items-center justify-between mb-4">
-                          <div className="flex items-center space-x-2 text-[#ff0000]">
+                          <div className="flex items-center space-x-2 text-[#ffcc00]">
                             <Calendar size={14} />
                             <span className="text-[10px] font-black uppercase tracking-widest">
                               {formatDate(post.createdAt, { day: '2-digit', month: '2-digit', year: 'numeric' })}
                             </span>
                           </div>
                           <div className="flex items-center space-x-2 text-gray-500">
-                            <Eye size={14} className="text-[#ff0000]" />
+                            <Eye size={14} className="text-[#ffcc00]" />
                             <span className="text-[10px] font-black uppercase tracking-widest">{post.views || 0}</span>
                           </div>
                         </div>
-                        <h3 className="text-xl font-black text-white mb-4 line-clamp-2 leading-tight tracking-tight group-hover:text-[#ff0000] transition-colors uppercase italic">
+                        <h3 className="text-xl font-black text-white mb-4 line-clamp-2 leading-tight tracking-tight group-hover:text-[#ffcc00] transition-colors uppercase italic">
                           {post.title}
                         </h3>
                         <p className="text-gray-500 text-xs font-medium line-clamp-3 leading-relaxed mb-6">
                           {post.content?.substring(0, 150)}...
                         </p>
-                        <div className="mt-auto pt-4 border-t border-white/5 text-[#ff0000] text-[10px] font-black uppercase tracking-widest">
+                        <div className="mt-auto pt-4 border-t border-white/5 text-[#ffcc00] text-[10px] font-black uppercase tracking-widest">
                           Devamını Oku
                         </div>
                       </div>

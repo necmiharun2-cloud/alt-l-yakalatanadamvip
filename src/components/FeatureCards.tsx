@@ -33,7 +33,7 @@ export default function FeatureCards() {
   ];
 
   return (
-    <section className="relative bg-[#050505] pt-24 pb-12 px-4 overflow-hidden">
+    <section className="relative bg-[#0f0f0f] pt-24 pb-12 px-4 overflow-hidden">
       {/* Background Horse Image fading to right */}
       <div 
         className="absolute left-0 top-0 bottom-0 w-full md:w-1/2 bg-cover bg-center opacity-30 mix-blend-screen pointer-events-none"
@@ -52,12 +52,12 @@ export default function FeatureCards() {
               <span className="font-extrabold relative pb-1 mr-2 inline-block">
                 Kazanmanın
                 {/* Yellow underline just under "Kazanmanın" */}
-                <span className="absolute bottom-0 left-0 w-full h-[4px] bg-[#ff0000]"></span>
+                <span className="absolute bottom-0 left-0 w-full h-[4px] bg-[#ffcc00]"></span>
               </span>
               <span className="font-light">Gidiş Hattı</span>
             </h2>
           </div>
-          <div className="flex-1 border-l-[3px] border-[#ff0000]/30 pl-8 h-full flex items-center md:max-w-xl">
+          <div className="flex-1 border-l-[3px] border-[#ffcc00]/30 pl-8 h-full flex items-center md:max-w-xl">
             <p className="text-gray-400 text-sm md:text-base font-medium leading-relaxed">
               Deneyimli at yarışı uzmanlarının tahminlerini takip edin ve kazanma şansınızı artırın.
             </p>
@@ -84,7 +84,7 @@ export default function FeatureCards() {
               {/* Optional Bottom Right Yellow Triangle */}
               {card.hasBottomYellow && (
                 <div className="absolute right-0 bottom-0 z-20 rounded-br-2xl overflow-hidden">
-                  <div className="w-0 h-0 border-b-[36px] border-b-[#ff0000] border-l-[36px] border-l-transparent"></div>
+                  <div className="w-0 h-0 border-b-[36px] border-b-[#ffcc00] border-l-[36px] border-l-transparent"></div>
                 </div>
               )}
 
@@ -111,14 +111,14 @@ export default function FeatureCards() {
         {/* App Links (Right Aligned, Bottom) */}
         <div className="mt-16 flex flex-col sm:flex-row items-center justify-end space-y-4 sm:space-y-0 sm:space-x-4">
           <a href="#" className="flex items-center space-x-3 bg-black/50 hover:bg-black/80 px-5 py-3 rounded-xl border border-white/10 transition-all hover:scale-105 group">
-            <Apple size={24} className="text-white group-hover:text-[#ff0000] transition-colors" />
+            <Apple size={24} className="text-white group-hover:text-[#ffcc00] transition-colors" />
             <div className="flex flex-col text-left">
               <span className="text-[9px] text-gray-400 font-medium">Download on the</span>
               <span className="text-sm font-bold text-white leading-tight">App Store</span>
             </div>
           </a>
           <a href="#" className="flex items-center space-x-3 bg-black/50 hover:bg-black/80 px-5 py-3 rounded-xl border border-white/10 transition-all hover:scale-105 group">
-            <Smartphone size={24} className="text-white group-hover:text-[#ff0000] transition-colors" />
+            <Smartphone size={24} className="text-white group-hover:text-[#ffcc00] transition-colors" />
             <div className="flex flex-col text-left">
               <span className="text-[9px] text-gray-400 font-medium">GET IT ON</span>
               <span className="text-sm font-bold text-white leading-tight">Google Play</span>
@@ -126,7 +126,7 @@ export default function FeatureCards() {
           </a>
           
           {/* Scroll Up Button Placeholder (as seen on the far right in screenshot) */}
-          <button className="hidden sm:flex ml-4 w-10 h-10 bg-[#0a0f18] hover:bg-[#1a1a1a] border border-white/10 rounded-full items-center justify-center transition-colors">
+          <button className="hidden sm:flex ml-4 w-10 h-10 bg-[#0a0f18] hover:bg-[#222222] border border-white/10 rounded-full items-center justify-center transition-colors">
             <svg width="14" height="8" viewBox="0 0 14 8" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M1 7L7 1L13 7" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>

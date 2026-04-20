@@ -62,7 +62,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white">
+    <div className="min-h-screen bg-[#0f0f0f] text-white">
       <Header />
       
       <main className="max-w-7xl mx-auto py-32 px-4 flex justify-center">
@@ -71,12 +71,12 @@ export default function Login() {
           animate={{ opacity: 1, scale: 1 }}
           className="w-full max-w-xl"
         >
-          <div className="border-l-4 border-[#ff0000] pl-6 mb-12">
+          <div className="border-l-4 border-[#ffcc00] pl-6 mb-12">
             <h2 className="text-4xl font-black italic tracking-tighter">Üye Girişi</h2>
           </div>
 
           <div className="bg-[#0a0a0a] border border-white/5 rounded-[40px] p-8 md:p-16 shadow-2xl relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-[#ff0000] blur-[100px] opacity-10 pointer-events-none" />
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#ffcc00] blur-[100px] opacity-10 pointer-events-none" />
             
             <p className="text-gray-400 text-sm mb-10 text-center font-medium opacity-60 italic">
               Lütfen üye olurken kullandığınız e-posta adresiniz ve şifreniz ile giriş yapın.
@@ -102,7 +102,7 @@ export default function Login() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 focus:outline-none focus:border-[#ff0000] transition-colors"
+                  className="w-full bg-[#222222] border border-white/10 rounded-2xl p-5 focus:outline-none focus:border-[#ffcc00] transition-colors"
                 />
               </div>
 
@@ -113,7 +113,7 @@ export default function Login() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 focus:outline-none focus:border-[#ff0000] transition-colors pr-14"
+                  className="w-full bg-[#222222] border border-white/10 rounded-2xl p-5 focus:outline-none focus:border-[#ffcc00] transition-colors pr-14"
                 />
                 <button 
                   type="button"
@@ -126,7 +126,7 @@ export default function Login() {
 
               <div className="flex justify-end">
                 <button type="button" onClick={handleResetPassword} className="flex items-center space-x-2 text-gray-500 hover:text-white transition-colors text-xs font-bold">
-                  <Smartphone size={14} className="text-[#ff0000]" />
+                  <Smartphone size={14} className="text-[#ffcc00]" />
                   <span className="border-b border-white/10">Şifremi Unuttum</span>
                 </button>
               </div>
@@ -134,7 +134,7 @@ export default function Login() {
               <button 
                 type="submit"
                 disabled={loading}
-                className="w-full p-5 bg-transparent border-2 border-[#ff0000] rounded-2xl font-black text-[#ff0000] uppercase tracking-widest hover:bg-[#ff0000] hover:text-white transition-all transform active:scale-95 shadow-xl shadow-[#ff0000]/5 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full p-5 bg-transparent border-2 border-[#ffcc00] rounded-2xl font-black text-[#ffcc00] uppercase tracking-widest hover:bg-[#ffcc00] hover:text-black transition-all transform active:scale-95 shadow-xl shadow-[#ffcc00]/5 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Giriş Yapılıyor...' : 'Giriş Yap'}
               </button>
