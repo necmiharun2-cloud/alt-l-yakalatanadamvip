@@ -21,6 +21,15 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPass, setLoginPass] = useState('');
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const menuItems = [
     { label: 'Güncel Tahminler', path: '/tahminler' },
@@ -31,9 +40,9 @@ export default function Header() {
   ];
 
   return (
-    <header className="w-full flex flex-col font-sans">
+    <header className="w-full flex flex-col font-sans sticky top-0 z-50">
       {/* Nesine Style Top Bar */}
-      <div className="bg-[#ffcc00] py-2 px-4 border-b border-[#000]/5">
+      <div className={`bg-[#ffcc00] py-2 px-4 border-b border-[#000]/5 transition-all duration-300 ${scrolled ? 'shadow-md py-1' : ''}`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-1 group">
@@ -74,7 +83,13 @@ export default function Header() {
                       placeholder="Şifre" 
                       className="px-3 text-[10px] w-24 focus:outline-none text-black"
                     />
-                    <button className="bg-gray-700 text-white text-[9px] px-2 font-bold hover:bg-black transition-colors">Unuttum</button>
+                    <Link 
+                      to="/giris-yap" 
+                      state={{ showReset: true }}
+                      className="bg-gray-700 text-white text-[9px] px-2 font-bold hover:bg-black transition-colors flex items-center"
+                    >
+                      Unuttum
+                    </Link>
                   </div>
                   
                   <div className="flex items-center space-x-1 text-[10px] font-bold text-black px-1">

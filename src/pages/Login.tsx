@@ -3,12 +3,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, Smartphone } from 'lucide-react';
 import { motion } from 'motion/react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { auth } from '../lib/firebase';
 import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
 
@@ -18,12 +18,25 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isResetMode, setIsResetMode] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [resetMessage, setResetMessage] = useState('');
 
+  useEffect(() => {
+    if (location.state?.showReset) {
+      setIsResetMode(true);
+      setError('Şifre sıfırlama bağlantısı göndermek için lütfen E-posta Adresinizi girin.');
+    }
+  }, [location.state]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isResetMode) {
+      handleResetPassword();
+      return;
+    }
     setLoading(true);
     setError('');
     setResetMessage('');
@@ -52,7 +65,7 @@ export default function Login() {
     setResetMessage('');
     try {
       await sendPasswordResetEmail(auth, email);
-      setResetMessage('Şifre sıfırlama bağlantısı e-posta adresinize gönderildi. Lütfen gelen kutunuzu (ve Spam klasörünü) kontrol edin.');
+      setResetMessage('Şifre sıfırlama bağlantısı e-posta adresinize gönderildi. Lütfen gelen kutunuzu kontrol edin.');
     } catch (err: any) {
       console.error('Reset password error:', err);
       setError('Şifre sıfırlama e-postası gönderilirken bir hata oluştu. Lütfen e-posta adresinizi kontrol edin.');
@@ -65,21 +78,23 @@ export default function Login() {
     <div className="min-h-screen bg-[#0f0f0f] text-white">
       <Header />
       
-      <main className="max-w-7xl mx-auto py-32 px-4 flex justify-center">
+      <main className="max-width-7xl mx-auto py-32 px-4 flex justify-center">
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="w-full max-w-xl"
         >
           <div className="border-l-4 border-[#ffcc00] pl-6 mb-12">
-            <h2 className="text-4xl font-black italic tracking-tighter">Üye Girişi</h2>
+            <h2 className="text-4xl font-black italic tracking-tighter">{isResetMode ? 'Şifremi Unuttum' : 'Üye Girişi'}</h2>
           </div>
 
           <div className="bg-[#0a0a0a] border border-white/5 rounded-[40px] p-8 md:p-16 shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-[#ffcc00] blur-[100px] opacity-10 pointer-events-none" />
             
             <p className="text-gray-400 text-sm mb-10 text-center font-medium opacity-60 italic">
-              Lütfen üye olurken kullandığınız e-posta adresiniz ve şifreniz ile giriş yapın.
+              {isResetMode 
+                ? 'Şifre sıfırlama bağlantısı almak için sisteme kayıtlı e-posta adresinizi giriniz.' 
+                : 'Lütfen üye olurken kullandığınız e-posta adresiniz ve şifreniz ile giriş yapın.'}
             </p>
 
             {error && (
@@ -106,29 +121,44 @@ export default function Login() {
                 />
               </div>
 
-              <div className="relative group">
-                <input 
-                  type={showPassword ? "text" : "password"} 
-                  placeholder="Şifre"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-[#222222] border border-white/10 rounded-2xl p-5 focus:outline-none focus:border-[#ffcc00] transition-colors pr-14"
-                />
-                <button 
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white"
-                >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
-              </div>
+              {!isResetMode && (
+                <div className="relative group">
+                  <input 
+                    type={showPassword ? "text" : "password"} 
+                    placeholder="Şifre"
+                    required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full bg-[#222222] border border-white/10 rounded-2xl p-5 focus:outline-none focus:border-[#ffcc00] transition-colors pr-14"
+                  />
+                  <button 
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white"
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
+              )}
 
-              <div className="flex justify-end">
-                <button type="button" onClick={handleResetPassword} className="flex items-center space-x-2 text-gray-500 hover:text-white transition-colors text-xs font-bold">
+              <div className="flex justify-between items-center">
+                <button 
+                  type="button" 
+                  onClick={() => setIsResetMode(!isResetMode)} 
+                  className="flex items-center space-x-2 text-gray-500 hover:text-white transition-colors text-xs font-bold"
+                >
                   <Smartphone size={14} className="text-[#ffcc00]" />
-                  <span className="border-b border-white/10">Şifremi Unuttum</span>
+                  <span className="border-b border-white/10">{isResetMode ? 'Giriş Yapmaya Dön' : 'Şifremi Unuttum'}</span>
                 </button>
+
+                {!isResetMode && (
+                  <Link 
+                    to="/kayit-ol" 
+                    className="text-gray-500 hover:text-white transition-colors text-xs font-bold border-b border-white/10"
+                  >
+                    Hemen Kayıt Ol
+                  </Link>
+                )}
               </div>
 
               <button 
@@ -136,7 +166,9 @@ export default function Login() {
                 disabled={loading}
                 className="w-full p-5 bg-transparent border-2 border-[#ffcc00] rounded-2xl font-black text-[#ffcc00] uppercase tracking-widest hover:bg-[#ffcc00] hover:text-black transition-all transform active:scale-95 shadow-xl shadow-[#ffcc00]/5 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? 'Giriş Yapılıyor...' : 'Giriş Yap'}
+                {loading 
+                  ? 'İşlem Yapılıyor...' 
+                  : (isResetMode ? 'Sıfırlama Bağlantısı Gönder' : 'Giriş Yap')}
               </button>
             </form>
           </div>
