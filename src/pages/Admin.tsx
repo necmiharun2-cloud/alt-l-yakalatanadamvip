@@ -246,7 +246,7 @@ export default function Admin() {
     setLoading(true);
     try {
       await updateDoc(doc(db, 'predictions', prediction.id), {
-        type: (result === 'won' || result === 'partial') ? 'success' : 'archive',
+        type: (result === 'won' || result === 'partial') ? 'success' : 'current',
         resultStatus: result,
         winnings: winnings,
         updatedAt: serverTimestamp(),
