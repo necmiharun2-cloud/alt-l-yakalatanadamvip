@@ -16,25 +16,42 @@
     },
     "Prediction": {
       "title": "Prediction",
-      "description": "Match predictions and analyses",
+      "description": "Structured horse race predictions and VIP coupons",
       "type": "object",
       "properties": {
         "title": { "type": "string" },
         "subTitle": { "type": "string" },
         "slug": { "type": "string" },
+        "track": { "type": "string" },
+        "raceDate": { "type": "string" },
+        "publishAt": { "type": "string" },
+        "status": { "type": "string", "enum": ["draft", "published", "settled"] },
+        "visibility": { "type": "string", "enum": ["vip", "public", "sample"] },
+        "couponType": { "type": "string", "enum": ["economic", "standard", "aggressive"] },
+        "confidenceScore": { "type": "integer" },
+        "badge": { "type": "string" },
+        "shortNote": { "type": "string" },
+        "priceLabel": { "type": "string" },
+        "kuponBedeli": { "type": "string" },
         "content": { "type": "string" },
+        "sampleContent": { "type": "string" },
         "image": { "type": "string" },
-        "type": { "type": "string", "enum": ["current", "success"] },
-        "isPublic": { "type": "boolean" },
+        "ayaklar": { 
+          "type": "array",
+          "description": "List of legs with raceNo, analysis, horses, banko, confidence"
+        },
+        "dailyBanko": { "type": "string" },
+        "dailySurpriz": { "type": "string" },
+        "dailyTemplate": { "type": "string" },
+        "resultStatus": { "type": "string", "enum": ["won", "lost", "partial", "pending"] },
         "winnings": { "type": "string" },
-        "ayaklar": { "type": "array" },
-        "fiyat": { "type": "string" },
+        "roi": { "type": "string" },
         "commentsEnabled": { "type": "boolean" },
         "authorName": { "type": "string" },
         "views": { "type": "integer" },
         "createdAt": { "type": "string", "format": "date-time" }
       },
-      "required": ["title", "slug", "content", "type"]
+      "required": ["title", "slug", "track", "status", "visibility"]
     },
     "Comment": {
       "title": "Comment",

@@ -56,12 +56,14 @@ service cloud.firestore {
 
     // Predictions Collection
     match /predictions/{predictionId} {
-      allow list: if (resource.data.isPublic == true) || isVip();
-      allow get: if (resource.data.isPublic == true) || isVip();
+      allow list: if (resource.data.status == 'published' || resource.data.status == 'settled' || isAdmin()) && 
+                    (resource.data.visibility in ['public', 'sample'] || isVip() || isAdmin());
+      allow get: if (resource.data.status == 'published' || resource.data.status == 'settled' || isAdmin()) && 
+                   (resource.data.visibility in ['public', 'sample'] || isVip() || isAdmin());
       
       allow create: if isAdmin();
-      allow update: if isAdmin(); // Adminse şema takıntısı yapma, direk izin ver.
-      allow delete: if isAdmin(); // Adminse direk sil
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
     }
 
     match /blogs/{blogId} {

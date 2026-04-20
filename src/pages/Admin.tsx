@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { motion, AnimatePresence } from 'motion/react';
-import { LayoutDashboard, FileText, CheckCircle, ListPlus, Send, ImageIcon, Type, Link as LinkIcon, Users, Eye, Clock, ExternalLink, Building2, Database } from 'lucide-react';
+import { LayoutDashboard, FileText, CheckCircle, ListPlus, Send, ImageIcon, Type, Link as LinkIcon, Users, Eye, Clock, ExternalLink, Building2, Database, ShieldCheck, AlertOctagon, Star, Trophy, Gauge, Info } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../lib/firebase';
@@ -44,22 +44,31 @@ export default function Admin() {
   const [winningsPrompt, setWinningsPrompt] = useState<{ isOpen: boolean, prediction: any, result: 'won'|'partial' } | null>(null);
   const [winningsValue, setWinningsValue] = useState('');
 
-  const [formData, setFormData] = useState({
+  const initialFormState = {
     title: '',
     subTitle: '',
     content: '',
+    sampleContent: '',
     image: '',
     slug: '',
     track: 'İstanbul',
+    raceDate: new Date().toISOString().split('T')[0],
+    publishAt: '',
+    status: 'published' as 'draft' | 'published' | 'settled',
+    resultStatus: 'pending' as 'pending' | 'won' | 'lost' | 'partial',
+    visibility: 'vip' as 'vip' | 'public' | 'sample',
+    couponType: 'standard' as 'economic' | 'standard' | 'aggressive',
+    confidenceScore: 80,
+    badge: 'Günün Kuponu',
+    shortNote: '',
+    priceLabel: 'Orta Risk',
+    kuponBedeli: '',
     winnings: '',
+    roi: '',
     views: 0,
-    type: 'current',
-    role: 'user',
     dailyBanko: '',
     dailySurpriz: '',
     dailyTemplate: '',
-    isFreeSample: false,
-    sampleContent: '',
     // slider specific
     ctaText: '',
     ctaLink: '',
@@ -68,15 +77,27 @@ export default function Admin() {
     bankName: '',
     iban: '',
     receiverName: '',
-    // Horse race specific
-    ayaklar: Array(6).fill(''),
+    // Horse race specific (Structured legs)
+    ayaklar: Array(6).fill(null).map((_, i) => ({
+      legNo: i + 1,
+      raceNo: i + 1,
+      analysis: '',
+      horses: '',
+      banko: false,
+      confidence: 70
+    })),
     fiyat: '',
-    commentsEnabled: true
-  });
+    commentsEnabled: true,
+    type: 'current',
+    role: 'user',
+    isFreeSample: false
+  };
+
+  const [formData, setFormData] = useState(initialFormState);
 
   const sections = [
-    { id: 'guncel', label: 'Güncel Tahminler', icon: ListPlus },
-    { id: 'basarili', label: 'Başarılı Tahminler', icon: CheckCircle },
+    { id: 'guncel', label: 'VIP Kuponlar', icon: ListPlus },
+    { id: 'basarili', label: 'Kazanan Kuponlar', icon: CheckCircle },
     { id: 'blog', label: 'Blog Yazıları', icon: FileText },
     { id: 'slider', label: 'Slider Ayarları', icon: ImageIcon },
     { id: 'banks', label: 'Banka Bilgileri', icon: Building2 },
@@ -105,25 +126,34 @@ export default function Admin() {
       } else if (activeSection === 'guncel' || activeSection === 'basarili') {
         const payload = {
           title: formData.title,
-          subTitle: formData.subTitle,
-          slug: formData.slug || formData.title.toLowerCase().replace(/ /g, '-'),
-          content: formData.content,
-          image: formData.image,
+          subTitle: formData.subTitle || '',
+          slug: formData.slug || formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
           track: formData.track,
+          raceDate: formData.raceDate,
+          publishAt: formData.publishAt || new Date().toISOString(),
+          status: activeSection === 'basarili' ? 'settled' : formData.status,
+          visibility: formData.visibility,
+          couponType: formData.couponType,
+          confidenceScore: Number(formData.confidenceScore),
+          badge: formData.badge,
+          shortNote: formData.shortNote,
+          priceLabel: formData.priceLabel,
+          kuponBedeli: formData.kuponBedeli,
+          content: formData.content || '',
+          sampleContent: formData.sampleContent || '',
+          image: formData.image || '',
           dailyBanko: formData.dailyBanko || '',
           dailySurpriz: formData.dailySurpriz || '',
           dailyTemplate: formData.dailyTemplate || '',
-          isFreeSample: formData.isFreeSample || false,
-          sampleContent: formData.sampleContent || '',
-          type: activeSection === 'guncel' ? 'current' : 'success',
-          winnings: formData.winnings,
-          views: Number(formData.views),
+          resultStatus: formData.status === 'settled' ? (formData.resultStatus || 'won') : 'pending',
+          winnings: formData.winnings || '',
+          roi: formData.roi || '',
           authorName: 'ALTILIYAKALATANADAM',
-          isPublic: formData.type === 'isPublic', 
-          ayaklar: Array.isArray(formData.ayaklar) ? formData.ayaklar.filter(l => l.trim()) : [],
-          fiyat: formData.fiyat,
+          views: Number(formData.views),
+          ayaklar: formData.ayaklar,
           commentsEnabled: formData.commentsEnabled,
-          createdAt: serverTimestamp()
+          createdAt: editId ? (formData as any).createdAt : serverTimestamp(),
+          updatedAt: serverTimestamp()
         };
         if (editId) {
             await updateDoc(doc(db, 'predictions', editId), payload);
@@ -144,14 +174,7 @@ export default function Admin() {
           }
       }
       setMessage(editId ? 'İçerik başarıyla güncellendi!' : 'İçerik başarıyla yayınlandı!');
-      setFormData({ 
-        title: '', subTitle: '', content: '', image: '', slug: '', 
-        track: 'İstanbul', winnings: '', views: 0, type: 'current', 
-        role: 'user', ctaText: '', ctaLink: '', orderIndex: 0, 
-        bankName: '', iban: '', receiverName: '', ayaklar: Array(6).fill(''), 
-        fiyat: '', commentsEnabled: true,
-        dailyBanko: '', dailySurpriz: '', dailyTemplate: '', isFreeSample: false, sampleContent: ''
-      });
+      setFormData(initialFormState);
       setEditId(null);
       await fetchAdminData();
     } catch (err: any) {
@@ -173,67 +196,61 @@ export default function Admin() {
       setEditId(item.id);
       if (type === 'blog') {
           setFormData({ 
+            ...initialFormState,
             title: item.title || '', 
             slug: item.slug || '', 
             content: item.content || '', 
             image: item.image || '', 
             views: item.views || 0,
-            subTitle: '', track: 'İstanbul', winnings: '', type: 'current', 
-            role: 'user', ctaText: '', ctaLink: '', orderIndex: 0, 
-            bankName: '', iban: '', receiverName: '', ayaklar: Array(6).fill(''), 
-            fiyat: '', commentsEnabled: true,
-            dailyBanko: '', dailySurpriz: '', dailyTemplate: '', isFreeSample: false, sampleContent: ''
           });
       } else if (type === 'prediction') {
           setFormData({ 
+            ...formData,
             title: item.title || '', 
             subTitle: item.subTitle || '', 
             slug: item.slug || '', 
             track: item.track || 'İstanbul',
+            raceDate: item.raceDate || new Date().toISOString().split('T')[0],
+            publishAt: item.publishAt || '',
+            status: item.status || (item.type === 'success' ? 'settled' : 'published'),
+            visibility: item.visibility || (item.isPublic ? 'public' : 'vip'),
+            couponType: item.couponType || 'standard',
+            confidenceScore: item.confidenceScore || 80,
+            badge: item.badge || 'Günün Kuponu',
+            shortNote: item.shortNote || '',
+            priceLabel: item.priceLabel || 'Orta Risk',
+            kuponBedeli: item.kuponBedeli || '',
             content: item.content || '', 
+            sampleContent: item.sampleContent || '',
             image: item.image || '', 
             winnings: item.winnings || '', 
+            roi: item.roi || '',
             views: item.views || 0, 
-            type: item.isPublic ? 'isPublic' : '',
             dailyBanko: item.dailyBanko || '',
             dailySurpriz: item.dailySurpriz || '',
             dailyTemplate: item.dailyTemplate || '',
-            isFreeSample: item.isFreeSample || false,
-            sampleContent: item.sampleContent || '',
-            ayaklar: Array.isArray(item.ayaklar) ? 
-              [...item.ayaklar, ...Array(Math.max(0, 6 - (Number(item.ayaklar.length) || 0))).fill('')].slice(0, 6) 
-              : Array(6).fill(''),
-            fiyat: item.fiyat || '',
+            ayaklar: Array.isArray(item.ayaklar) ? item.ayaklar : Array(6).fill(null).map((_, i) => ({
+              legNo: i + 1, raceNo: i + 1, analysis: '', horses: '', banko: false, confidence: 70
+            })),
             commentsEnabled: item.commentsEnabled !== undefined ? item.commentsEnabled : true,
-            role: 'user', ctaText: '', ctaLink: '', orderIndex: 0, 
-            bankName: '', iban: '', receiverName: ''
-          });
+            createdAt: item.createdAt
+          } as any);
       } else if (type === 'bank') {
           setFormData({ 
-            title: '', subTitle: '', content: '', image: '', slug: '', 
-            track: 'İstanbul', winnings: '', views: 0, type: 'current', 
-            role: 'user', ctaText: '', ctaLink: '', orderIndex: 0, 
+            ...initialFormState,
             bankName: item.bankName || '', 
             iban: item.iban || '', 
             receiverName: item.receiverName || '', 
-            ayaklar: Array(6).fill(''), fiyat: '', commentsEnabled: true,
-            dailyBanko: '', dailySurpriz: '', dailyTemplate: '', isFreeSample: false, sampleContent: ''
           });
       } else if (type === 'slider') {
           setFormData({ 
+            ...initialFormState,
             title: item.title || '', 
             subTitle: item.subTitle || '', 
-            content: '', 
             image: item.imageUrl || '', 
-            slug: '', 
-            track: 'İstanbul', winnings: '', views: 0, type: 'current', 
-            role: 'user', 
             ctaText: item.ctaText || '', 
             ctaLink: item.ctaLink || '', 
             orderIndex: item.orderIndex || 0, 
-            bankName: '', iban: '', receiverName: '', 
-            ayaklar: Array(6).fill(''), fiyat: '', commentsEnabled: true,
-            dailyBanko: '', dailySurpriz: '', dailyTemplate: '', isFreeSample: false, sampleContent: ''
           });
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -252,15 +269,11 @@ export default function Admin() {
     setLoading(true);
     try {
       await updateDoc(doc(db, 'predictions', prediction.id), {
-        type: (result === 'won' || result === 'partial') ? 'success' : 'current',
+        status: 'settled',
         resultStatus: result,
         winnings: winnings,
         updatedAt: serverTimestamp(),
         settledAt: serverTimestamp(),
-        // Failsafes for older incomplete / demo documents to pass strict schema validation
-        slug: prediction.slug || (prediction.title ? prediction.title.toLowerCase().replace(/ /g, '-') : 'tahmin'),
-        content: prediction.content || 'İçerik belirtilmedi.',
-        title: prediction.title || 'İsimsiz Tahmin',
       });
       setMessage('Tahmin sonucu başarıyla güncellendi!');
       setWinningsPrompt(null);
@@ -361,7 +374,7 @@ export default function Admin() {
             setMessage('Slider öğesi başarıyla eklendi!');
         }
         await fetchAdminData();
-        setFormData({ ...formData, title: '', subTitle: '', ctaText: '', ctaLink: '', image: '', orderIndex: 0 });
+        setFormData(initialFormState);
         setEditId(null);
     } catch (err) {
         console.error(err);
@@ -460,6 +473,46 @@ export default function Admin() {
       <Header />
       
       <main className="max-w-7xl mx-auto py-20 px-4">
+        {/* KPI Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+          <div className="bg-[#0a0a0a] border border-white/5 rounded-3xl p-6 shadow-xl">
+             <div className="flex items-center space-x-3 mb-2">
+                <div className="w-8 h-8 rounded-full bg-[#ffcc00]/10 flex items-center justify-center">
+                   <ListPlus size={16} className="text-[#ffcc00]" />
+                </div>
+                <span className="text-[10px] font-black tracking-widest uppercase text-gray-500">Açık Kuponlar</span>
+             </div>
+             <div className="text-3xl font-black italic">{predictions.filter(p => (p.status === 'published' || p.type === 'current')).length}</div>
+          </div>
+          <div className="bg-[#0a0a0a] border border-white/5 rounded-3xl p-6 shadow-xl">
+             <div className="flex items-center space-x-3 mb-2">
+                <div className="w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center">
+                   <CheckCircle size={16} className="text-green-500" />
+                </div>
+                <span className="text-[10px] font-black tracking-widest uppercase text-gray-500">Tutan Kuponlar</span>
+             </div>
+             <div className="text-3xl font-black italic">{predictions.filter(p => (p.status === 'settled' || p.type === 'success')).length}</div>
+          </div>
+          <div className="bg-[#0a0a0a] border border-white/5 rounded-3xl p-6 shadow-xl">
+             <div className="flex items-center space-x-3 mb-2">
+                <div className="w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center">
+                   <Eye size={16} className="text-blue-500" />
+                </div>
+                <span className="text-[10px] font-black tracking-widest uppercase text-gray-500">Görüntülenme</span>
+             </div>
+             <div className="text-3xl font-black italic">{predictions.reduce((acc, p) => acc + (p.views || 0), 0).toLocaleString()}</div>
+          </div>
+          <div className="bg-[#0a0a0a] border border-white/5 rounded-3xl p-6 shadow-xl">
+             <div className="flex items-center space-x-3 mb-2">
+                <div className="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center">
+                   <Users size={16} className="text-purple-500" />
+                </div>
+                <span className="text-[10px] font-black tracking-widest uppercase text-gray-500">Bekleyen Ödeme</span>
+             </div>
+             <div className="text-3xl font-black italic">{payments.filter(p => p.status === 'pending').length}</div>
+          </div>
+        </div>
+
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 border-l-4 border-[#ffcc00] pl-8">
           <div className="flex items-center space-x-6">
             <div className="relative w-20 h-20 rounded-full p-[3px] overflow-hidden flex items-center justify-center bg-black shadow-2xl shadow-[#ffcc00]/30">
@@ -508,14 +561,7 @@ export default function Admin() {
                   onClick={() => {
                     setActiveSection(section.id as Section);
                     setEditId(null);
-                    setFormData({ 
-                      title: '', subTitle: '', content: '', image: '', slug: '', 
-                      track: 'İstanbul', winnings: '', views: 0, type: 'current', 
-                      role: 'user', ctaText: '', ctaLink: '', orderIndex: 0, 
-                      bankName: '', iban: '', receiverName: '', ayaklar: Array(6).fill(''), 
-                      fiyat: '', commentsEnabled: true,
-                      dailyBanko: '', dailySurpriz: '', dailyTemplate: '', isFreeSample: false, sampleContent: ''
-                    });
+                    setFormData(initialFormState);
                   }}
                   className={`flex-shrink-0 lg:flex-shrink lg:w-full flex items-center space-x-3 md:space-x-4 p-4 md:p-5 rounded-xl md:rounded-2xl transition-all group ${
                     activeSection === section.id 
@@ -684,28 +730,63 @@ export default function Admin() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="bg-[#0a0a0a] border border-white/5 rounded-[40px] p-8 md:p-12 shadow-2xl"
+                className={`bg-[#0a0a0a] border border-white/5 rounded-[40px] shadow-2xl overflow-hidden ${
+                  (activeSection === 'guncel' || activeSection === 'basarili') ? 'p-0' : 'p-8 md:p-12'
+                }`}
               >
                 {message && (
-                  <div className="bg-green-500/10 border border-green-500 text-green-500 p-4 rounded-2xl mb-6 text-sm font-bold">
+                  <div className="bg-green-500/10 border border-green-500 text-green-500 p-4 rounded-2xl m-8 mb-6 text-sm font-bold">
                     {message}
                   </div>
                 )}
 
-                <div className="flex items-center space-x-4 mb-10">
-                  <div className="w-12 h-12 bg-[#ffcc00]/10 rounded-2xl flex items-center justify-center">
-                    {(() => {
-                      const Icon = sections.find(s => s.id === activeSection)?.icon;
-                      return Icon ? <Icon size={24} className="text-[#ffcc00]" /> : null;
-                    })()}
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-black italic tracking-tight">{sections.find(s => s.id === activeSection)?.label} {activeSection === 'users' ? 'Yönetimi' : (editId ? 'Güncelle' : 'Ekle')}</h2>
-                    <p className="text-gray-500 text-xs font-medium">Lütfen tüm bilgileri eksiksiz doldurun.</p>
-                  </div>
-                </div>
+                {/* Form Wrapper with Preview if applicable */}
+                {activeSection === 'users' ? (
+                   <div className="p-8 md:p-12 space-y-12">
+                      <div className="flex items-center space-x-4 mb-10">
+                        <div className="w-12 h-12 bg-[#ffcc00]/10 rounded-2xl flex items-center justify-center">
+                           <Users size={24} className="text-[#ffcc00]" />
+                        </div>
+                        <div>
+                          <h2 className="text-2xl font-black italic tracking-tight uppercase">Kullanıcı Yönetimi</h2>
+                          <p className="text-gray-500 text-xs font-medium uppercase tracking-widest">Mevcut aboneleri ve ödemelerini buradan yönetin.</p>
+                        </div>
+                      </div>
 
-                  {activeSection === 'banks' ? (
+                      <div className="bg-[#222222] border border-[#ffcc00]/20 rounded-[30px] p-12 text-center mt-4 shadow-2xl">
+                         <Users size={64} className="text-[#ffcc00] mx-auto mb-6 opacity-30" />
+                         <h4 className="text-xl font-black mb-2 uppercase tracking-tight">KULLANICI VERİ TABANI</h4>
+                         <p className="text-sm text-gray-500 mb-6 font-medium max-w-sm mx-auto">
+                            Yeni kullanıcılar "Kayıt Ol" sayfası üzerinden eklenmelidir. Mevcut aboneleri buradan yönetebilirsiniz.
+                         </p>
+                         <div className="inline-flex items-center space-x-2 bg-[#ffcc00]/10 border border-[#ffcc00]/20 px-6 py-3 rounded-2xl">
+                            <Info size={16} className="text-[#ffcc00]" />
+                            <span className="text-[10px] text-[#ffcc00] font-black uppercase tracking-widest">Sistem v2.0 Aktif</span>
+                         </div>
+                      </div>
+                   </div>
+                ) : (
+                  <div className={`${(activeSection === 'guncel' || activeSection === 'basarili') ? 'flex flex-col xl:flex-row' : ''}`}>
+                  
+                  {/* Left Column: Form Fields */}
+                  <div className={`${(activeSection === 'guncel' || activeSection === 'basarili') ? 'flex-1 p-8 md:p-12 border-r border-white/5 lg:max-h-[1200px] overflow-y-auto custom-scrollbar' : 'w-full'}`}>
+                    
+                    <div className="flex items-center space-x-4 mb-10">
+                      <div className="w-12 h-12 bg-[#ffcc00]/10 rounded-2xl flex items-center justify-center">
+                        {(() => {
+                          const Icon = sections.find(s => s.id === activeSection)?.icon;
+                          return Icon ? <Icon size={24} className="text-[#ffcc00]" /> : null;
+                        })()}
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-black italic tracking-tight">
+                          {sections.find(s => s.id === activeSection)?.label} {editId ? 'Güncelle' : 'Ekle'}
+                        </h2>
+                        <p className="text-gray-500 text-xs font-medium">Lütfen tüm bilgileri eksiksiz doldurun.</p>
+                      </div>
+                    </div>
+
+                    {activeSection === 'banks' ? (
                        <div className="space-y-8">
                          <form onSubmit={handleSubmit} className="space-y-4 bg-[#222222] p-6 rounded-2xl border border-white/5">
                              <input type="text" placeholder="Banka Adı (Örn: Ziraat Bankası)" required value={formData.bankName} onChange={e => setFormData({...formData, bankName: e.target.value})} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-sm focus:outline-none focus:border-[#ffcc00]" />
@@ -717,7 +798,7 @@ export default function Admin() {
                              </div>
                          </form>
                       </div>
-                  ) : activeSection === 'slider' ? (
+                   ) : activeSection === 'slider' ? (
                       <div className="space-y-8">
                          <form onSubmit={handleSliderSubmit} className="space-y-4 bg-[#222222] p-6 rounded-2xl border border-white/5">
                              <input type="text" placeholder="Başlık" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-sm" />
@@ -732,321 +813,395 @@ export default function Admin() {
                              </div>
                          </form>
                       </div>
-                  ) : activeSection !== 'users' ? (
+                   ) : (
                     <div className="space-y-12">
-                     <form onSubmit={handleSubmit} className="space-y-6">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Başlık / Koşu Adı</label>
-                          <div className="relative">
-                            <Type size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-600" />
-                            <input 
-                              type="text" 
-                              placeholder="Örn: Tek Banko - 11 Nisan İstanbul"
-                              required
-                              value={formData.title}
-                              onChange={e => setFormData({...formData, title: e.target.value})}
-                              className="w-full bg-[#222222] border border-white/10 rounded-2xl p-5 pl-14 text-sm font-bold focus:outline-none focus:border-[#ffcc00] transition-colors"
-                            />
-                          </div>
-                        </div>
-
-                        {activeSection === 'guncel' && (
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Pist (Hipodrom)</label>
-                            <div className="relative">
-                              <select 
-                                value={formData.track}
-                                onChange={e => setFormData({...formData, track: e.target.value})}
-                                className="w-full bg-[#222222] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ffcc00] transition-colors appearance-none"
-                              >
-                                <option value="Şanlıurfa">Şanlıurfa</option>
-                                <option value="Turffontein">Turffontein</option>
-                                <option value="İstanbul">İstanbul</option>
-                                <option value="Adana">Adana</option>
-                                <option value="Laurel Park">Laurel Park</option>
-                                <option value="Keeneland">Keeneland</option>
-                                <option value="Santa Anita">Santa Anita</option>
-                                <option value="İzmir">İzmir</option>
-                              </select>
-                            </div>
-                          </div>
-                        )}
-                        
-                        {activeSection !== 'guncel' && (
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Slug (URL)</label>
-                            <div className="relative">
-                              <LinkIcon size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-600" />
-                              <input 
-                                type="text" 
-                                placeholder="Örn: istanbul-tahminleri-18-nisan"
-                                value={formData.slug}
-                                onChange={e => setFormData({...formData, slug: e.target.value})}
-                                className="w-full bg-[#222222] border border-white/10 rounded-2xl p-5 pl-14 text-sm font-bold focus:outline-none focus:border-[#ffcc00] transition-colors"
-                              />
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      {activeSection === 'guncel' && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Slug (URL)</label>
-                            <div className="relative">
-                              <LinkIcon size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-600" />
-                              <input 
-                                type="text" 
-                                placeholder="Örn: istanbul-tahminleri-18-nisan"
-                                value={formData.slug}
-                                onChange={e => setFormData({...formData, slug: e.target.value})}
-                                className="w-full bg-[#222222] border border-white/10 rounded-2xl p-5 pl-14 text-sm font-bold focus:outline-none focus:border-[#ffcc00] transition-colors"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Görsel URL</label>
-                          <div className="relative">
-                            <ImageIcon size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-600" />
-                            <input 
-                              type="url" 
-                              placeholder="Örn: https://picsum.photos/..."
-                              value={formData.image}
-                              onChange={e => setFormData({...formData, image: e.target.value})}
-                              className="w-full bg-[#222222] border border-white/10 rounded-2xl p-5 pl-14 text-sm font-bold focus:outline-none focus:border-[#ffcc00] transition-colors"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Okunma / İzlenme Sayısı</label>
-                          <div className="relative">
-                            <Eye size={18} className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-600" />
-                            <input 
-                              type="number" 
-                              placeholder="Örn: 1250"
-                              value={formData.views}
-                              onChange={e => setFormData({...formData, views: Number(e.target.value)})}
-                              className="w-full bg-[#222222] border border-white/10 rounded-2xl p-5 pl-14 text-sm font-bold focus:outline-none focus:border-[#ffcc00] transition-colors"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      {activeSection === 'basarili' && (
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">İkramiye Tutarı</label>
-                          <div className="relative">
-                            <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-600 font-bold">₺</span>
-                            <input 
-                              type="text" 
-                              placeholder="Örn: 26.500,00 TL"
-                              required
-                              value={formData.winnings}
-                              onChange={e => setFormData({...formData, winnings: e.target.value})}
-                              className="w-full bg-[#222222] border border-white/10 rounded-2xl p-5 pl-10 text-sm font-bold focus:outline-none focus:border-[#ffcc00] transition-colors"
-                            />
-                          </div>
-                        </div>
-                      )}
-
-                      {activeSection === 'guncel' && (
-                        <>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-2">
-                               <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Alt Başlık (SubTitle)</label>
-                               <input 
+                     <form onSubmit={handleSubmit} className="space-y-8">
+                       
+                       {/* Basic Info & VIP Settings Section */}
+                       <div className="space-y-10">
+                         
+                         {/* Tier 1: Identity */}
+                         <div className="space-y-6">
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ffcc00] flex items-center space-x-2">
+                               <span className="w-6 h-[1px] bg-[#ffcc00]/30"></span>
+                               <span>Kupon Kimliği</span>
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Başlık / Koşu Adı</label>
+                                <input 
                                   type="text" 
-                                  placeholder="Örn: İstanbul Tahminleri Sayfanın En Altındadır;"
-                                  value={formData.subTitle}
-                                  onChange={e => setFormData({...formData, subTitle: e.target.value})}
-                                  className="w-full bg-[#222222] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ffcc00] transition-colors"
+                                  placeholder="Örn: VIP Agresif İstanbul Altılısı"
+                                  required
+                                  value={formData.title}
+                                  onChange={e => setFormData({...formData, title: e.target.value})}
+                                  className="w-full bg-[#111111] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ffcc00] transition-colors"
                                 />
+                              </div>
+                              <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Hipodrom (Pist)</label>
+                                <select 
+                                  value={formData.track}
+                                  onChange={e => setFormData({...formData, track: e.target.value})}
+                                  className="w-full bg-[#111111] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ffcc00] transition-colors appearance-none"
+                                >
+                                  {['İstanbul', 'Adana', 'İzmir', 'Şanlıurfa', 'Ankara', 'Bursa', 'Kocaeli', 'Turffontein', 'Laurel Park', 'Keeneland', 'Santa Anita'].map(t => (
+                                    <option key={t} value={t}>{t}</option>
+                                  ))}
+                                </select>
+                              </div>
                             </div>
-                            <div className="flex items-center justify-between p-5 space-x-4">
-                               <div className="flex items-center space-x-3">
-                                 <input 
-                                   type="checkbox" 
-                                   id="isPublic"
-                                   checked={formData.type === 'isPublic'}
-                                   onChange={e => setFormData({...formData, type: e.target.checked ? 'isPublic' : ''})}
-                                   className="w-5 h-5 rounded bg-[#222222] border-white/10 text-[#ffcc00] focus:ring-[#ffcc00]"
-                                 />
-                                 <label htmlFor="isPublic" className="text-sm font-bold text-gray-400 cursor-pointer">Ücretsiz Herkese Açık Yap</label>
-                               </div>
-                               <div className="flex items-center space-x-3">
-                                 <input 
-                                   type="checkbox" 
-                                   id="commentsEnabled"
-                                   checked={!formData.commentsEnabled}
-                                   onChange={e => setFormData({...formData, commentsEnabled: !e.target.checked})}
-                                   className="w-5 h-5 rounded bg-[#222222] border-white/10 text-[#ffcc00] focus:ring-[#ffcc00]"
-                                 />
-                                 <label htmlFor="commentsEnabled" className="text-sm font-bold text-gray-400 cursor-pointer">Yorumlara Kapat</label>
-                               </div>
-                            </div>
-                          </div>
+                         </div>
 
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-4">
-                                <div className="space-y-2">
-                                  <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Şablon Fiyatı</label>
-                                  <div className="relative">
-                                    <span className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-600 font-black italic">₺</span>
-                                    <input 
-                                      type="text" 
-                                      placeholder="Örn: 1.250 ₺"
-                                      value={formData.fiyat}
-                                      onChange={e => setFormData({...formData, fiyat: e.target.value})}
-                                      className="w-full bg-[#222222] border border-white/10 rounded-2xl p-5 pl-10 text-sm font-bold focus:outline-none focus:border-[#ffcc00] transition-colors"
-                                    />
-                                  </div>
-                                </div>
-                                
-                                <div className="space-y-2">
-                                  <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Günün Bankosu</label>
-                                  <input type="text" placeholder="Örn: 4. Ayak 6 Nolu At" value={formData.dailyBanko} onChange={e => setFormData({...formData, dailyBanko: e.target.value})} className="w-full bg-[#222222] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ffcc00] transition-colors" />
-                                </div>
-                                <div className="space-y-2">
-                                  <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Günün Sürprizi</label>
-                                  <input type="text" placeholder="Örn: 2. Ayak 9 Nolu At" value={formData.dailySurpriz} onChange={e => setFormData({...formData, dailySurpriz: e.target.value})} className="w-full bg-[#222222] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ffcc00] transition-colors" />
-                                </div>
-                                <div className="space-y-2">
-                                  <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Hazır Altılı Şablonu</label>
-                                  <input type="text" placeholder="Örn: 1-5 / 3-6 / 2 / 6 / 1-4-8 / 5-7" value={formData.dailyTemplate} onChange={e => setFormData({...formData, dailyTemplate: e.target.value})} className="w-full bg-[#222222] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ffcc00] transition-colors" />
-                                </div>
-                            </div>
+                         {/* Tier 2: VIP Settings & Descriptions */}
+                         <div className="space-y-8">
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ffcc00] flex items-center space-x-2">
+                               <span className="w-6 h-[1px] bg-[#ffcc00]/30"></span>
+                               <span>Yayın & Satış Kontrolleri</span>
+                            </h3>
                             
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                              <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Görünürlük</label>
+                                <select 
+                                  value={formData.visibility}
+                                  onChange={e => setFormData({...formData, visibility: e.target.value as any})}
+                                  className="w-full bg-[#111111] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ffcc00] appearance-none"
+                                >
+                                  <option value="vip">🔒 VIP Özel</option>
+                                  <option value="sample">👁️ Örnek Gösterim</option>
+                                  <option value="public">🌍 Herkese Açık</option>
+                                </select>
+                              </div>
+                              <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Kupon Türü</label>
+                                <select 
+                                  value={formData.couponType}
+                                  onChange={e => setFormData({...formData, couponType: e.target.value as any})}
+                                  className="w-full bg-[#111111] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ffcc00] appearance-none"
+                                >
+                                  <option value="economic">💰 Ekonomik</option>
+                                  <option value="standard">🎯 Standart</option>
+                                  <option value="aggressive">💣 Agresif</option>
+                                </select>
+                              </div>
+                              <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Durum</label>
+                                <select 
+                                  value={formData.status}
+                                  onChange={e => setFormData({...formData, status: e.target.value as any})}
+                                  className="w-full bg-[#111111] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ffcc00] appearance-none"
+                                >
+                                  <option value="published">🟢 Yayında</option>
+                                  <option value="draft">🟡 Taslak</option>
+                                  <option value="settled">🔴 Sonuçlandı</option>
+                                </select>
+                              </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2 flex justify-between">
+                                  <span>Güven Endeksi</span>
+                                  <span className="text-[#ffcc00]">%{formData.confidenceScore}</span>
+                                </label>
+                                <input 
+                                  type="range" min="1" max="100" 
+                                  value={formData.confidenceScore}
+                                  onChange={e => setFormData({...formData, confidenceScore: parseInt(e.target.value)})}
+                                  className="w-full accent-[#ffcc00]"
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Öncelik Rozeti</label>
+                                <input 
+                                  type="text" 
+                                  placeholder="Örn: Günün Bankosu"
+                                  value={formData.badge}
+                                  onChange={e => setFormData({...formData, badge: e.target.value})}
+                                  className="w-full bg-[#111111] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ffcc00]"
+                                />
+                              </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Kısa Satış Spotu (Summary)</label>
+                                <textarea 
+                                  value={formData.shortNote}
+                                  onChange={e => setFormData({...formData, shortNote: e.target.value})}
+                                  className="w-full bg-[#111111] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ffcc00] resize-none"
+                                  rows={3}
+                                  placeholder="Örn: %90 başarı oranlı bugün kü en güçlü kuponumuz."
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Ücret Etiketi</label>
+                                <input 
+                                  type="text" 
+                                  placeholder="Örn: Uygun Kupon / Yüksek Kazanç"
+                                  value={formData.priceLabel}
+                                  onChange={e => setFormData({...formData, priceLabel: e.target.value})}
+                                  className="w-full bg-[#111111] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ffcc00]"
+                                />
+                              </div>
+                            </div>
+                         </div>
+                       </div>
+
+                       {/* Tier 3: Structured Legs (Ayaklar) */}
+                         <div className="space-y-6">
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ffcc00] flex items-center space-x-2">
+                               <span className="w-6 h-[1px] bg-[#ffcc00]/30"></span>
+                               <span>Kupon Ayakları (Görsel Editör)</span>
+                            </h3>
+
                             <div className="space-y-4">
-                                <div className="flex items-center space-x-3 bg-[#222222] p-5 rounded-2xl border border-white/10">
-                                   <input type="checkbox" id="isFreeSample" checked={formData.isFreeSample} onChange={e => setFormData({...formData, isFreeSample: e.target.checked})} className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#ffcc00] focus:ring-[#ffcc00]" />
-                                   <label htmlFor="isFreeSample" className="text-sm font-bold text-[#ffcc00] cursor-pointer">Ücretsiz Örnek Alanı Aktif</label>
+                               {formData.ayaklar.map((ayak, idx) => (
+                                  <div key={idx} className="bg-[#111111] border border-white/5 rounded-3xl p-6 relative overflow-hidden group">
+                                     <div className="absolute top-0 right-0 w-32 h-32 bg-[#ffcc00]/5 -mr-16 -mt-16 rounded-full group-hover:scale-110 transition-transform"></div>
+                                     <div className="relative z-10">
+                                        <div className="flex items-center justify-between mb-6">
+                                           <div className="flex items-center space-x-3">
+                                              <div className="w-10 h-10 bg-[#ffcc00] text-black rounded-xl flex items-center justify-center font-black italic shadow-lg shadow-[#ffcc00]/20">
+                                                 {idx + 1}
+                                              </div>
+                                              <div>
+                                                 <h4 className="text-sm font-black italic tracking-wide uppercase">.{idx + 1} AYAK ANALİZİ</h4>
+                                                 <p className="text-[9px] text-gray-500 font-bold uppercase">Koşu No: {idx + 1}</p>
+                                              </div>
+                                           </div>
+                                           <div className="flex items-center space-x-4">
+                                              <div className="flex items-center space-x-2">
+                                                 <input 
+                                                   type="checkbox" 
+                                                   checked={ayak.banko}
+                                                   onChange={(e) => {
+                                                      const newAyaklar = [...formData.ayaklar];
+                                                      newAyaklar[idx].banko = e.target.checked;
+                                                      setFormData({...formData, ayaklar: newAyaklar});
+                                                   }}
+                                                   className="w-4 h-4 rounded bg-black border-white/10 text-[#ffcc00] focus:ring-[#ffcc00]"
+                                                 />
+                                                 <label className="text-[10px] font-black text-[#ffcc00] uppercase tracking-widest cursor-pointer">BANKO</label>
+                                              </div>
+                                              <div className="flex items-center space-x-2 bg-black/50 px-3 py-1.5 rounded-lg border border-white/5">
+                                                 <Gauge size={12} className="text-gray-500" />
+                                                 <input 
+                                                   type="number" 
+                                                   value={ayak.confidence}
+                                                   onChange={(e) => {
+                                                      const newAyaklar = [...formData.ayaklar];
+                                                      newAyaklar[idx].confidence = parseInt(e.target.value);
+                                                      setFormData({...formData, ayaklar: newAyaklar});
+                                                   }}
+                                                   className="w-8 bg-transparent text-[10px] font-black text-[#ffcc00] focus:outline-none"
+                                                 />
+                                                 <span className="text-[9px] font-bold text-gray-600">%</span>
+                                              </div>
+                                           </div>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                           <div className="space-y-2">
+                                              <label className="text-[9px] font-black uppercase text-gray-500 ml-1">At Numaraları (Sıralı)</label>
+                                              <input 
+                                                type="text"
+                                                placeholder="Örn: 2, 4, 6, 8, 10"
+                                                value={ayak.horses}
+                                                onChange={(e) => {
+                                                   const newAyaklar = [...formData.ayaklar];
+                                                   newAyaklar[idx].horses = e.target.value;
+                                                   setFormData({...formData, ayaklar: newAyaklar});
+                                                }}
+                                                className="w-full bg-black/40 border border-white/5 rounded-xl p-4 text-xs font-bold text-[#ffcc00] focus:border-[#ffcc00] outline-none transition-colors"
+                                              />
+                                           </div>
+                                           <div className="space-y-2">
+                                              <label className="text-[9px] font-black uppercase text-gray-500 ml-1">Kısa Analiz / Banko Notu</label>
+                                              <input 
+                                                type="text"
+                                                placeholder="Örn: Bu mesafede çok şanslı."
+                                                value={ayak.analysis}
+                                                onChange={(e) => {
+                                                   const newAyaklar = [...formData.ayaklar];
+                                                   newAyaklar[idx].analysis = e.target.value;
+                                                   setFormData({...formData, ayaklar: newAyaklar});
+                                                }}
+                                                className="w-full bg-black/40 border border-white/5 rounded-xl p-4 text-xs font-bold focus:border-[#ffcc00] outline-none transition-colors"
+                                              />
+                                           </div>
+                                        </div>
+                                     </div>
+                                  </div>
+                               ))}
+                            </div>
+                         </div>
+
+                         {/* Result Marking Panel (Professional Reporting) */}
+                         <div className="space-y-6 pt-10 border-t border-white/5">
+                            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ffcc00] flex items-center space-x-2">
+                               <span className="w-6 h-[1px] bg-[#ffcc00]/30"></span>
+                               <span>Sonuçlandırma & Raporlama</span>
+                            </h3>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                               <div className="space-y-2">
+                                  <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Sonuç Durumu</label>
+                                  <select 
+                                    value={formData.resultStatus}
+                                    onChange={e => setFormData({...formData, resultStatus: e.target.value as any})}
+                                    className="w-full bg-[#111111] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ffcc00] appearance-none"
+                                  >
+                                    <option value="pending">⏳ Bekliyor</option>
+                                    <option value="won">🏆 Kazandı</option>
+                                    <option value="lost">❌ Kaybetti</option>
+                                    <option value="partial">🌗 İade / Kısmi</option>
+                                  </select>
+                               </div>
+                               <div className="space-y-2">
+                                  <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Net Kazanç (₺)</label>
+                                  <input 
+                                    type="text" 
+                                    placeholder="Örn: 12500"
+                                    value={formData.winnings}
+                                    onChange={e => setFormData({...formData, winnings: e.target.value})}
+                                    className="w-full bg-[#111111] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ffcc00]"
+                                  />
+                               </div>
+                               <div className="space-y-2">
+                                  <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">ROI (%)</label>
+                                  <input 
+                                    type="number" 
+                                    placeholder="Örn: 450"
+                                    value={formData.roi}
+                                    onChange={e => setFormData({...formData, roi: e.target.value})}
+                                    className="w-full bg-[#111111] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ffcc00]"
+                                  />
+                               </div>
+                            </div>
+                         </div>
+
+                        <div className="flex space-x-4 pt-10">
+                          <button 
+                            type="submit"
+                            disabled={loading}
+                            className="flex-1 p-6 bg-[#ffcc00] rounded-3xl font-black text-black uppercase tracking-[0.2em] hover:bg-white hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center space-x-4 shadow-xl shadow-[#ffcc00]/10 disabled:opacity-50"
+                          >
+                            <Send size={20} />
+                            <span>{loading ? 'İŞLENİYOR...' : (editId ? 'SİSTEMİ GÜNCELLE' : 'VIP KUPONU YAYINLA')}</span>
+                          </button>
+                          {editId && (
+                             <button type="button" onClick={() => { 
+                               setEditId(null); 
+                               setFormData(initialFormState); 
+                             }} className="px-10 bg-gray-900 text-white font-black p-6 rounded-3xl uppercase tracking-widest hover:bg-gray-800 transition-all border border-white/5">İPTAL</button>
+                          )}
+                        </div>
+                      </form>
+                    </div>
+                  )
+                }
+              </div>
+            
+              {/* Right Column: Live Preview */}
+                    {(activeSection === 'guncel' || activeSection === 'basarili') && (
+                       <div className="xl:w-[450px] bg-[#050505] p-8 lg:max-h-[1200px] overflow-y-auto custom-scrollbar">
+                          <div className="sticky top-0 space-y-8">
+                             <div className="flex items-center justify-between">
+                                <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ffcc00]">CANLI ÖNİZLEME</h3>
+                                <div className="flex items-center space-x-2">
+                                   <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                                   <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest">REAL-TIME SYNC</span>
                                 </div>
-                                {formData.isFreeSample && (
-                                   <div className="space-y-2">
-                                     <label className="text-[10px] font-black uppercase tracking-widest text-[#ffcc00] ml-2">Ücretsiz Örnek İçerik</label>
-                                     <textarea rows={6} placeholder="Ücretsiz gösterilecek örnek tahmini buraya giriniz..." value={formData.sampleContent} onChange={e => setFormData({...formData, sampleContent: e.target.value})} className="w-full bg-[#222222] border border-[#ffcc00]/50 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ffcc00] transition-colors resize-none"></textarea>
+                             </div>
+
+                             {/* Premium Coupon Card Preview */}
+                             <div className="bg-[#111111] border border-white/10 rounded-[32px] overflow-hidden shadow-2xl relative group">
+                                {/* Header / Badge */}
+                                <div className="p-6 pb-4 flex justify-between items-start">
+                                   <div>
+                                      <div className="inline-flex items-center space-x-2 bg-[#ffcc00] text-black px-3 py-1 rounded-full text-[9px] font-black italic uppercase mb-3">
+                                         <Star size={10} fill="currentColor" />
+                                         <span>{formData.badge || 'VIP ÖZEL SEÇİM'}</span>
+                                      </div>
+                                      <h4 className="text-xl font-black italic tracking-tight uppercase leading-tight">
+                                         {formData.title || 'KUPON BAŞLIĞI'}
+                                      </h4>
+                                   </div>
+                                   <div className="bg-black/50 border border-white/5 p-3 rounded-2xl flex flex-col items-center">
+                                      <Info size={16} className="text-[#ffcc00] mb-1" />
+                                      <span className="text-[8px] font-black text-gray-400 uppercase leading-none">{formData.track || 'PİST'}</span>
+                                   </div>
+                                </div>
+
+                                {/* Confidence Bar */}
+                                <div className="px-6 mb-6">
+                                   <div className="bg-black/50 rounded-2xl p-4 border border-white/5">
+                                      <div className="flex justify-between items-center mb-2">
+                                         <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">GÜVEN ENDEKSİ</span>
+                                         <span className="text-[10px] font-black text-[#ffcc00] italic">%{formData.confidenceScore}</span>
+                                      </div>
+                                      <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                                         <motion.div 
+                                           initial={{ width: 0 }}
+                                           animate={{ width: `${formData.confidenceScore}%` }}
+                                           className="h-full bg-gradient-to-r from-[#ffcc00] to-[#ffa200]"
+                                         />
+                                      </div>
+                                   </div>
+                                </div>
+
+                                {/* Ayaklar Preview List */}
+                                <div className="px-6 space-y-3 mb-6">
+                                   {formData.ayaklar.map((ayak, i) => (
+                                      <div key={i} className="flex items-center p-3 bg-white/5 rounded-2xl border border-white/5 group-hover:bg-white/[0.08] transition-colors">
+                                         <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black italic ${ayak.banko ? 'bg-[#ffcc00] text-black shadow-lg shadow-[#ffcc00]/20' : 'bg-black text-gray-400 border border-white/10'}`}>
+                                            {i + 1}
+                                         </div>
+                                         <div className="flex-1 ml-4 overflow-hidden">
+                                            <div className="flex items-center justify-between">
+                                               <span className="text-[11px] font-black text-[#ffcc00] tracking-wider truncate">{ayak.horses || '---'}</span>
+                                               {ayak.banko && <span className="text-[8px] font-black bg-black text-[#ffcc00] px-1.5 py-0.5 rounded border border-[#ffcc00]/30 italic ml-2">BANKO</span>}
+                                            </div>
+                                            {ayak.analysis && <p className="text-[9px] text-gray-500 font-bold truncate mt-0.5 uppercase italic">{ayak.analysis}</p>}
+                                         </div>
+                                      </div>
+                                   ))}
+                                </div>
+
+                                {/* Footer Price/Meta */}
+                                <div className="bg-black/40 p-6 flex justify-between items-center border-t border-white/5">
+                                   <div>
+                                      <p className="text-[8px] font-black text-gray-500 uppercase tracking-[0.2em] mb-1">{formData.priceLabel || 'VIP ERİŞİM PLANI'}</p>
+                                      <p className="text-xl font-black italic tracking-tighter text-[#ffcc00]">₺{formData.kuponBedeli || '---'}</p>
+                                   </div>
+                                   <div className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest ${formData.couponType === 'economic' ? 'bg-green-500/10 text-green-500' : formData.couponType === 'aggressive' ? 'bg-red-500/10 text-red-500' : 'bg-[#ffcc00]/10 text-[#ffcc00]'}`}>
+                                      {formData.couponType}
+                                   </div>
+                                </div>
+
+                                {/* ROI/Winning Badge if settled */}
+                                {formData.status === 'settled' && (
+                                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[15deg]">
+                                      <div className="bg-[#ffcc00] text-black px-8 py-3 rounded-2xl shadow-2xl shadow-[#ffcc00]/40 border-4 border-black font-black italic text-2xl tracking-tighter uppercase whitespace-nowrap">
+                                         +{formData.roi}% ROI
+                                      </div>
                                    </div>
                                 )}
-                            </div>
+                             </div>
+
+                             {/* Sales Messaging Preview */}
+                             <div className="bg-[#ffcc00]/5 border border-[#ffcc00]/10 rounded-2xl p-6 italic">
+                                <p className="text-[11px] font-bold text-[#ffcc00] leading-relaxed uppercase tracking-tight">
+                                   {formData.shortNote || 'Lütfen kupon için kısa bir dikkat çekici metin girin...'}
+                                </p>
+                             </div>
                           </div>
-
-                          <div className="space-y-4">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Ayaklar (Her ayağa 16 adet At ve AGF girebilirsiniz)</label>
-                            <div className="grid grid-cols-2 lg:grid-cols-6 gap-3">
-                              {Array.from({ length: 6 }).map((_, i) => {
-                                const currentAyakStr = formData.ayaklar[i] || '';
-                                const lines = currentAyakStr.split('\n');
-                                const horses = Array.from({length: 16}).map((_, idx) => {
-                                   const line = lines[idx] || '';
-                                   const match = line.trim().match(/^([^\(]+?)(?:\s*\(\%?([^\)]+)\))?$/);
-                                   return {
-                                      atNo: match ? match[1].trim() : '',
-                                      agf: match && match[2] ? match[2].trim() : ''
-                                   };
-                                });
-
-                                const updateHorse = (horseIdx: number, field: 'atNo' | 'agf', val: string) => {
-                                   const newHorses = [...horses];
-                                   newHorses[horseIdx][field] = val;
-                                   const newAyaklar = [...formData.ayaklar];
-                                   newAyaklar[i] = newHorses
-                                      .map(h => {
-                                         if (!h.atNo && !h.agf) return '';
-                                         return `${h.atNo}${h.agf ? ` (%${h.agf})` : ''}`;
-                                      })
-                                      .join('\n');
-                                   setFormData({...formData, ayaklar: newAyaklar});
-                                };
-
-                                return (
-                                  <div key={i} className="flex flex-col space-y-1 bg-[#222222] border border-white/10 rounded-xl p-2 h-[350px] overflow-y-auto custom-scrollbar relative">
-                                    <span className="text-[9px] font-black text-[#ffcc00] uppercase text-center mb-1 sticky top-0 bg-[#222222] py-2 z-10 border-b border-white/5">{i + 1}. Ayak</span>
-                                    <div className="flex text-[8px] text-gray-500 font-bold px-1 mb-1">
-                                       <span className="w-5 text-center">NO</span>
-                                       <span className="flex-1 text-center">AT NO</span>
-                                       <span className="flex-1 text-center">% AGF</span>
-                                    </div>
-                                    {horses.map((horse, hIdx) => (
-                                      <div key={hIdx} className="flex space-x-1 items-center">
-                                        <span className="text-[9px] font-black text-gray-500 w-5 text-center">{hIdx + 1}</span>
-                                        <input 
-                                          type="text" 
-                                          placeholder="At No" 
-                                          value={horse.atNo}
-                                          onChange={(e) => updateHorse(hIdx, 'atNo', e.target.value)}
-                                          className="w-1/2 bg-black/50 border border-white/5 rounded p-1.5 text-[10px] text-center font-bold focus:border-[#ffcc00] focus:outline-none transition-colors placeholder:text-gray-700" 
-                                        />
-                                        <input 
-                                          type="text" 
-                                          placeholder="%" 
-                                          value={horse.agf}
-                                          onChange={(e) => updateHorse(hIdx, 'agf', e.target.value)}
-                                          className="w-1/2 bg-black/50 border border-white/5 rounded p-1.5 text-[10px] text-center font-bold focus:border-[#ffcc00] focus:outline-none transition-colors placeholder:text-gray-700" 
-                                        />
-                                      </div>
-                                    ))}
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          </div>
-                        </>
-                      )}
-
-                      <div className="space-y-2">
-                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">İçerik / Açıklama</label>
-                        <textarea 
-                          placeholder="Gönderi içeriğini buraya giriniz..."
-                          required
-                          rows={6}
-                          value={formData.content}
-                          onChange={e => setFormData({...formData, content: e.target.value})}
-                          className="w-full bg-[#222222] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ffcc00] transition-colors resize-none"
-                        ></textarea>
-                      </div>
-
-                      <div className="flex space-x-4">
-                        <button 
-                          type="submit"
-                          disabled={loading}
-                          className="flex-1 p-5 bg-[#ffcc00] rounded-2xl font-black text-black uppercase tracking-[0.2em] hover:bg-white transition-all transform active:scale-95 flex items-center justify-center space-x-3 group disabled:opacity-50"
-                        >
-                          <span>{loading ? 'Yükleniyor...' : (editId ? 'Güncelle' : 'Yayına Al')}</span>
-                          <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                        </button>
-                        {editId && (
-                           <button type="button" onClick={() => { 
-                             setEditId(null); 
-                             setFormData({ 
-                               ...formData, title: '', subTitle: '', content: '', image: '', 
-                               slug: '', winnings: '', ayaklar: Array(6).fill('') 
-                             }); 
-                           }} className="px-8 bg-gray-700 text-white font-black p-5 rounded-2xl uppercase hover:bg-gray-600 transition-colors">İptal</button>
-                        )}
-                      </div>
-                    </form>
-                  </div>
-                  ) : (
-                    <div className="space-y-8">
-                       <h3 className="text-xl font-bold mb-4">Kullanıcı Yönetimi</h3>
-                       <div className="bg-[#222222] border border-[#ffcc00]/20 rounded-[30px] p-8 text-center mt-4">
-                          <Users size={48} className="text-[#ffcc00] mx-auto mb-4 opacity-50" />
-                          <p className="text-sm text-gray-500 mb-2 font-medium">
-                             Yeni kullanıcılar "Kayıt Ol" sayfası üzerinden eklenmelidir.
-                          </p>
-                          <p className="text-[11px] text-gray-600 font-bold uppercase italic">
-                             Buradan mevcut kullanıcıların ödemelerini ve VIP durumlarını yönetebilirsiniz.
-                          </p>
                        </div>
-                    </div>
                   )}
-              </motion.div>
+                </div>
+              )}
+        </motion.div>
             </AnimatePresence>
           </div>
         </div>
