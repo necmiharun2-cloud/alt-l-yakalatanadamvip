@@ -170,10 +170,10 @@ export default function Header() {
             ))}
             
             <li className="relative group flex items-center ml-2">
-              <a href="https://webtv.tjk.org/" target="_blank" rel="noreferrer" className="flex items-center space-x-2 text-[#0ff] hover:text-white transition-all drop-shadow-[0_0_8px_rgba(0,255,255,0.8)] border border-[#0ff]/30 px-3 py-1.5 rounded-full bg-[#0ff]/10 hover:bg-[#0ff]/20">
+              <Link to="/program" className="flex items-center space-x-2 text-[#0ff] hover:text-white transition-all drop-shadow-[0_0_8px_rgba(0,255,255,0.8)] border border-[#0ff]/30 px-3 py-1.5 rounded-full bg-[#0ff]/10 hover:bg-[#0ff]/20">
                 <Tv size={16} className="animate-pulse" />
-                <span className="font-black tracking-widest text-[10px]">TJK WEB TV</span>
-              </a>
+                <span className="font-black tracking-widest text-[10px]">YARIŞ PROGRAMLARI</span>
+              </Link>
             </li>
           </ul>
 
@@ -208,15 +208,14 @@ export default function Header() {
                   </li>
                 ))}
                 <li>
-                  <a 
-                    href="https://webtv.tjk.org/" 
-                    target="_blank" 
-                    rel="noreferrer"
+                  <Link 
+                    to="/program"
+                    onClick={() => setMobileMenuOpen(false)}
                     className="flex items-center space-x-2 text-[#0ff] hover:text-white transition-all drop-shadow-[0_0_8px_rgba(0,255,255,0.8)] border border-[#0ff]/30 px-4 py-2 rounded-xl bg-[#0ff]/10 w-fit"
                   >
                     <Tv size={18} className="animate-pulse" />
-                    <span className="font-black tracking-widest text-xs">TJK WEB TV CANLI</span>
-                  </a>
+                    <span className="font-black tracking-widest text-xs">YARIŞ PROGRAMLARI</span>
+                  </Link>
                 </li>
               </ul>
             </motion.div>

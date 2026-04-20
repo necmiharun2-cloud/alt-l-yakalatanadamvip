@@ -33,6 +33,8 @@ import VipPage from './pages/VipPage';
 import CompliancePage from './pages/CompliancePage';
 import LegalPage from './pages/LegalPage';
 
+import Program from './pages/Program';
+
 // Services & Context
 import { dbService } from './services/dbService';
 import { useAuth } from './context/AuthContext';
@@ -360,6 +362,7 @@ export default function App() {
           <Route path="/blog/:slug" element={<BlogDetail />} />
           <Route path="/iletisim" element={<Contact />} />
           <Route path="/vip" element={<VipPage />} />
+          <Route path="/program" element={<><Header /><main><Program /></main><Footer /></>} />
           <Route path="/yasal/:slug" element={<LegalPageWrapper />} />
           <Route path="/kurumsal/:slug" element={<CompliancePage />} />
           <Route path="*" element={<><Header /><main><HomePage /></main><Footer /></>} />

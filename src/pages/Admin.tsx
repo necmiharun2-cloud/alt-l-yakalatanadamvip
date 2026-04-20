@@ -39,6 +39,9 @@ export default function Admin() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [editId, setEditId] = useState<string | null>(null);
+  const [confirmDialog, setConfirmDialog] = useState<{ isOpen: boolean, title: string, onConfirm: () => void } | null>(null);
+  const [winningsPrompt, setWinningsPrompt] = useState<{ isOpen: boolean, prediction: any, result: 'won'|'partial' } | null>(null);
+  const [winningsValue, setWinningsValue] = useState('');
 
   const [formData, setFormData] = useState({
     title: '',
@@ -235,12 +238,14 @@ export default function Admin() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
-  const handleResultMarking = async (prediction: any, result: 'won' | 'partial' | 'lost') => {
-    let winnings = prediction.winnings || "";
-    if (result === 'won' || result === 'partial') {
-        const w = window.prompt("Tebrikler! Kazanılan ikramiye tutarını giriniz (Örn: 511.589,37 TL):", winnings);
-        if (w === null) return;
-        winnings = w;
+  const handleResultMarking = async (prediction: any, result: 'won' | 'partial' | 'lost', customWinnings?: string) => {
+    let winnings = customWinnings !== undefined ? customWinnings : (prediction.winnings || "");
+    
+    // If not lost and we haven't asked for winnings yet, ask for it
+    if ((result === 'won' || result === 'partial') && customWinnings === undefined) {
+        setWinningsValue(winnings);
+        setWinningsPrompt({ isOpen: true, prediction, result });
+        return;
     }
     
     setLoading(true);
@@ -250,9 +255,14 @@ export default function Admin() {
         resultStatus: result,
         winnings: winnings,
         updatedAt: serverTimestamp(),
-        settledAt: serverTimestamp()
+        settledAt: serverTimestamp(),
+        // Failsafes for older incomplete / demo documents to pass strict schema validation
+        slug: prediction.slug || (prediction.title ? prediction.title.toLowerCase().replace(/ /g, '-') : 'tahmin'),
+        content: prediction.content || 'İçerik belirtilmedi.',
+        title: prediction.title || 'İsimsiz Tahmin',
       });
       setMessage('Tahmin sonucu başarıyla güncellendi!');
+      setWinningsPrompt(null);
       await fetchAdminData();
     } catch (err: any) {
       console.error(err);
@@ -263,16 +273,27 @@ export default function Admin() {
   };
 
   const handleDelete = async (id: string, type: string) => {
-      if (!window.confirm("Bu veriyi silmek istediğinize emin misiniz?")) return;
-      try {
-          if (type === 'blog') await deleteDoc(doc(db, 'blogs', id));
-          if (type === 'prediction') await deleteDoc(doc(db, 'predictions', id));
-          if (type === 'bank') await deleteDoc(doc(db, 'banks', id));
-          setMessage('Başarıyla silindi!');
-          await fetchAdminData();
-      } catch (err) {
-          console.error(err);
-      }
+      setConfirmDialog({
+          isOpen: true,
+          title: "Bu veriyi silmek istediğinize emin misiniz?",
+          onConfirm: async () => {
+             setConfirmDialog(null);
+             setLoading(true);
+             try {
+                 if (type === 'blog') await deleteDoc(doc(db, 'blogs', id));
+                 if (type === 'prediction') await deleteDoc(doc(db, 'predictions', id));
+                 if (type === 'bank') await deleteDoc(doc(db, 'banks', id));
+                 if (type === 'slider') await deleteDoc(doc(db, 'slider', id));
+                 setMessage('Başarıyla silindi!');
+                 await fetchAdminData();
+             } catch (err: any) {
+                 console.error(err);
+                 setMessage('Silme hatası: ' + err.message + ' (Lütfen Firestore kurallarınızı kontrol edin)');
+             } finally {
+                 setLoading(false);
+             }
+          }
+      });
   };
 
   const [payments, setPayments] = useState<any[]>([]);
@@ -288,17 +309,31 @@ export default function Admin() {
 
   const fetchAdminData = async () => {
     try {
-      const paymentsSnap = await getDocs(query(collection(db, 'payments'), orderBy('createdAt', 'desc')));
-      const sliderSnap = await getDocs(query(collection(db, 'slider'), orderBy('orderIndex', 'asc')));
-      const predsSnap = await getDocs(query(collection(db, 'predictions'), orderBy('createdAt', 'desc')));
-      const blogsSnap = await getDocs(query(collection(db, 'blogs'), orderBy('createdAt', 'desc')));
-      const banksSnap = await getDocs(collection(db, 'banks'));
-
-      setPayments(paymentsSnap.docs.map(d => ({ id: d.id, ...d.data() })));
-      setSliderItems(sliderSnap.docs.map(d => ({ id: d.id, ...d.data() })));
-      setPredictions(predsSnap.docs.map(d => ({ id: d.id, ...d.data() })));
-      setBlogs(blogsSnap.docs.map(d => ({ id: d.id, ...d.data() })));
-      setBanks(banksSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+      try {
+        const paymentsSnap = await getDocs(query(collection(db, 'payments'), orderBy('createdAt', 'desc')));
+        setPayments(paymentsSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+      } catch (e: any) { console.error("Error payments", e); }
+      
+      try {
+        const sliderSnap = await getDocs(query(collection(db, 'slider'), orderBy('orderIndex', 'asc')));
+        setSliderItems(sliderSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+      } catch (e: any) { console.error("Error slider", e); }
+      
+      try {
+        const predsSnap = await getDocs(query(collection(db, 'predictions'), orderBy('createdAt', 'desc')));
+        setPredictions(predsSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+      } catch (e: any) { console.error("Error preds", e); }
+      
+      try {
+        const blogsSnap = await getDocs(query(collection(db, 'blogs'), orderBy('createdAt', 'desc')));
+        setBlogs(blogsSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+      } catch (e: any) { console.error("Error blogs", e); }
+      
+      try {
+        const banksSnap = await getDocs(collection(db, 'banks'));
+        setBanks(banksSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+      } catch (e: any) { console.error("Error banks", e); }
+      
     } catch (err) {
       console.error("Error fetching admin data", err);
     }
@@ -336,13 +371,24 @@ export default function Admin() {
   };
 
   const deleteSlider = async (id: string) => {
-      try {
-          await deleteDoc(doc(db, 'slider', id));
-          await fetchAdminData();
-          setMessage('Slider silindi!');
-      } catch(err) {
-          console.error(err);
-      }
+      setConfirmDialog({
+          isOpen: true,
+          title: "Bu slider öğesini silmek istediğinize emin misiniz?",
+          onConfirm: async () => {
+             setConfirmDialog(null);
+             setLoading(true);
+             try {
+                 await deleteDoc(doc(db, 'slider', id));
+                 await fetchAdminData();
+                 setMessage('Slider silindi!');
+             } catch(err: any) {
+                 console.error(err);
+                 setMessage('Silme hatası: ' + err.message + ' (Lütfen Firestore kurallarınızı kontrol edin)');
+             } finally {
+                 setLoading(false);
+             }
+          }
+      });
   };
 
   const handlePaymentAction = async (paymentId: string, status: string, userId: string, paymentPackage?: string) => {
@@ -988,6 +1034,53 @@ export default function Admin() {
           </div>
         </div>
       </main>
+
+      {/* Confirmation Dialog Modal */}
+      <AnimatePresence>
+         {confirmDialog && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+               <motion.div 
+                 initial={{ opacity: 0, scale: 0.95 }}
+                 animate={{ opacity: 1, scale: 1 }}
+                 exit={{ opacity: 0, scale: 0.95 }}
+                 className="bg-[#151b27] border border-white/10 rounded-2xl p-6 md:p-8 max-w-sm w-full shadow-2xl"
+               >
+                  <h3 className="text-xl font-black mb-6 text-center">{confirmDialog.title}</h3>
+                  <div className="flex gap-4">
+                     <button onClick={() => setConfirmDialog(null)} className="flex-1 py-3 bg-gray-700 text-white rounded-xl font-black uppercase text-xs hover:bg-gray-600 transition-colors">İptal</button>
+                     <button onClick={confirmDialog.onConfirm} className="flex-1 py-3 bg-red-500 text-white rounded-xl font-black uppercase text-xs hover:bg-red-400 transition-colors">Sil</button>
+                  </div>
+               </motion.div>
+            </div>
+         )}
+         
+         {winningsPrompt && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+               <motion.div 
+                 initial={{ opacity: 0, scale: 0.95 }}
+                 animate={{ opacity: 1, scale: 1 }}
+                 exit={{ opacity: 0, scale: 0.95 }}
+                 className="bg-[#151b27] border border-white/10 rounded-2xl p-6 md:p-8 max-w-sm w-full shadow-2xl"
+               >
+                  <h3 className="text-xl font-black mb-2 text-center text-[#00e5ff] italic">Tebrikler!</h3>
+                  <p className="text-sm font-medium text-gray-400 text-center mb-6">Kazanılan ikramiye tutarını giriniz (Örn: 511.589,37 TL veya sadece sayı)</p>
+                  
+                  <input 
+                     type="text"
+                     value={winningsValue}
+                     onChange={(e) => setWinningsValue(e.target.value)}
+                     className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-center font-bold text-lg focus:outline-none focus:border-[#00e5ff] mb-6"
+                     placeholder="Tutar girin..."
+                     autoFocus
+                  />
+                  <div className="flex gap-4">
+                     <button onClick={() => setWinningsPrompt(null)} className="flex-1 py-3 bg-gray-700 text-white rounded-xl font-black uppercase text-xs hover:bg-gray-600 transition-colors">İptal</button>
+                     <button onClick={() => handleResultMarking(winningsPrompt.prediction, winningsPrompt.result, winningsValue)} className="flex-1 py-3 bg-[#00e5ff] text-black rounded-xl font-black uppercase text-xs hover:bg-white transition-colors">Kaydet</button>
+                  </div>
+               </motion.div>
+            </div>
+         )}
+      </AnimatePresence>
 
       <Footer />
     </div>
