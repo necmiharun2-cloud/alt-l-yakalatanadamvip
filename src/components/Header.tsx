@@ -127,6 +127,12 @@ export default function Header() {
                  )}
 
                  <div className="flex items-center space-x-2">
+                    {profile?.role === 'admin' && (
+                      <Link to="/admin" className="p-2 bg-black text-[#ffcc00] rounded-lg hover:bg-gray-800 transition-colors flex items-center space-x-1">
+                        <LayoutGrid size={16} />
+                        <span className="text-[10px] font-black uppercase tracking-tight hidden sm:inline">Panel</span>
+                      </Link>
+                    )}
                     <Link to="/bilgilerim" className="p-2 bg-black text-[#ffcc00] rounded-lg hover:bg-gray-800 transition-colors">
                       <User size={16} />
                     </Link>
@@ -213,6 +219,16 @@ export default function Header() {
                   <Tv size={18} />
                   <span>YARIŞ PROGRAMLARI</span>
                 </Link>
+                {profile?.role === 'admin' && (
+                  <Link 
+                    to="/admin"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-3 rounded-xl font-black tracking-widest text-xs w-full justify-center"
+                  >
+                    <LayoutGrid size={18} />
+                    <span>ADMİN PANELİ</span>
+                  </Link>
+                )}
                 <Link 
                   to="/odeme-bildirimi"
                   onClick={() => setMobileMenuOpen(false)}
