@@ -37,7 +37,7 @@ export default function Dashboard() {
       : ['İstanbul', 'İzmir']
   );
   
-  const [stats, setStats] = useState({ hits7: 0, hits30: 0, total: 0, totalGain: 0 });
+  const [stats, setStats] = useState({ hits7: 0, hits30: 0, total: 0, totalGain: 0, fullHits: 0, partialHits: 0 });
   const [loadingStats, setLoadingStats] = useState(true);
 
   React.useEffect(() => {
@@ -47,6 +47,9 @@ export default function Dashboard() {
           const snap = await getDocs(q);
           const docs = snap.docs.map(d => d.data());
           let totalSuccess = docs.length;
+          let fullHits = docs.filter(d => d.resultStatus === 'won').length;
+          let partialHits = docs.filter(d => d.resultStatus === 'partial').length;
+
           let totalWinnings = docs.reduce((acc, curr) => {
              if (curr.winnings) {
                 const val = parseFloat(curr.winnings.replace(/[^\d]/g, '')) / 100;
@@ -70,7 +73,7 @@ export default function Dashboard() {
              return false;
           }).length;
 
-          setStats({ hits7, hits30, total: totalSuccess, totalGain: totalWinnings });
+          setStats({ hits7, hits30, total: totalSuccess, totalGain: totalWinnings, fullHits, partialHits });
        } catch (err) {
          console.error('Failed to fetch stats for dashboard', err);
        } finally {
@@ -97,9 +100,14 @@ export default function Dashboard() {
      )
   }
 
-  const getDaysRemaining = (expiryStr?: string) => {
-    if (!expiryStr) return 0;
-    const expiryDate = new Date(expiryStr);
+  const getDaysRemaining = (expiryParam?: any) => {
+    if (!expiryParam) return 0;
+    let expiryDate: Date;
+    if (expiryParam.toDate && typeof expiryParam.toDate === 'function') {
+      expiryDate = expiryParam.toDate();
+    } else {
+      expiryDate = new Date(expiryParam);
+    }
     const timeDiff = expiryDate.getTime() - new Date().getTime();
     const days = Math.ceil(timeDiff / (1000 * 3600 * 24));
     return days > 0 ? days : 0;
@@ -286,16 +294,18 @@ export default function Dashboard() {
               ) : (
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                   <div className="bg-[#151b27] border border-white/5 p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-green-500/50 hover:bg-green-500/5 transition-all">
-                    <div className="text-[10px] font-black uppercase text-gray-500 mb-2">Son 7 Günlük İsabet</div>
-                    <div className="text-2xl font-black text-white">{stats.hits7} <span className="text-sm font-bold text-gray-500">Adet</span></div>
-                  </div>
-                  <div className="bg-[#151b27] border border-white/5 p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-green-500/50 hover:bg-green-500/5 transition-all">
-                    <div className="text-[10px] font-black uppercase text-gray-500 mb-2">Son 30 Günlük İsabet</div>
-                    <div className="text-2xl font-black text-white">{stats.hits30} <span className="text-sm font-bold text-gray-500">Adet</span></div>
+                    <div className="text-[10px] font-black uppercase text-green-500 mb-2">Tam / Kısmi İsabet</div>
+                    <div className="text-xl font-black text-white">
+                      <span className="text-green-400">{stats.fullHits}</span> <span className="text-gray-600">/</span> <span className="text-orange-400">{stats.partialHits}</span>
+                    </div>
                   </div>
                   <div className="bg-[#151b27] border border-white/5 p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-blue-500/50 hover:bg-blue-500/5 transition-all">
                     <div className="text-[10px] font-black uppercase text-gray-500 mb-2">Toplam İsabet</div>
                     <div className="text-2xl font-black text-blue-400">{stats.total} <span className="text-sm font-bold text-gray-500">Adet</span></div>
+                  </div>
+                  <div className="bg-[#151b27] border border-white/5 p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-green-500/50 hover:bg-green-500/5 transition-all">
+                    <div className="text-[10px] font-black uppercase text-gray-500 mb-2">Son 30 Günlük İsabet</div>
+                    <div className="text-2xl font-black text-white">{stats.hits30} <span className="text-sm font-bold text-gray-500">Adet</span></div>
                   </div>
                   <div className="bg-[#151b27] border border-[#00e5ff]/20 p-4 rounded-2xl flex flex-col items-center justify-center text-center shadow-[0_0_20px_rgba(0,229,255,0.1)]">
                     <div className="text-[10px] font-black uppercase text-gray-400 mb-2">Toplam Kazanç</div>

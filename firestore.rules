@@ -45,7 +45,7 @@ service cloud.firestore {
              data.title is string && data.title.size() <= 200 &&
              data.slug is string && data.slug.size() <= 128 &&
              data.content is string && data.content.size() <= 10000 &&
-             data.type in ['current', 'success'] &&
+             data.type in ['current', 'success', 'archive'] &&
              (!('isPublic' in data) || data.isPublic is bool) &&
              (!('ayaklar' in data) || data.ayaklar is list) &&
              (!('fiyat' in data) || data.fiyat is string) &&
