@@ -78,7 +78,7 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-[#080d16] text-white">
+    <div className="min-h-screen bg-[#050505] text-white">
       <Header />
       
       <main className="max-w-7xl mx-auto py-20 px-4">
@@ -89,7 +89,7 @@ export default function Register() {
             animate={{ opacity: 1, x: 0 }}
             className="flex-1"
           >
-            <div className="border-l-4 border-[#00e5ff] pl-6 mb-8">
+            <div className="border-l-4 border-[#ff0000] pl-6 mb-8">
               <h2 className="text-4xl font-black italic tracking-tighter">Üyelik Formu</h2>
             </div>
 
@@ -113,7 +113,7 @@ export default function Register() {
                       type="text" 
                       placeholder="İsim"
                       required
-                      className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 focus:outline-none focus:border-[#00e5ff] transition-colors"
+                      className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 focus:outline-none focus:border-[#ff0000] transition-colors"
                       onChange={(e) => setFormData({...formData, name: e.target.value})}
                     />
                   </div>
@@ -122,7 +122,7 @@ export default function Register() {
                       type="text" 
                       placeholder="Soyisim"
                       required
-                      className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 focus:outline-none focus:border-[#00e5ff] transition-colors"
+                      className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 focus:outline-none focus:border-[#ff0000] transition-colors"
                       onChange={(e) => setFormData({...formData, surname: e.target.value})}
                     />
                   </div>
@@ -133,7 +133,7 @@ export default function Register() {
                     type="email" 
                     placeholder="E-Posta Adresiniz"
                     required
-                    className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 focus:outline-none focus:border-[#00e5ff] transition-colors"
+                    className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 focus:outline-none focus:border-[#ff0000] transition-colors"
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
                   />
                 </div>
@@ -143,7 +143,7 @@ export default function Register() {
                     type="tel" 
                     placeholder="Telefon Numaranız"
                     required
-                    className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 focus:outline-none focus:border-[#00e5ff] transition-colors"
+                    className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 focus:outline-none focus:border-[#ff0000] transition-colors"
                     onChange={(e) => setFormData({...formData, phone: e.target.value})}
                   />
                 </div>
@@ -153,7 +153,7 @@ export default function Register() {
                     type={showPassword ? "text" : "password"} 
                     placeholder="Şifre"
                     required
-                    className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 focus:outline-none focus:border-[#00e5ff] transition-colors pr-14"
+                    className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 focus:outline-none focus:border-[#ff0000] transition-colors pr-14"
                     onChange={(e) => setFormData({...formData, password: e.target.value})}
                   />
                   <button 
@@ -166,7 +166,7 @@ export default function Register() {
                 </div>
 
                 <div className="flex items-start space-x-4 group cursor-pointer" onClick={() => setFormData({...formData, terms: !formData.terms})}>
-                  <div className={`mt-1 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-colors ${formData.terms ? 'bg-[#00e5ff] border-[#00e5ff]' : 'border-white/20 hover:border-white/40'}`}>
+                  <div className={`mt-1 w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-colors ${formData.terms ? 'bg-[#ff0000] border-[#ff0000]' : 'border-white/20 hover:border-white/40'}`}>
                     {formData.terms && <Check size={14} className="text-white" />}
                   </div>
                   <span className="text-gray-400 text-xs leading-relaxed flex-1">
@@ -175,13 +175,13 @@ export default function Register() {
                 </div>
 
                 <p className="text-[10px] text-gray-600 italic">
-                  KVKK kapsamının detaylarına, ALTILIYAKALATANADAM.com <a href="/yasal/kvkk-politikasi-10" className="text-[#00e5ff] border-b border-[#00e5ff]/20">Kişisel Verilerin Korunması ve İşlenmesi</a> şartlarının yer aldığı sayfamızdan ulaşabilirsiniz.
+                  KVKK kapsamının detaylarına, ALTILIYAKALATANADAM.com <a href="/yasal/kvkk-politikasi-10" className="text-[#ff0000] border-b border-[#ff0000]/20">Kişisel Verilerin Korunması ve İşlenmesi</a> şartlarının yer aldığı sayfamızdan ulaşabilirsiniz.
                 </p>
 
                 <button 
                   type="submit"
                   disabled={!formData.terms || loading}
-                  className="w-full p-5 bg-transparent border-2 border-[#00e5ff] rounded-2xl font-black text-[#00e5ff] uppercase tracking-widest hover:bg-[#00e5ff] hover:text-white transition-all transform active:scale-95 disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-[#00e5ff] disabled:cursor-not-allowed"
+                  className="w-full p-5 bg-transparent border-2 border-[#ff0000] rounded-2xl font-black text-[#ff0000] uppercase tracking-widest hover:bg-[#ff0000] hover:text-white transition-all transform active:scale-95 disabled:opacity-50 disabled:hover:bg-transparent disabled:hover:text-[#ff0000] disabled:cursor-not-allowed"
                 >
                   {loading ? 'Kayıt Olunuyor...' : 'Gönder'}
                 </button>

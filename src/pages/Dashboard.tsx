@@ -94,7 +94,7 @@ export default function Dashboard() {
 
   if (!profile || !user) {
      return (
-        <div className="min-h-screen bg-[#080d16] flex items-center justify-center text-white">
+        <div className="min-h-screen bg-[#050505] flex items-center justify-center text-white">
            Yükleniyor veya Giriş Yapılmadı...
         </div>
      )
@@ -175,7 +175,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#080d16] text-white">
+    <div className="min-h-screen bg-[#050505] text-white">
       <Header />
       
       <main className="max-w-7xl mx-auto py-20 px-4">
@@ -183,13 +183,13 @@ export default function Dashboard() {
         <div className="flex items-center space-x-2 text-[10px] font-black uppercase tracking-widest text-gray-600 mb-12">
           <span>Anasayfa</span>
           <ChevronRight size={12} className="text-gray-800" />
-          <span className="text-[#00e5ff]">Bilgilerim</span>
+          <span className="text-[#ff0000]">Bilgilerim</span>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-12">
           {/* Sidebar Menu */}
           <aside className="w-full lg:w-1/3">
-            <div className="border-l-4 border-[#00e5ff] pl-6 mb-8">
+            <div className="border-l-4 border-[#ff0000] pl-6 mb-8">
               <h2 className="text-3xl font-black italic tracking-tighter uppercase whitespace-nowrap">Kullanıcı <span className="text-gray-400">Menüsü</span></h2>
             </div>
             
@@ -199,20 +199,20 @@ export default function Dashboard() {
                   <button 
                     key={idx}
                     onClick={item.action}
-                    className={`w-full flex items-center justify-between px-8 py-5 transition-all group ${item.active ? 'bg-[#151b27]/40 ring-1 ring-inset ring-[#00e5ff]/20' : 'hover:bg-white/5'}`}
+                    className={`w-full flex items-center justify-between px-8 py-5 transition-all group ${item.active ? 'bg-[#1a1a1a]/40 ring-1 ring-inset ring-[#ff0000]/20' : 'hover:bg-white/5'}`}
                   >
                     <div className="flex items-center space-x-4">
-                      <item.icon size={18} className={item.active ? 'text-[#00e5ff]' : 'text-gray-500 group-hover:text-white transition-colors'} />
+                      <item.icon size={18} className={item.active ? 'text-[#ff0000]' : 'text-gray-500 group-hover:text-white transition-colors'} />
                       <span className={`text-xs font-black uppercase tracking-widest ${item.active ? 'text-white' : 'text-gray-500 group-hover:text-white transition-colors'}`}>
                         {item.label}
                       </span>
                       {item.badge && (
-                        <span className="bg-[#00e5ff]/10 text-[#00e5ff] text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-[#00e5ff]/20">
+                        <span className="bg-[#ff0000]/10 text-[#ff0000] text-[8px] font-black uppercase px-2 py-0.5 rounded-full border border-[#ff0000]/20">
                           {item.badge}
                         </span>
                       )}
                     </div>
-                    <ChevronRight size={14} className={`transition-transform ${item.active ? 'text-[#00e5ff] translate-x-1' : 'text-gray-800 group-hover:text-white group-hover:translate-x-1'}`} />
+                    <ChevronRight size={14} className={`transition-transform ${item.active ? 'text-[#ff0000] translate-x-1' : 'text-gray-800 group-hover:text-white group-hover:translate-x-1'}`} />
                   </button>
                 ))}
               </div>
@@ -227,20 +227,20 @@ export default function Dashboard() {
               <motion.section 
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-gradient-to-br from-[#0c121e] to-[#0a0a0a] border border-[#00e5ff]/20 rounded-[40px] p-8 md:p-12 shadow-[0_0_50px_-12px_rgba(0,229,255,0.15)] relative overflow-hidden"
+                className="bg-gradient-to-br from-[#111111] to-[#0a0a0a] border border-[#ff0000]/20 rounded-[40px] p-8 md:p-12 shadow-[0_0_50px_-12px_rgba(255,0,0,0.15)] relative overflow-hidden"
               >
                 <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
-                  <Star size={120} className="text-[#00e5ff]" />
+                  <Star size={120} className="text-[#ff0000]" />
                 </div>
                 
-                <h3 className="text-xl font-black italic mb-6 tracking-tight uppercase flex items-center space-x-3 text-[#00e5ff]">
+                <h3 className="text-xl font-black italic mb-6 tracking-tight uppercase flex items-center space-x-3 text-[#ff0000]">
                   <Star size={20} />
                   <span>VIP <span className="text-white">Abonelik Durumu</span></span>
                 </h3>
                 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8 relative z-10">
                    <div>
-                     <div className="text-[10px] font-black uppercase tracking-widest text-[#00e5ff] mb-1">Paket Tipi</div>
+                     <div className="text-[10px] font-black uppercase tracking-widest text-[#ff0000] mb-1">Paket Tipi</div>
                      <div className="font-bold text-sm">{profile.vipPackage || '1 Aylık VIP'}</div>
                    </div>
                    <div>
@@ -256,14 +256,14 @@ export default function Dashboard() {
                      </div>
                    </div>
                    <div>
-                     <div className="text-[10px] font-black uppercase tracking-widest text-[#00e5ff] mb-1">Kalan Süre</div>
+                     <div className="text-[10px] font-black uppercase tracking-widest text-[#ff0000] mb-1">Kalan Süre</div>
                      <div className="font-black text-2xl italic tracking-tighter">
                        {getDaysRemaining(profile.vipExpiry)} <span className="text-[10px] font-bold text-gray-400 not-italic">Gün</span>
                      </div>
                    </div>
                 </div>
                 
-                <button onClick={() => navigate('/vip')} className="w-full md:w-auto px-8 py-3 bg-[#00e5ff] text-black font-black uppercase text-[10px] tracking-widest rounded-full hover:bg-white transition-all shadow-lg shadow-[#00e5ff]/20">
+                <button onClick={() => navigate('/vip')} className="w-full md:w-auto px-8 py-3 bg-[#ff0000] text-black font-black uppercase text-[10px] tracking-widest rounded-full hover:bg-white transition-all shadow-lg shadow-[#ff0000]/20">
                   Şimdi Yenile
                 </button>
               </motion.section>
@@ -273,10 +273,10 @@ export default function Dashboard() {
             <motion.section 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-[#0a0a0a] border border-[#00e5ff]/10 rounded-[40px] p-8 md:p-12 shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)]"
+              className="bg-[#0a0a0a] border border-[#ff0000]/10 rounded-[40px] p-8 md:p-12 shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)]"
             >
               <h3 className="text-xl font-black italic mb-6 tracking-tight uppercase flex items-center space-x-3 text-white">
-                <TrendingUp size={20} className="text-[#00e5ff]" />
+                <TrendingUp size={20} className="text-[#ff0000]" />
                 <span>Performansım <span className="text-gray-500">(Gözlemlerimiz)</span></span>
               </h3>
               <p className="text-gray-500 text-xs font-medium mb-8">Platform genelinde yorumcuların ne kadar kazandırdığının özeti.</p>
@@ -293,23 +293,23 @@ export default function Dashboard() {
                 </div>
               ) : (
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                  <div className="bg-[#151b27] border border-white/5 p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-green-500/50 hover:bg-green-500/5 transition-all">
+                  <div className="bg-[#1a1a1a] border border-white/5 p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-green-500/50 hover:bg-green-500/5 transition-all">
                     <div className="text-[10px] font-black uppercase text-green-500 mb-2">Tam / Kısmi İsabet</div>
                     <div className="text-xl font-black text-white">
                       <span className="text-green-400">{stats.fullHits}</span> <span className="text-gray-600">/</span> <span className="text-orange-400">{stats.partialHits}</span>
                     </div>
                   </div>
-                  <div className="bg-[#151b27] border border-white/5 p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-blue-500/50 hover:bg-blue-500/5 transition-all">
+                  <div className="bg-[#1a1a1a] border border-white/5 p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-blue-500/50 hover:bg-blue-500/5 transition-all">
                     <div className="text-[10px] font-black uppercase text-gray-500 mb-2">Toplam İsabet</div>
                     <div className="text-2xl font-black text-blue-400">{stats.total} <span className="text-sm font-bold text-gray-500">Adet</span></div>
                   </div>
-                  <div className="bg-[#151b27] border border-white/5 p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-green-500/50 hover:bg-green-500/5 transition-all">
+                  <div className="bg-[#1a1a1a] border border-white/5 p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-green-500/50 hover:bg-green-500/5 transition-all">
                     <div className="text-[10px] font-black uppercase text-gray-500 mb-2">Son 30 Günlük İsabet</div>
                     <div className="text-2xl font-black text-white">{stats.hits30} <span className="text-sm font-bold text-gray-500">Adet</span></div>
                   </div>
-                  <div className="bg-[#151b27] border border-[#00e5ff]/20 p-4 rounded-2xl flex flex-col items-center justify-center text-center shadow-[0_0_20px_rgba(0,229,255,0.1)]">
+                  <div className="bg-[#1a1a1a] border border-[#ff0000]/20 p-4 rounded-2xl flex flex-col items-center justify-center text-center shadow-[0_0_20px_rgba(255,0,0,0.1)]">
                     <div className="text-[10px] font-black uppercase text-gray-400 mb-2">Toplam Kazanç</div>
-                    <div className="text-xl font-black text-[#00e5ff] italic">
+                    <div className="text-xl font-black text-[#ff0000] italic">
                        {new Intl.NumberFormat('tr-TR', { style: 'currency', currency: 'TRY' }).format(stats.totalGain)}
                     </div>
                   </div>
@@ -328,19 +328,19 @@ export default function Dashboard() {
               </h3>
               <p className="text-gray-500 text-xs font-medium mb-8">Hangi durumlarda size bildirim göndereceğimizi seçin.</p>
               
-              {messages.prefs && <div className="text-[#00e5ff] text-sm mb-4 font-bold">{messages.prefs}</div>}
+              {messages.prefs && <div className="text-[#ff0000] text-sm mb-4 font-bold">{messages.prefs}</div>}
               
               <div className="space-y-4 mb-12">
-                 <div className="flex items-center space-x-3 bg-[#151b27] p-5 rounded-2xl border border-white/10">
-                    <input type="checkbox" id="emailNotif" checked={notifState.email} onChange={(e) => setNotifState({...notifState, email: e.target.checked})} className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#00e5ff] focus:ring-[#00e5ff]" />
+                 <div className="flex items-center space-x-3 bg-[#1a1a1a] p-5 rounded-2xl border border-white/10">
+                    <input type="checkbox" id="emailNotif" checked={notifState.email} onChange={(e) => setNotifState({...notifState, email: e.target.checked})} className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#ff0000] focus:ring-[#ff0000]" />
                     <label htmlFor="emailNotif" className="text-sm font-bold text-gray-400 cursor-pointer">E-Posta Bildirimleri Al</label>
                  </div>
-                 <div className="flex items-center space-x-3 bg-[#151b27] p-5 rounded-2xl border border-white/10">
-                    <input type="checkbox" id="browserNotif" checked={notifState.browser} onChange={(e) => setNotifState({...notifState, browser: e.target.checked})} className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#00e5ff] focus:ring-[#00e5ff]" />
+                 <div className="flex items-center space-x-3 bg-[#1a1a1a] p-5 rounded-2xl border border-white/10">
+                    <input type="checkbox" id="browserNotif" checked={notifState.browser} onChange={(e) => setNotifState({...notifState, browser: e.target.checked})} className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#ff0000] focus:ring-[#ff0000]" />
                     <label htmlFor="browserNotif" className="text-sm font-bold text-gray-400 cursor-pointer">Tarayıcı (Push) Bildirimleri Al</label>
                  </div>
-                 <div className="flex items-center space-x-3 bg-[#151b27] p-5 rounded-2xl border border-white/10">
-                    <input type="checkbox" id="vipNotif" checked={notifState.onlyVip} onChange={(e) => setNotifState({...notifState, onlyVip: e.target.checked})} className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#00e5ff] focus:ring-[#00e5ff]" />
+                 <div className="flex items-center space-x-3 bg-[#1a1a1a] p-5 rounded-2xl border border-white/10">
+                    <input type="checkbox" id="vipNotif" checked={notifState.onlyVip} onChange={(e) => setNotifState({...notifState, onlyVip: e.target.checked})} className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#ff0000] focus:ring-[#ff0000]" />
                     <label htmlFor="vipNotif" className="text-sm font-bold text-gray-400 cursor-pointer">Sadece VIP İçerik ve Önemli Duyuruları Al</label>
                  </div>
               </div>
@@ -352,8 +352,8 @@ export default function Dashboard() {
 
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                 {['İstanbul', 'İzmir', 'Ankara', 'Adana', 'Şanlıurfa', 'Bursa', 'Kocaeli', 'Antalya'].map((track) => (
-                   <div key={track} className="flex items-center space-x-3 bg-[#151b27] p-4 rounded-xl border border-white/10">
-                      <input type="checkbox" id={`track-${track}`} checked={selectedTracks.includes(track)} onChange={() => toggleTrack(track)} className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#00e5ff] focus:ring-[#00e5ff]" />
+                   <div key={track} className="flex items-center space-x-3 bg-[#1a1a1a] p-4 rounded-xl border border-white/10">
+                      <input type="checkbox" id={`track-${track}`} checked={selectedTracks.includes(track)} onChange={() => toggleTrack(track)} className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#ff0000] focus:ring-[#ff0000]" />
                       <label htmlFor={`track-${track}`} className="text-sm font-bold text-gray-400 cursor-pointer">{track}</label>
                    </div>
                 ))}
@@ -362,7 +362,7 @@ export default function Dashboard() {
               <button 
                 onClick={handleSavePreferences} 
                 disabled={isSavingPrefs}
-                className="w-full p-4 bg-transparent border-2 border-[#00e5ff] rounded-2xl font-black text-[#00e5ff] uppercase text-xs tracking-[0.2em] hover:bg-[#00e5ff] hover:text-white transition-all transform active:scale-95 disabled:opacity-50"
+                className="w-full p-4 bg-transparent border-2 border-[#ff0000] rounded-2xl font-black text-[#ff0000] uppercase text-xs tracking-[0.2em] hover:bg-[#ff0000] hover:text-white transition-all transform active:scale-95 disabled:opacity-50"
               >
                 {isSavingPrefs ? 'Kaydediliyor...' : 'Tercihleri Kaydet'}
               </button>
@@ -385,7 +385,7 @@ export default function Dashboard() {
                     type="email" 
                     defaultValue={profile?.email || ''}
                     disabled
-                    className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors opacity-50 cursor-not-allowed"
+                    className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ff0000] transition-colors opacity-50 cursor-not-allowed"
                   />
                   <div className="text-xs text-gray-500 mt-2 ml-2">Geçici olarak e-posta değişimi devre dışıdır.</div>
                 </div>
@@ -407,17 +407,17 @@ export default function Dashboard() {
               <p className="text-gray-500 text-xs font-medium mb-8">Yeni telefon numaranıza doğrulama kodu gönderilecektir.</p>
               
               <form onSubmit={handleUpdatePhone} className="space-y-4">
-                {messages.phone && <div className="text-[#00e5ff] text-sm mb-4 font-bold">{messages.phone}</div>}
+                {messages.phone && <div className="text-[#ff0000] text-sm mb-4 font-bold">{messages.phone}</div>}
                 <div className="relative">
                   <input 
                     type="tel" 
                     placeholder="Telefon Numaranız"
                     value={phone}
                     onChange={e => setPhone(e.target.value)}
-                    className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors"
+                    className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ff0000] transition-colors"
                   />
                 </div>
-                <button type="submit" disabled={loading} className="w-full p-4 bg-transparent border-2 border-[#00e5ff] rounded-2xl font-black text-[#00e5ff] uppercase text-xs tracking-[0.2em] hover:bg-[#00e5ff] hover:text-white transition-all transform active:scale-95">
+                <button type="submit" disabled={loading} className="w-full p-4 bg-transparent border-2 border-[#ff0000] rounded-2xl font-black text-[#ff0000] uppercase text-xs tracking-[0.2em] hover:bg-[#ff0000] hover:text-white transition-all transform active:scale-95">
                   {loading ? 'Güncelleniyor...' : 'Güncelle'}
                 </button>
               </form>
@@ -435,29 +435,29 @@ export default function Dashboard() {
               <p className="text-gray-500 text-xs font-medium mb-8">Lütfen aşağıdaki form alanlarına yeni şifrenizi giriniz. Bundan sonraki girişlerde girdiğiniz yeni şifreniz geçerli olacaktır.</p>
               
               <form onSubmit={handleUpdatePassword} className="space-y-4">
-                {messages.password && <div className="text-[#00e5ff] text-sm mb-4 font-bold">{messages.password}</div>}
+                {messages.password && <div className="text-[#ff0000] text-sm mb-4 font-bold">{messages.password}</div>}
                 <input 
                   type="password" 
                   placeholder="Eski Şifre"
                   value={passwords.currentPassword}
                   onChange={e => setPasswords({...passwords, currentPassword: e.target.value})}
-                  className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors"
+                  className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ff0000] transition-colors"
                 />
                 <input 
                   type="password" 
                   placeholder="Yeni Şifre"
                   value={passwords.newPassword}
                   onChange={e => setPasswords({...passwords, newPassword: e.target.value})}
-                  className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors"
+                  className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ff0000] transition-colors"
                 />
                 <input 
                   type="password" 
                   placeholder="Yeni Şifre Tekrar"
                   value={passwords.newPasswordConfirm}
                   onChange={e => setPasswords({...passwords, newPasswordConfirm: e.target.value})}
-                  className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors"
+                  className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ff0000] transition-colors"
                 />
-                <button type="submit" disabled={loading} className="w-full p-4 bg-transparent border-2 border-[#00e5ff] rounded-2xl font-black text-[#00e5ff] uppercase text-xs tracking-[0.2em] hover:bg-[#00e5ff] hover:text-white transition-all transform active:scale-95">
+                <button type="submit" disabled={loading} className="w-full p-4 bg-transparent border-2 border-[#ff0000] rounded-2xl font-black text-[#ff0000] uppercase text-xs tracking-[0.2em] hover:bg-[#ff0000] hover:text-white transition-all transform active:scale-95">
                   {loading ? 'Güncelleniyor...' : 'Güncelle'}
                 </button>
               </form>

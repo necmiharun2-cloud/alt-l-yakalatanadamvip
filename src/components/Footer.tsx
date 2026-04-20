@@ -12,12 +12,12 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#05090f] pt-24 pb-12 px-4 relative">
+    <footer className="bg-[#000000] pt-24 pb-12 px-4 relative">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
           {/* Column 1: ALTILIYAKALATANADAM */}
           <div>
-            <h4 className="text-xl font-black text-white italic mb-8 border-b-2 border-[#00e5ff] inline-block pb-2 pr-4">ALTILIYAKALATANADAM</h4>
+            <h4 className="text-xl font-black text-white italic mb-8 border-b-2 border-[#ff0000] inline-block pb-2 pr-4">ALTILIYAKALATANADAM</h4>
             <ul className="space-y-4">
               <li><Link to="/kurumsal/hakkimizda" className="text-gray-500 hover:text-white transition-colors text-sm font-bold">Hakkında</Link></li>
               <li><Link to="/tahminler" className="text-gray-500 hover:text-white transition-colors text-sm font-bold">Güncel Tahminler</Link></li>
@@ -28,7 +28,7 @@ export default function Footer() {
 
           {/* Column 2: Destek */}
           <div>
-            <h4 className="text-xl font-black text-white italic mb-8 border-b-2 border-[#00e5ff] inline-block pb-2 pr-4">Destek</h4>
+            <h4 className="text-xl font-black text-white italic mb-8 border-b-2 border-[#ff0000] inline-block pb-2 pr-4">Destek</h4>
             <ul className="space-y-4">
               <li><Link to="/vip" className="text-gray-500 hover:text-white transition-colors text-sm font-bold">Nasıl Vip Üye Olurum?</Link></li>
               <li><Link to="/kurumsal/reklam" className="text-gray-500 hover:text-white transition-colors text-sm font-bold">Reklam</Link></li>
@@ -39,24 +39,24 @@ export default function Footer() {
 
           {/* Column 3: Üyelik */}
           <div>
-            <h4 className="text-xl font-black text-white italic mb-8 border-b-2 border-[#00e5ff] inline-block pb-2 pr-4">Üyelik</h4>
+            <h4 className="text-xl font-black text-white italic mb-8 border-b-2 border-[#ff0000] inline-block pb-2 pr-4">Üyelik</h4>
             <div className="space-y-6">
-              <Link to="/vip" className="flex items-start space-x-4 bg-white/5 p-4 rounded-xl border border-white/5 hover:border-[#00e5ff] transition-all group">
-                <Star size={20} className="text-[#00e5ff] group-hover:scale-125 transition-transform" />
+              <Link to="/vip" className="flex items-start space-x-4 bg-white/5 p-4 rounded-xl border border-white/5 hover:border-[#ff0000] transition-all group">
+                <Star size={20} className="text-[#ff0000] group-hover:scale-125 transition-transform" />
                 <div className="flex flex-col">
                   <span className="text-white text-sm font-black italic">Vip Üyelik</span>
                   <span className="text-[10px] text-gray-500 font-bold uppercase tracking-tight">Hemen Üye Olun</span>
                 </div>
               </Link>
-              <Link to="/odeme-bildirimi" className="flex items-start space-x-4 bg-white/5 p-4 rounded-xl border border-white/5 hover:border-[#00e5ff] transition-all group">
-                <CreditCard size={20} className="text-[#00e5ff] group-hover:scale-125 transition-transform" />
+              <Link to="/odeme-bildirimi" className="flex items-start space-x-4 bg-white/5 p-4 rounded-xl border border-white/5 hover:border-[#ff0000] transition-all group">
+                <CreditCard size={20} className="text-[#ff0000] group-hover:scale-125 transition-transform" />
                 <div className="flex flex-col">
                   <span className="text-white text-sm font-black italic">Ödeme Bildirimi</span>
                   <span className="text-[10px] text-gray-500 font-bold uppercase tracking-tight">Formu Doldurun</span>
                 </div>
               </Link>
-              <a href="https://wa.me/905336711463" target="_blank" rel="noreferrer" className="flex items-start space-x-4 bg-white/5 p-4 rounded-xl border border-white/5 hover:border-[#00e5ff] transition-all group">
-                <Send size={20} className="text-[#00e5ff] group-hover:scale-125 transition-transform" />
+              <a href="https://wa.me/905336711463" target="_blank" rel="noreferrer" className="flex items-start space-x-4 bg-white/5 p-4 rounded-xl border border-white/5 hover:border-[#ff0000] transition-all group">
+                <Send size={20} className="text-[#ff0000] group-hover:scale-125 transition-transform" />
                 <div className="flex flex-col">
                   <span className="text-white text-sm font-black italic">WhatsApp Destek</span>
                   <span className="text-[10px] text-gray-500 font-bold tracking-tight">90 533 671 14 63</span>
@@ -67,29 +67,29 @@ export default function Footer() {
 
           {/* Column 4: Sosyal Medya */}
           <div>
-            <h4 className="text-xl font-black text-white italic mb-8 border-b-2 border-[#00e5ff] inline-block pb-2 pr-4">Sosyal Medya</h4>
+            <h4 className="text-xl font-black text-white italic mb-8 border-b-2 border-[#ff0000] inline-block pb-2 pr-4">Sosyal Medya</h4>
             <ul className="space-y-4">
               <li>
                 <a href="#" className="flex items-center space-x-4 text-gray-500 hover:text-white transition-colors group">
-                  <Facebook size={18} className="group-hover:text-[#00e5ff]" />
+                  <Facebook size={18} className="group-hover:text-[#ff0000]" />
                   <span className="text-sm font-bold">Facebook</span>
                 </a>
               </li>
               <li>
                 <a href="#" className="flex items-center space-x-4 text-gray-500 hover:text-white transition-colors group">
-                  <Twitter size={18} className="group-hover:text-[#00e5ff]" />
+                  <Twitter size={18} className="group-hover:text-[#ff0000]" />
                   <span className="text-sm font-bold">Twitter</span>
                 </a>
               </li>
               <li>
                 <a href="#" className="flex items-center space-x-4 text-gray-500 hover:text-white transition-colors group">
-                  <Youtube size={18} className="group-hover:text-[#00e5ff]" />
+                  <Youtube size={18} className="group-hover:text-[#ff0000]" />
                   <span className="text-sm font-bold">Youtube</span>
                 </a>
               </li>
               <li>
                 <a href="#" className="flex items-center space-x-4 text-gray-500 hover:text-white transition-colors group">
-                  <Instagram size={18} className="group-hover:text-[#00e5ff]" />
+                  <Instagram size={18} className="group-hover:text-[#ff0000]" />
                   <span className="text-sm font-bold">Instagram</span>
                 </a>
               </li>
@@ -134,7 +134,7 @@ export default function Footer() {
       {/* Scroll to Top */}
       <button 
         onClick={scrollToTop}
-        className="absolute bottom-8 right-8 bg-[#00e5ff] hover:bg-white text-white hover:text-black p-3 rounded-xl shadow-2xl transition-all transform hover:-translate-y-2 group"
+        className="absolute bottom-8 right-8 bg-[#ff0000] hover:bg-white text-white hover:text-black p-3 rounded-xl shadow-2xl transition-all transform hover:-translate-y-2 group"
       >
         <ArrowUp size={20} className="group-hover:animate-bounce" />
       </button>

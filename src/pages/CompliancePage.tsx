@@ -21,10 +21,10 @@ export default function CompliancePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#080d16] text-white">
+    <div className="min-h-screen bg-[#050505] text-white">
       <Header />
       <main className="max-w-4xl mx-auto py-24 px-4">
-        <div className="border-l-4 border-[#00e5ff] pl-8 mb-12">
+        <div className="border-l-4 border-[#ff0000] pl-8 mb-12">
            <h1 className="text-4xl font-black italic tracking-tighter uppercase">{getTitle()}</h1>
         </div>
         

@@ -30,13 +30,13 @@ export default function PastSuccess() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#080d16] text-white">
+    <div className="min-h-screen bg-[#050505] text-white">
       <Header />
       
       <main>
         {/* Banner with Breadcrumb */}
         <section className="relative h-[250px] overflow-hidden flex items-center px-4">
-          <div className="absolute inset-0 bg-[#05090f] opacity-80 z-10" />
+          <div className="absolute inset-0 bg-[#000000] opacity-80 z-10" />
           <img 
             src="https://picsum.photos/seed/race1/1920/600" 
             alt="Race" 
@@ -44,7 +44,7 @@ export default function PastSuccess() {
             referrerPolicy="no-referrer"
           />
           <div className="max-w-7xl mx-auto w-full relative z-20">
-            <div className="flex items-center space-x-3 text-xs font-bold uppercase tracking-widest text-[#00e5ff]">
+            <div className="flex items-center space-x-3 text-xs font-bold uppercase tracking-widest text-[#ff0000]">
               <span>Anasayfa</span>
               <ChevronRight size={14} />
               <span className="text-gray-400">Geçmiş Başarılı Tahminler</span>
@@ -55,33 +55,33 @@ export default function PastSuccess() {
         {/* Stats & Title Section */}
         <section className="max-w-7xl mx-auto py-16 px-4">
           <div className="flex flex-col md:flex-row items-center justify-between mb-12">
-            <div className="border-l-4 border-[#00e5ff] pl-8">
+            <div className="border-l-4 border-[#ff0000] pl-8">
               <h1 className="text-5xl font-black italic tracking-tighter">
                 Başarılı <span className="text-gray-400">Tahminler</span>
               </h1>
             </div>
-            <div className="bg-[#151b27]/50 border border-white/5 rounded-3xl p-8 flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-12 mt-8 md:mt-0">
+            <div className="bg-[#1a1a1a]/50 border border-white/5 rounded-3xl p-8 flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-12 mt-8 md:mt-0">
                <div className="flex flex-col text-center md:text-left">
                   <span className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-1">Toplam Koşu</span>
-                  <span className="text-2xl font-black text-[#00e5ff]">5.790</span>
+                  <span className="text-2xl font-black text-[#ff0000]">5.790</span>
                </div>
                <div className="w-px h-12 bg-white/10 hidden md:block" />
                <div className="flex flex-col text-center md:text-left">
                   <span className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-1">Toplam Kazanç</span>
-                  <span className="text-2xl font-black text-[#00e5ff]">6.177.230,75 TL</span>
+                  <span className="text-2xl font-black text-[#ff0000]">6.177.230,75 TL</span>
                </div>
             </div>
           </div>
 
           {loading ? (
              <div className="flex justify-center items-center py-20">
-               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#00e5ff]"></div>
+               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#ff0000]"></div>
              </div>
           ) : (
             <>
               {/* Full Width Table */}
               <div className="bg-[#0a0a0a] rounded-[40px] border border-white/5 overflow-hidden shadow-2xl">
-                <div className="grid grid-cols-4 bg-[#151b27] p-6 text-[10px] font-black uppercase tracking-[0.2em] text-[#00e5ff]">
+                <div className="grid grid-cols-4 bg-[#1a1a1a] p-6 text-[10px] font-black uppercase tracking-[0.2em] text-[#ff0000]">
                   <div className="flex items-center space-x-2"><Calendar size={12} /><span>Tarih</span></div>
                   <div className="flex items-center space-x-2"><User size={12} /><span>Yorumcu</span></div>
                   <div className="flex items-center space-x-2"><Trophy size={12} /><span>Koşu Adı</span></div>
@@ -104,8 +104,8 @@ export default function PastSuccess() {
                             {formatDate(item.createdAt, { day: '2-digit', month: '2-digit', year: 'numeric' })}
                         </div>
                         <div className="flex items-center space-x-4">
-                          <img src="https://i.pravatar.cc/100?u=altili" alt="ALTILIYAKALATANADAM" className="w-8 h-8 rounded-full border border-white/10 group-hover:border-[#00e5ff] transition-colors" />
-                          <span className="text-white font-black italic text-xs uppercase group-hover:text-[#00e5ff] transition-colors">{item.authorName || 'ALTILIYAKALATANADAM'}</span>
+                          <img src="https://i.pravatar.cc/100?u=altili" alt="ALTILIYAKALATANADAM" className="w-8 h-8 rounded-full border border-white/10 group-hover:border-[#ff0000] transition-colors" />
+                          <span className="text-white font-black italic text-xs uppercase group-hover:text-[#ff0000] transition-colors">{item.authorName || 'ALTILIYAKALATANADAM'}</span>
                         </div>
                         <div className="text-gray-400 font-bold italic text-sm flex items-center tracking-tight">
                           <span className="flex-1">{item.title}</span>
@@ -116,7 +116,7 @@ export default function PastSuccess() {
                             <span className="ml-2 bg-orange-500/20 text-orange-500 text-[10px] font-black uppercase px-2 py-1 rounded-full border border-orange-500/20 whitespace-nowrap">Kısmen Tuttu</span>
                           )}
                         </div>
-                        <div className="text-right text-[#00e5ff] font-black text-lg italic">{item.winnings || '0,00 TL'}</div>
+                        <div className="text-right text-[#ff0000] font-black text-lg italic">{item.winnings || '0,00 TL'}</div>
                       </motion.div>
                     ))
                   )}

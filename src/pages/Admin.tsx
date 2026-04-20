@@ -447,19 +447,19 @@ export default function Admin() {
   };
 
   if (authLoading) {
-    return <div className="min-h-screen bg-[#080d16] flex items-center justify-center text-white">Yükleniyor...</div>;
+    return <div className="min-h-screen bg-[#050505] flex items-center justify-center text-white">Yükleniyor...</div>;
   }
 
   if (!profile || profile.role !== 'admin') {
-     return <div className="min-h-screen bg-[#080d16] flex items-center justify-center text-white">Yetkisiz Erişim</div>;
+     return <div className="min-h-screen bg-[#050505] flex items-center justify-center text-white">Yetkisiz Erişim</div>;
   }
 
   return (
-    <div className="min-h-screen bg-[#080d16] text-white">
+    <div className="min-h-screen bg-[#050505] text-white">
       <Header />
       
       <main className="max-w-7xl mx-auto py-20 px-4">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 border-l-4 border-[#00e5ff] pl-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 border-l-4 border-[#ff0000] pl-8">
           <div>
             <h1 className="text-5xl font-black italic tracking-tighter mb-4">
               Admin <span className="text-gray-400">Paneli</span>
@@ -475,7 +475,7 @@ export default function Admin() {
               <span className="text-[10px] font-black uppercase tracking-widest text-blue-400 group-hover:text-white">Demo Veri Yükle</span>
             </button>
             <div className="flex items-center space-x-2 bg-[#0a0a0a] border border-white/5 p-3 rounded-2xl group cursor-default">
-              <LayoutDashboard size={20} className="text-[#00e5ff]" />
+              <LayoutDashboard size={20} className="text-[#ff0000]" />
               <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">Yönetim Paneli v2.0</span>
             </div>
           </div>
@@ -502,11 +502,11 @@ export default function Admin() {
                   }}
                   className={`flex-shrink-0 lg:flex-shrink lg:w-full flex items-center space-x-3 md:space-x-4 p-4 md:p-5 rounded-xl md:rounded-2xl transition-all group ${
                     activeSection === section.id 
-                    ? 'bg-[#00e5ff] text-black shadow-lg shadow-[#00e5ff]/20' 
+                    ? 'bg-[#ff0000] text-black shadow-lg shadow-[#ff0000]/20' 
                     : 'hover:bg-white/5 text-gray-400 hover:text-white'
                   }`}
                 >
-                  <section.icon size={18} className={activeSection === section.id ? 'text-black' : 'text-[#00e5ff] group-hover:scale-110 transition-transform'} />
+                  <section.icon size={18} className={activeSection === section.id ? 'text-black' : 'text-[#ff0000] group-hover:scale-110 transition-transform'} />
                   <span className="text-[10px] md:text-sm font-black uppercase tracking-tight whitespace-nowrap">{section.label}</span>
                 </button>
               ))}
@@ -517,8 +517,8 @@ export default function Admin() {
               
               {/* Persistent Current Predictions List */}
               <div className="space-y-4">
-                <h3 className="text-[10px] font-black uppercase tracking-widest text-[#00e5ff] flex items-center">
-                  <div className="w-2 h-2 bg-[#00e5ff] rounded-full mr-3 animate-pulse" />
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-[#ff0000] flex items-center">
+                  <div className="w-2 h-2 bg-[#ff0000] rounded-full mr-3 animate-pulse" />
                   GÜNCEL TAHMİNLER
                 </h3>
                 <div className="divide-y divide-white/5">
@@ -526,7 +526,7 @@ export default function Admin() {
                       <div key={p.id} className="py-4 group">
                           <div className="flex justify-between items-start mb-2">
                              <div className="flex-1 truncate">
-                                <span className="font-bold text-xs truncate block mb-1 group-hover:text-[#00e5ff] transition-colors">{p.title}</span>
+                                <span className="font-bold text-xs truncate block mb-1 group-hover:text-[#ff0000] transition-colors">{p.title}</span>
                                 <div className="flex items-center space-x-2">
                                   <span className="text-[9px] text-gray-500 uppercase font-black bg-white/5 px-1.5 py-0.5 rounded">{p.track}</span>
                                 </div>
@@ -602,7 +602,7 @@ export default function Admin() {
                         <div key={p.id} className="py-4 group">
                             <div className="flex justify-between items-start mb-2">
                                <div className="flex-1 truncate">
-                                  <span className="font-bold text-xs truncate block text-white group-hover:text-[#00e5ff] transition-colors">{p.title}</span>
+                                  <span className="font-bold text-xs truncate block text-white group-hover:text-[#ff0000] transition-colors">{p.title}</span>
                                 </div>
                                <div className="flex space-x-1 ml-2 shrink-0">
                                   <button onClick={() => handleEdit(p, 'prediction')} className="p-1.5 bg-blue-500/10 text-blue-500 rounded-lg"><FileText size={12}/></button>
@@ -624,7 +624,7 @@ export default function Admin() {
                                         <Clock size={10} />
                                         <span>{p.createdAt?.toDate ? p.createdAt.toDate().toLocaleDateString('tr-TR') : '...'}</span>
                                         {p.receiptUrl && (
-                                           <a href={p.receiptUrl} target="_blank" rel="noreferrer" className="flex items-center space-x-1 text-[#00e5ff] hover:underline ml-2">
+                                           <a href={p.receiptUrl} target="_blank" rel="noreferrer" className="flex items-center space-x-1 text-[#ff0000] hover:underline ml-2">
                                               <ExternalLink size={10} />
                                               <span>DEKONT</span>
                                            </a>
@@ -676,10 +676,10 @@ export default function Admin() {
                 )}
 
                 <div className="flex items-center space-x-4 mb-10">
-                  <div className="w-12 h-12 bg-[#00e5ff]/10 rounded-2xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-[#ff0000]/10 rounded-2xl flex items-center justify-center">
                     {(() => {
                       const Icon = sections.find(s => s.id === activeSection)?.icon;
-                      return Icon ? <Icon size={24} className="text-[#00e5ff]" /> : null;
+                      return Icon ? <Icon size={24} className="text-[#ff0000]" /> : null;
                     })()}
                   </div>
                   <div>
@@ -690,19 +690,19 @@ export default function Admin() {
 
                   {activeSection === 'banks' ? (
                        <div className="space-y-8">
-                         <form onSubmit={handleSubmit} className="space-y-4 bg-[#151b27] p-6 rounded-2xl border border-white/5">
-                             <input type="text" placeholder="Banka Adı (Örn: Ziraat Bankası)" required value={formData.bankName} onChange={e => setFormData({...formData, bankName: e.target.value})} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-sm focus:outline-none focus:border-[#00e5ff]" />
-                             <input type="text" placeholder="IBAN (Örn: TR00 0000 0000 0000 0000 0000 00)" required value={formData.iban} onChange={e => setFormData({...formData, iban: e.target.value})} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-sm focus:outline-none focus:border-[#00e5ff]" />
-                             <input type="text" placeholder="Alıcı Adı Soyadı Lti. Şti." required value={formData.receiverName} onChange={e => setFormData({...formData, receiverName: e.target.value})} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-sm focus:outline-none focus:border-[#00e5ff]" />
+                         <form onSubmit={handleSubmit} className="space-y-4 bg-[#1a1a1a] p-6 rounded-2xl border border-white/5">
+                             <input type="text" placeholder="Banka Adı (Örn: Ziraat Bankası)" required value={formData.bankName} onChange={e => setFormData({...formData, bankName: e.target.value})} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-sm focus:outline-none focus:border-[#ff0000]" />
+                             <input type="text" placeholder="IBAN (Örn: TR00 0000 0000 0000 0000 0000 00)" required value={formData.iban} onChange={e => setFormData({...formData, iban: e.target.value})} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-sm focus:outline-none focus:border-[#ff0000]" />
+                             <input type="text" placeholder="Alıcı Adı Soyadı Lti. Şti." required value={formData.receiverName} onChange={e => setFormData({...formData, receiverName: e.target.value})} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-sm focus:outline-none focus:border-[#ff0000]" />
                              <div className="flex space-x-4">
-                               <button type="submit" disabled={loading} className="flex-1 bg-[#00e5ff] text-black font-bold p-4 rounded-xl uppercase hover:bg-white transition-colors">{editId ? 'Güncelle' : 'Ekle'}</button>
+                               <button type="submit" disabled={loading} className="flex-1 bg-[#ff0000] text-black font-bold p-4 rounded-xl uppercase hover:bg-white transition-colors">{editId ? 'Güncelle' : 'Ekle'}</button>
                                {editId && <button type="button" onClick={() => { setEditId(null); setFormData({...formData, bankName: '', iban: '', receiverName: ''}); }} className="px-6 bg-gray-700 text-white font-bold p-4 rounded-xl uppercase hover:bg-gray-600 transition-colors">İptal</button>}
                              </div>
                          </form>
                       </div>
                   ) : activeSection === 'slider' ? (
                       <div className="space-y-8">
-                         <form onSubmit={handleSliderSubmit} className="space-y-4 bg-[#151b27] p-6 rounded-2xl border border-white/5">
+                         <form onSubmit={handleSliderSubmit} className="space-y-4 bg-[#1a1a1a] p-6 rounded-2xl border border-white/5">
                              <input type="text" placeholder="Başlık" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-sm" />
                              <input type="text" placeholder="Alt Başlık" value={formData.subTitle} onChange={e => setFormData({...formData, subTitle: e.target.value})} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-sm" />
                              <input type="text" placeholder="CTA Metni" value={formData.ctaText} onChange={e => setFormData({...formData, ctaText: e.target.value})} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-sm" />
@@ -710,7 +710,7 @@ export default function Admin() {
                              <input type="text" placeholder="Görsel URL" value={formData.image} onChange={e => setFormData({...formData, image: e.target.value})} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-sm" />
                              <input type="number" placeholder="Sıralama (0-9)" value={formData.orderIndex} onChange={e => setFormData({...formData, orderIndex: Number(e.target.value)})} className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-sm" />
                              <div className="flex space-x-4">
-                               <button type="submit" disabled={loading} className="flex-1 bg-[#00e5ff] text-black font-bold p-4 rounded-xl uppercase hover:bg-white transition-colors">{editId ? 'Güncelle' : 'Ekle'}</button>
+                               <button type="submit" disabled={loading} className="flex-1 bg-[#ff0000] text-black font-bold p-4 rounded-xl uppercase hover:bg-white transition-colors">{editId ? 'Güncelle' : 'Ekle'}</button>
                                {editId && <button type="button" onClick={() => { setEditId(null); setFormData({ ...formData, title: '', subTitle: '', ctaText: '', ctaLink: '', image: '', orderIndex: 0 }); }} className="px-8 bg-gray-700 text-white font-bold p-4 rounded-xl uppercase hover:bg-gray-600 transition-colors">İptal</button>}
                              </div>
                          </form>
@@ -729,7 +729,7 @@ export default function Admin() {
                               required
                               value={formData.title}
                               onChange={e => setFormData({...formData, title: e.target.value})}
-                              className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 pl-14 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors"
+                              className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 pl-14 text-sm font-bold focus:outline-none focus:border-[#ff0000] transition-colors"
                             />
                           </div>
                         </div>
@@ -741,7 +741,7 @@ export default function Admin() {
                               <select 
                                 value={formData.track}
                                 onChange={e => setFormData({...formData, track: e.target.value})}
-                                className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors appearance-none"
+                                className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ff0000] transition-colors appearance-none"
                               >
                                 <option value="Şanlıurfa">Şanlıurfa</option>
                                 <option value="Turffontein">Turffontein</option>
@@ -766,7 +766,7 @@ export default function Admin() {
                                 placeholder="Örn: istanbul-tahminleri-18-nisan"
                                 value={formData.slug}
                                 onChange={e => setFormData({...formData, slug: e.target.value})}
-                                className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 pl-14 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors"
+                                className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 pl-14 text-sm font-bold focus:outline-none focus:border-[#ff0000] transition-colors"
                               />
                             </div>
                           </div>
@@ -784,7 +784,7 @@ export default function Admin() {
                                 placeholder="Örn: istanbul-tahminleri-18-nisan"
                                 value={formData.slug}
                                 onChange={e => setFormData({...formData, slug: e.target.value})}
-                                className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 pl-14 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors"
+                                className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 pl-14 text-sm font-bold focus:outline-none focus:border-[#ff0000] transition-colors"
                               />
                             </div>
                           </div>
@@ -801,7 +801,7 @@ export default function Admin() {
                               placeholder="Örn: https://picsum.photos/..."
                               value={formData.image}
                               onChange={e => setFormData({...formData, image: e.target.value})}
-                              className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 pl-14 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors"
+                              className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 pl-14 text-sm font-bold focus:outline-none focus:border-[#ff0000] transition-colors"
                             />
                           </div>
                         </div>
@@ -815,7 +815,7 @@ export default function Admin() {
                               placeholder="Örn: 1250"
                               value={formData.views}
                               onChange={e => setFormData({...formData, views: Number(e.target.value)})}
-                              className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 pl-14 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors"
+                              className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 pl-14 text-sm font-bold focus:outline-none focus:border-[#ff0000] transition-colors"
                             />
                           </div>
                         </div>
@@ -832,7 +832,7 @@ export default function Admin() {
                               required
                               value={formData.winnings}
                               onChange={e => setFormData({...formData, winnings: e.target.value})}
-                              className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 pl-10 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors"
+                              className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 pl-10 text-sm font-bold focus:outline-none focus:border-[#ff0000] transition-colors"
                             />
                           </div>
                         </div>
@@ -848,7 +848,7 @@ export default function Admin() {
                                   placeholder="Örn: İstanbul Tahminleri Sayfanın En Altındadır;"
                                   value={formData.subTitle}
                                   onChange={e => setFormData({...formData, subTitle: e.target.value})}
-                                  className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors"
+                                  className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ff0000] transition-colors"
                                 />
                             </div>
                             <div className="flex items-center justify-between p-5 space-x-4">
@@ -858,7 +858,7 @@ export default function Admin() {
                                    id="isPublic"
                                    checked={formData.type === 'isPublic'}
                                    onChange={e => setFormData({...formData, type: e.target.checked ? 'isPublic' : ''})}
-                                   className="w-5 h-5 rounded bg-[#151b27] border-white/10 text-[#00e5ff] focus:ring-[#00e5ff]"
+                                   className="w-5 h-5 rounded bg-[#1a1a1a] border-white/10 text-[#ff0000] focus:ring-[#ff0000]"
                                  />
                                  <label htmlFor="isPublic" className="text-sm font-bold text-gray-400 cursor-pointer">Ücretsiz Herkese Açık Yap</label>
                                </div>
@@ -868,7 +868,7 @@ export default function Admin() {
                                    id="commentsEnabled"
                                    checked={!formData.commentsEnabled}
                                    onChange={e => setFormData({...formData, commentsEnabled: !e.target.checked})}
-                                   className="w-5 h-5 rounded bg-[#151b27] border-white/10 text-[#00e5ff] focus:ring-[#00e5ff]"
+                                   className="w-5 h-5 rounded bg-[#1a1a1a] border-white/10 text-[#ff0000] focus:ring-[#ff0000]"
                                  />
                                  <label htmlFor="commentsEnabled" className="text-sm font-bold text-gray-400 cursor-pointer">Yorumlara Kapat</label>
                                </div>
@@ -886,34 +886,34 @@ export default function Admin() {
                                       placeholder="Örn: 1.250 ₺"
                                       value={formData.fiyat}
                                       onChange={e => setFormData({...formData, fiyat: e.target.value})}
-                                      className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 pl-10 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors"
+                                      className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 pl-10 text-sm font-bold focus:outline-none focus:border-[#ff0000] transition-colors"
                                     />
                                   </div>
                                 </div>
                                 
                                 <div className="space-y-2">
                                   <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Günün Bankosu</label>
-                                  <input type="text" placeholder="Örn: 4. Ayak 6 Nolu At" value={formData.dailyBanko} onChange={e => setFormData({...formData, dailyBanko: e.target.value})} className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors" />
+                                  <input type="text" placeholder="Örn: 4. Ayak 6 Nolu At" value={formData.dailyBanko} onChange={e => setFormData({...formData, dailyBanko: e.target.value})} className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ff0000] transition-colors" />
                                 </div>
                                 <div className="space-y-2">
                                   <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Günün Sürprizi</label>
-                                  <input type="text" placeholder="Örn: 2. Ayak 9 Nolu At" value={formData.dailySurpriz} onChange={e => setFormData({...formData, dailySurpriz: e.target.value})} className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors" />
+                                  <input type="text" placeholder="Örn: 2. Ayak 9 Nolu At" value={formData.dailySurpriz} onChange={e => setFormData({...formData, dailySurpriz: e.target.value})} className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ff0000] transition-colors" />
                                 </div>
                                 <div className="space-y-2">
                                   <label className="text-[10px] font-black uppercase tracking-widest text-gray-500 ml-2">Hazır Altılı Şablonu</label>
-                                  <input type="text" placeholder="Örn: 1-5 / 3-6 / 2 / 6 / 1-4-8 / 5-7" value={formData.dailyTemplate} onChange={e => setFormData({...formData, dailyTemplate: e.target.value})} className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors" />
+                                  <input type="text" placeholder="Örn: 1-5 / 3-6 / 2 / 6 / 1-4-8 / 5-7" value={formData.dailyTemplate} onChange={e => setFormData({...formData, dailyTemplate: e.target.value})} className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ff0000] transition-colors" />
                                 </div>
                             </div>
                             
                             <div className="space-y-4">
-                                <div className="flex items-center space-x-3 bg-[#151b27] p-5 rounded-2xl border border-white/10">
-                                   <input type="checkbox" id="isFreeSample" checked={formData.isFreeSample} onChange={e => setFormData({...formData, isFreeSample: e.target.checked})} className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#00e5ff] focus:ring-[#00e5ff]" />
-                                   <label htmlFor="isFreeSample" className="text-sm font-bold text-[#00e5ff] cursor-pointer">Ücretsiz Örnek Alanı Aktif</label>
+                                <div className="flex items-center space-x-3 bg-[#1a1a1a] p-5 rounded-2xl border border-white/10">
+                                   <input type="checkbox" id="isFreeSample" checked={formData.isFreeSample} onChange={e => setFormData({...formData, isFreeSample: e.target.checked})} className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#ff0000] focus:ring-[#ff0000]" />
+                                   <label htmlFor="isFreeSample" className="text-sm font-bold text-[#ff0000] cursor-pointer">Ücretsiz Örnek Alanı Aktif</label>
                                 </div>
                                 {formData.isFreeSample && (
                                    <div className="space-y-2">
-                                     <label className="text-[10px] font-black uppercase tracking-widest text-[#00e5ff] ml-2">Ücretsiz Örnek İçerik</label>
-                                     <textarea rows={6} placeholder="Ücretsiz gösterilecek örnek tahmini buraya giriniz..." value={formData.sampleContent} onChange={e => setFormData({...formData, sampleContent: e.target.value})} className="w-full bg-[#151b27] border border-[#00e5ff]/50 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors resize-none"></textarea>
+                                     <label className="text-[10px] font-black uppercase tracking-widest text-[#ff0000] ml-2">Ücretsiz Örnek İçerik</label>
+                                     <textarea rows={6} placeholder="Ücretsiz gösterilecek örnek tahmini buraya giriniz..." value={formData.sampleContent} onChange={e => setFormData({...formData, sampleContent: e.target.value})} className="w-full bg-[#1a1a1a] border border-[#ff0000]/50 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ff0000] transition-colors resize-none"></textarea>
                                    </div>
                                 )}
                             </div>
@@ -948,8 +948,8 @@ export default function Admin() {
                                 };
 
                                 return (
-                                  <div key={i} className="flex flex-col space-y-1 bg-[#151b27] border border-white/10 rounded-xl p-2 h-[350px] overflow-y-auto custom-scrollbar relative">
-                                    <span className="text-[9px] font-black text-[#00e5ff] uppercase text-center mb-1 sticky top-0 bg-[#151b27] py-2 z-10 border-b border-white/5">{i + 1}. Ayak</span>
+                                  <div key={i} className="flex flex-col space-y-1 bg-[#1a1a1a] border border-white/10 rounded-xl p-2 h-[350px] overflow-y-auto custom-scrollbar relative">
+                                    <span className="text-[9px] font-black text-[#ff0000] uppercase text-center mb-1 sticky top-0 bg-[#1a1a1a] py-2 z-10 border-b border-white/5">{i + 1}. Ayak</span>
                                     <div className="flex text-[8px] text-gray-500 font-bold px-1 mb-1">
                                        <span className="w-5 text-center">NO</span>
                                        <span className="flex-1 text-center">AT NO</span>
@@ -963,14 +963,14 @@ export default function Admin() {
                                           placeholder="At No" 
                                           value={horse.atNo}
                                           onChange={(e) => updateHorse(hIdx, 'atNo', e.target.value)}
-                                          className="w-1/2 bg-black/50 border border-white/5 rounded p-1.5 text-[10px] text-center font-bold focus:border-[#00e5ff] focus:outline-none transition-colors placeholder:text-gray-700" 
+                                          className="w-1/2 bg-black/50 border border-white/5 rounded p-1.5 text-[10px] text-center font-bold focus:border-[#ff0000] focus:outline-none transition-colors placeholder:text-gray-700" 
                                         />
                                         <input 
                                           type="text" 
                                           placeholder="%" 
                                           value={horse.agf}
                                           onChange={(e) => updateHorse(hIdx, 'agf', e.target.value)}
-                                          className="w-1/2 bg-black/50 border border-white/5 rounded p-1.5 text-[10px] text-center font-bold focus:border-[#00e5ff] focus:outline-none transition-colors placeholder:text-gray-700" 
+                                          className="w-1/2 bg-black/50 border border-white/5 rounded p-1.5 text-[10px] text-center font-bold focus:border-[#ff0000] focus:outline-none transition-colors placeholder:text-gray-700" 
                                         />
                                       </div>
                                     ))}
@@ -990,7 +990,7 @@ export default function Admin() {
                           rows={6}
                           value={formData.content}
                           onChange={e => setFormData({...formData, content: e.target.value})}
-                          className="w-full bg-[#151b27] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#00e5ff] transition-colors resize-none"
+                          className="w-full bg-[#1a1a1a] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ff0000] transition-colors resize-none"
                         ></textarea>
                       </div>
 
@@ -998,7 +998,7 @@ export default function Admin() {
                         <button 
                           type="submit"
                           disabled={loading}
-                          className="flex-1 p-5 bg-[#00e5ff] rounded-2xl font-black text-black uppercase tracking-[0.2em] hover:bg-white transition-all transform active:scale-95 flex items-center justify-center space-x-3 group disabled:opacity-50"
+                          className="flex-1 p-5 bg-[#ff0000] rounded-2xl font-black text-black uppercase tracking-[0.2em] hover:bg-white transition-all transform active:scale-95 flex items-center justify-center space-x-3 group disabled:opacity-50"
                         >
                           <span>{loading ? 'Yükleniyor...' : (editId ? 'Güncelle' : 'Yayına Al')}</span>
                           <Send size={18} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
@@ -1018,8 +1018,8 @@ export default function Admin() {
                   ) : (
                     <div className="space-y-8">
                        <h3 className="text-xl font-bold mb-4">Kullanıcı Yönetimi</h3>
-                       <div className="bg-[#151b27] border border-[#00e5ff]/20 rounded-[30px] p-8 text-center mt-4">
-                          <Users size={48} className="text-[#00e5ff] mx-auto mb-4 opacity-50" />
+                       <div className="bg-[#1a1a1a] border border-[#ff0000]/20 rounded-[30px] p-8 text-center mt-4">
+                          <Users size={48} className="text-[#ff0000] mx-auto mb-4 opacity-50" />
                           <p className="text-sm text-gray-500 mb-2 font-medium">
                              Yeni kullanıcılar "Kayıt Ol" sayfası üzerinden eklenmelidir.
                           </p>
@@ -1043,7 +1043,7 @@ export default function Admin() {
                  initial={{ opacity: 0, scale: 0.95 }}
                  animate={{ opacity: 1, scale: 1 }}
                  exit={{ opacity: 0, scale: 0.95 }}
-                 className="bg-[#151b27] border border-white/10 rounded-2xl p-6 md:p-8 max-w-sm w-full shadow-2xl"
+                 className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-6 md:p-8 max-w-sm w-full shadow-2xl"
                >
                   <h3 className="text-xl font-black mb-6 text-center">{confirmDialog.title}</h3>
                   <div className="flex gap-4">
@@ -1060,22 +1060,22 @@ export default function Admin() {
                  initial={{ opacity: 0, scale: 0.95 }}
                  animate={{ opacity: 1, scale: 1 }}
                  exit={{ opacity: 0, scale: 0.95 }}
-                 className="bg-[#151b27] border border-white/10 rounded-2xl p-6 md:p-8 max-w-sm w-full shadow-2xl"
+                 className="bg-[#1a1a1a] border border-white/10 rounded-2xl p-6 md:p-8 max-w-sm w-full shadow-2xl"
                >
-                  <h3 className="text-xl font-black mb-2 text-center text-[#00e5ff] italic">Tebrikler!</h3>
+                  <h3 className="text-xl font-black mb-2 text-center text-[#ff0000] italic">Tebrikler!</h3>
                   <p className="text-sm font-medium text-gray-400 text-center mb-6">Kazanılan ikramiye tutarını giriniz (Örn: 511.589,37 TL veya sadece sayı)</p>
                   
                   <input 
                      type="text"
                      value={winningsValue}
                      onChange={(e) => setWinningsValue(e.target.value)}
-                     className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-center font-bold text-lg focus:outline-none focus:border-[#00e5ff] mb-6"
+                     className="w-full bg-[#0a0a0a] border border-white/10 rounded-xl p-4 text-center font-bold text-lg focus:outline-none focus:border-[#ff0000] mb-6"
                      placeholder="Tutar girin..."
                      autoFocus
                   />
                   <div className="flex gap-4">
                      <button onClick={() => setWinningsPrompt(null)} className="flex-1 py-3 bg-gray-700 text-white rounded-xl font-black uppercase text-xs hover:bg-gray-600 transition-colors">İptal</button>
-                     <button onClick={() => handleResultMarking(winningsPrompt.prediction, winningsPrompt.result, winningsValue)} className="flex-1 py-3 bg-[#00e5ff] text-black rounded-xl font-black uppercase text-xs hover:bg-white transition-colors">Kaydet</button>
+                     <button onClick={() => handleResultMarking(winningsPrompt.prediction, winningsPrompt.result, winningsValue)} className="flex-1 py-3 bg-[#ff0000] text-black rounded-xl font-black uppercase text-xs hover:bg-white transition-colors">Kaydet</button>
                   </div>
                </motion.div>
             </div>

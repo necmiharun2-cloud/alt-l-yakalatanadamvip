@@ -40,16 +40,16 @@ export default function Header() {
   return (
     <header className="w-full flex flex-col font-sans">
       {/* Top Bar */}
-      <div className="bg-[#05090f] text-gray-400 text-[10px] md:text-xs py-2 px-4 border-b border-gray-800">
+      <div className="bg-[#000000] text-gray-400 text-[10px] md:text-xs py-2 px-4 border-b border-gray-800">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0">
           <div className="flex items-center space-x-4 md:space-x-6">
             <a href="mailto:bilgi@ALTILIYAKALATANADAM.com" className="flex items-center space-x-2 hover:text-white transition-colors">
-              <Mail size={12} className="text-[#00e5ff]" />
+              <Mail size={12} className="text-[#ff0000]" />
               <span className="hidden sm:inline">bilgi@ALTILIYAKALATANADAM.com</span>
               <span className="sm:hidden">E-Posta</span>
             </a>
             <div className="flex items-center space-x-2 cursor-pointer hover:text-white transition-colors group">
-              <LayoutGrid size={12} className="text-[#00e5ff]" />
+              <LayoutGrid size={12} className="text-[#ff0000]" />
               <span>Diğer Sitelerimiz</span>
               <ChevronDown size={10} className="group-hover:translate-y-0.5 transition-transform" />
             </div>
@@ -64,15 +64,15 @@ export default function Header() {
             ) : !user ? (
               <>
                 <Link to="/giris-yap" className="flex items-center space-x-2 hover:text-white transition-colors whitespace-nowrap">
-                  <LogIn size={12} className="text-[#00e5ff]" />
+                  <LogIn size={12} className="text-[#ff0000]" />
                   <span>Giriş Yap</span>
                 </Link>
                 <Link to="/kayit-ol" className="flex items-center space-x-2 hover:text-white transition-colors whitespace-nowrap">
-                  <UserPlus size={12} className="text-[#00e5ff]" />
+                  <UserPlus size={12} className="text-[#ff0000]" />
                   <span>Üye Ol</span>
                 </Link>
                 <Link to="/odeme-bildirimi" className="flex items-center space-x-2 hover:text-white transition-colors whitespace-nowrap">
-                  <CreditCard size={12} className="text-[#00e5ff]" />
+                  <CreditCard size={12} className="text-[#ff0000]" />
                   <span>Ödeme Bildirimi</span>
                 </Link>
               </>
@@ -85,11 +85,11 @@ export default function Header() {
                   </div>
                 )}
                 <div className="relative group cursor-pointer mr-2 pt-1 pb-1">
-                  <Bell size={14} className="text-[#00e5ff] hover:text-white transition-colors" />
+                  <Bell size={14} className="text-[#ff0000] hover:text-white transition-colors" />
                   <div className="absolute top-0 right-[-2px] w-2 h-2 bg-red-500 rounded-full animate-pulse blur-[1px]"></div>
                   <div className="absolute top-0 right-[-2px] w-2 h-2 bg-red-500 rounded-full"></div>
                   {/* Dropdown */}
-                  <div className="absolute right-0 top-8 w-64 bg-[#151b27] border border-white/10 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 p-2 pointer-events-none group-hover:pointer-events-auto">
+                  <div className="absolute right-0 top-8 w-64 bg-[#1a1a1a] border border-white/10 rounded-2xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 p-2 pointer-events-none group-hover:pointer-events-auto">
                      <div className="text-[10px] font-black uppercase text-gray-500 mb-2 px-2 pt-1 border-b border-white/5 pb-2">Bildirimler</div>
                      <div className="space-y-1">
                         <div className="p-2 hover:bg-white/5 rounded-xl transition-colors">
@@ -100,31 +100,31 @@ export default function Header() {
                   </div>
                 </div>
                 <Link to="/bilgilerim" className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors whitespace-nowrap">
-                  <User size={12} className="text-[#00e5ff]" />
+                  <User size={12} className="text-[#ff0000]" />
                   <span className="hidden sm:inline">Hoşgeldiniz: <span className="text-white font-bold">{profile?.fullName || user?.email}</span></span>
                   <span className="sm:hidden font-bold text-white">Profil</span>
                 </Link>
                 {profile?.role === 'admin' && (
                   <Link to="/admin" className="flex items-center space-x-2 hover:text-white transition-colors whitespace-nowrap">
-                    <Settings size={12} className="text-[#00e5ff]" />
+                    <Settings size={12} className="text-[#ff0000]" />
                     <span>Admin</span>
                   </Link>
                 )}
                 {!profile?.isVip && (
                   <Link to="/vip" className="flex items-center space-x-2 hover:text-white transition-colors whitespace-nowrap">
-                    <Star size={12} className="text-[#00e5ff]" />
+                    <Star size={12} className="text-[#ff0000]" />
                     <span>VIP Satın Al</span>
                   </Link>
                 )}
                 <Link to="/odeme-bildirimi" className="flex items-center space-x-2 hover:text-white transition-colors whitespace-nowrap">
-                  <CreditCard size={12} className="text-[#00e5ff]" />
+                  <CreditCard size={12} className="text-[#ff0000]" />
                   <span>Ödeme</span>
                 </Link>
                 <button 
                   onClick={signOut}
                   className="flex items-center space-x-2 hover:text-white transition-colors cursor-pointer whitespace-nowrap"
                 >
-                  <LogOut size={12} className="text-[#00e5ff]" />
+                  <LogOut size={12} className="text-[#ff0000]" />
                   <span>Çıkış</span>
                 </button>
               </>
@@ -134,21 +134,21 @@ export default function Header() {
       </div>
 
       {/* Main Nav */}
-      <nav className={`px-4 sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#0c121e]/90 backdrop-blur-lg shadow-[0_4px_30px_rgba(0,0,0,0.5)] py-2 border-b border-white/5' : 'bg-[#0c121e] py-4 shadow-2xl'}`}>
+      <nav className={`px-4 sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-[#111111]/90 backdrop-blur-lg shadow-[0_4px_30px_rgba(0,0,0,0.5)] py-2 border-b border-white/5' : 'bg-[#111111] py-4 shadow-2xl'}`}>
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 group cursor-pointer">
             <div className="relative">
-              <div className="absolute inset-0 bg-[#00e5ff] blur-lg opacity-20 group-hover:opacity-40 transition-opacity"></div>
+              <div className="absolute inset-0 bg-[#ff0000] blur-lg opacity-20 group-hover:opacity-40 transition-opacity"></div>
               <svg width="32" height="32" viewBox="0 0 40 40" className="md:w-10 md:h-10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 5L10 15V35H30V15L20 5Z" fill="#00e5ff" />
-                <path d="M15 20L20 15L25 20L20 25L15 20Z" fill="#0c121e" />
-                <path d="M20 10C20 10 15 15 15 20C15 25 20 30 20 30C20 30 25 25 25 20C25 15 20 10 20 10Z" fill="#00e5ff" />
+                <path d="M20 5L10 15V35H30V15L20 5Z" fill="#ff0000" />
+                <path d="M15 20L20 15L25 20L20 25L15 20Z" fill="#111111" />
+                <path d="M20 10C20 10 15 15 15 20C15 25 20 30 20 30C20 30 25 25 25 20C25 15 20 10 20 10Z" fill="#ff0000" />
               </svg>
             </div>
             <div className="flex flex-col leading-none">
               <span className="text-lg md:text-2xl font-black text-white tracking-tighter">
-                ALTILIYAKALATANADAM<span className="text-[#00e5ff]">.com</span>
+                ALTILIYAKALATANADAM<span className="text-[#ff0000]">.com</span>
               </span>
               <span className="text-[7px] md:text-[8px] text-gray-500 uppercase tracking-widest font-bold">kazanmanın gidiş hattı</span>
             </div>
@@ -158,11 +158,11 @@ export default function Header() {
           <ul className="hidden lg:flex items-center space-x-8 text-sm font-bold text-white uppercase tracking-tight">
             {menuItems.map((item) => (
               <li key={item.label} className="relative group">
-                <Link to={item.path} className="hover:text-[#00e5ff] transition-colors relative z-10">
+                <Link to={item.path} className="hover:text-[#ff0000] transition-colors relative z-10">
                   {item.label}
                 </Link>
                 <motion.div 
-                  className="absolute -bottom-1 left-0 h-0.5 bg-[#00e5ff] rounded-full"
+                  className="absolute -bottom-1 left-0 h-0.5 bg-[#ff0000] rounded-full"
                   initial={{ width: 0 }}
                   whileHover={{ width: '100%' }}
                 />
@@ -180,7 +180,7 @@ export default function Header() {
           {/* Mobile Menu Button */}
           <button 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden text-white hover:text-[#00e5ff] transition-colors p-2"
+            className="lg:hidden text-white hover:text-[#ff0000] transition-colors p-2"
           >
             {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
@@ -193,7 +193,7 @@ export default function Header() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden border-t border-white/5 bg-[#0c121e] overflow-hidden"
+              className="lg:hidden border-t border-white/5 bg-[#111111] overflow-hidden"
             >
               <ul className="flex flex-col space-y-4 p-6 text-sm font-bold text-white uppercase tracking-tight">
                 {menuItems.map((item) => (
@@ -201,7 +201,7 @@ export default function Header() {
                     <Link 
                       to={item.path} 
                       onClick={() => setMobileMenuOpen(false)}
-                      className="block hover:text-[#00e5ff] transition-colors"
+                      className="block hover:text-[#ff0000] transition-colors"
                     >
                       {item.label}
                     </Link>

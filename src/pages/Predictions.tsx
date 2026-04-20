@@ -36,12 +36,12 @@ export default function Predictions() {
   const isVip = profile?.isVip || profile?.role === 'admin';
 
   return (
-    <div className="min-h-screen bg-[#080d16] text-white">
+    <div className="min-h-screen bg-[#050505] text-white">
       <Header />
       
       <main className="max-w-7xl mx-auto py-20 px-4">
         {/* Title Section */}
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 border-l-4 border-[#00e5ff] pl-8 gap-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 border-l-4 border-[#ff0000] pl-8 gap-6">
             <div>
               <h1 className="text-3xl md:text-5xl font-black italic tracking-tighter mb-4">
                 Güncel <span className="text-gray-400">Tahminler</span>
@@ -54,7 +54,7 @@ export default function Predictions() {
 
         {loading ? (
           <div className="flex justify-center items-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#00e5ff]"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#ff0000]"></div>
           </div>
         ) : (
           <>
@@ -71,13 +71,13 @@ export default function Predictions() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ delay: (idx % 2) * 0.1 }}
                     onClick={() => navigate(`/tahmin/${pred.slug}`)}
-                    className="bg-[#0a0a0a] rounded-3xl md:rounded-[40px] p-6 border border-white/5 shadow-2xl flex flex-col sm:flex-row items-start sm:items-center group cursor-pointer hover:border-[#00e5ff]/30 transition-all relative overflow-hidden"
+                    className="bg-[#0a0a0a] rounded-3xl md:rounded-[40px] p-6 border border-white/5 shadow-2xl flex flex-col sm:flex-row items-start sm:items-center group cursor-pointer hover:border-[#ff0000]/30 transition-all relative overflow-hidden"
                   >
                     {!pred.isPublic && !isVip && (
                       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-10 flex items-center justify-center">
                           <div className="flex flex-col items-center">
-                            <Lock size={32} className="text-[#00e5ff] mb-2" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#00e5ff]">VIP Kilitli</span>
+                            <Lock size={32} className="text-[#ff0000] mb-2" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#ff0000]">VIP Kilitli</span>
                           </div>
                       </div>
                     )}
@@ -90,14 +90,14 @@ export default function Predictions() {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
                     <div className="w-full sm:w-2/3 flex flex-col justify-center">
-                      <div className="flex items-center space-x-2 text-[10px] font-black uppercase text-[#00e5ff] tracking-widest mb-3">
+                      <div className="flex items-center space-x-2 text-[10px] font-black uppercase text-[#ff0000] tracking-widest mb-3">
                         <Eye size={12} />
                         <span>{pred.views || 0} Görüntülenme</span>
                       </div>
-                      <h3 className="text-xl font-black italic mb-3 leading-tight tracking-tight group-hover:text-[#00e5ff] transition-colors uppercase">
+                      <h3 className="text-xl font-black italic mb-3 leading-tight tracking-tight group-hover:text-[#ff0000] transition-colors uppercase">
                         {pred.title}
                       </h3>
-                      <p className="text-[#00e5ff] text-xs font-black italic mb-6">
+                      <p className="text-[#ff0000] text-xs font-black italic mb-6">
                         {pred.subTitle}
                       </p>
 
@@ -105,7 +105,7 @@ export default function Predictions() {
                         <div className="mb-6 flex flex-wrap gap-2">
                            {pred.ayaklar.slice(0, 4).map((a: string, i: number) => (
                              <div key={i} className="bg-white/5 border border-white/10 px-2 py-1 rounded-lg flex items-center space-x-1">
-                               <span className="text-[7px] font-black text-[#00e5ff] uppercase">{i + 1}.A:</span>
+                               <span className="text-[7px] font-black text-[#ff0000] uppercase">{i + 1}.A:</span>
                                <span className="text-[9px] font-bold text-gray-300 truncate max-w-[30px]">{a}</span>
                              </div>
                            ))}

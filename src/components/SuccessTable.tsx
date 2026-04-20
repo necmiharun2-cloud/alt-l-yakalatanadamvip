@@ -18,19 +18,7 @@ export default function SuccessTable() {
     const fetchData = async () => {
       try {
         const data = await dbService.getPredictions('success');
-        if (data.length > 0) {
-            setSuccessList(data.slice(0, 6)); // show latest 6 to fill grid
-        } else {
-            // Mock data for display if none exists
-            setSuccessList([
-                { slug: '1', createdAt: '2026-04-05T00:00:00.000Z', authorName: 'ALTILIYAKALATANADAM', title: 'İki Üç Banko - Adana / İzmir', winnings: '26.500,00 TL' },
-                { slug: '2', createdAt: '2026-03-28T00:00:00.000Z', authorName: 'ALTILIYAKALATANADAM', title: 'Tek Banko - 29 Mart Adana', winnings: '14.800,00 TL' },
-                { slug: '3', createdAt: '2026-03-13T00:00:00.000Z', authorName: 'ALTILIYAKALATANADAM', title: 'Tek Banko - 14 Mart İstanbul', winnings: '42.050,00 TL' },
-                { slug: '4', createdAt: '2026-03-12T00:00:00.000Z', authorName: 'ALTILIYAKALATANADAM', title: 'Farklı Banko - 13 Mart Antalya / İzmir', winnings: '24.055,00 TL' },
-                { slug: '5', createdAt: '2026-03-11T00:00:00.000Z', authorName: 'ALTILIYAKALATANADAM', title: 'İki Banko - 12 Mart İzmir / Antalya', winnings: '27.150,00 TL' },
-                { slug: '6', createdAt: '2026-03-07T00:00:00.000Z', authorName: 'ALTILIYAKALATANADAM', title: 'İki Banko - 8 Mart Adana', winnings: '91.000,00 TL' }
-            ]);
-        }
+        setSuccessList(data.slice(0, 6)); // show latest 6 to fill grid
       } catch (error) {
         console.error(error);
       } finally {
@@ -50,25 +38,25 @@ export default function SuccessTable() {
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight flex items-end">
               <span className="font-extrabold relative pb-1 mr-2 inline-block">
                 Başarılı
-                <span className="absolute bottom-0 left-0 w-full h-[4px] bg-[#00e5ff]"></span>
+                <span className="absolute bottom-0 left-0 w-full h-[4px] bg-[#ff0000]"></span>
               </span>
               <span className="font-light">Tahminler</span>
             </h2>
           </div>
           
-          <div className="md:max-w-md border-l-[3px] border-[#00e5ff] pl-6 py-1 h-full flex items-center">
+          <div className="md:max-w-md border-l-[3px] border-[#ff0000] pl-6 py-1 h-full flex items-center">
             <p className="text-[#647c9f] text-[13px] md:text-sm font-medium leading-relaxed">
-              ALTILIYAKALATANADAM.com Vip üyelerine bugüne kadar toplam <span className="text-[#00e5ff] font-black">5.791</span> koşuda<br/>
-              <span className="text-[#00e5ff] font-black">6.177.230,75</span> TL kazandırdı
+              ALTILIYAKALATANADAM.com Vip üyelerine bugüne kadar toplam <span className="text-[#ff0000] font-black">5.791</span> koşuda<br/>
+              <span className="text-[#ff0000] font-black">6.177.230,75</span> TL kazandırdı
             </p>
           </div>
         </div>
 
         {/* Table Area */}
-        <div className="w-full rounded-2xl shadow-2xl border border-white/5 bg-[#081528] overflow-hidden">
+        <div className="w-full rounded-2xl shadow-2xl border border-white/5 bg-[#111111] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[700px] text-left text-sm md:text-base border-collapse">
-              <thead className="bg-[#193256] text-white/90 font-semibold border-b border-white/10">
+              <thead className="bg-[#222222] text-white/90 font-semibold border-b border-white/10">
                 <tr className="divide-x divide-white/10">
                   <th className="px-6 py-5 font-semibold">Tarih</th>
                   <th className="px-6 py-5 font-semibold">Yorumcu</th>
@@ -93,7 +81,7 @@ export default function SuccessTable() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
                     onClick={() => navigate(`/tahmin/${p.slug}`)}
-                    className="hover:bg-[#152846] cursor-pointer transition-colors divide-x divide-white/5 even:bg-[#071324] odd:bg-[#0b1b33]"
+                    className="hover:bg-[#1a1a1a] cursor-pointer transition-colors divide-x divide-white/5 even:bg-[#050505] odd:bg-[#111111]"
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
                        {formatDate(p.createdAt)}
@@ -117,7 +105,7 @@ export default function SuccessTable() {
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-center font-bold tracking-wide text-[#59b1ff]">
+                    <td className="px-6 py-4 text-center font-bold tracking-wide text-[#ff0000]">
                       {p.winnings || '0,00 TL'}
                     </td>
                   </motion.tr>
