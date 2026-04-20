@@ -107,12 +107,20 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center justify-between space-y-8 md:space-y-0 text-gray-500">
             <div className="flex items-center space-x-4">
-              <img 
-                src={APP_LOGO_URL} 
-                alt="Logo" 
-                className="w-16 h-16 object-contain"
-                referrerPolicy="no-referrer"
-              />
+              <div className="relative w-16 h-16 rounded-full p-[2px] overflow-hidden flex items-center justify-center bg-black">
+                {/* Subtle Rotating Neon Overlay */}
+                <div className="absolute w-[200%] h-[200%] bg-[conic-gradient(transparent,#ffcc00,#ff3300,#00ffcc,transparent_30%)] animate-neon-rotate opacity-50"></div>
+                
+                {/* Image Container */}
+                <div className="relative z-10 w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
+                  <img 
+                    src={APP_LOGO_URL} 
+                    alt="Logo" 
+                    className="w-[80%] h-[80%] object-contain"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+              </div>
               <p className="text-[10px] font-black uppercase tracking-widest text-center md:text-left">
                 Copyright © 2026 Tüm hakları saklıdır ALTILIYAKALATANADAM.com
               </p>

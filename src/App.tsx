@@ -313,13 +313,19 @@ function HomePage() {
                 animate={{ opacity: 1 }}
                 className="bg-[#0a0a0a] rounded-[40px] p-16 border border-white/5 shadow-2xl relative flex flex-col items-center justify-center text-center"
               >
-                  <div className="w-24 h-24 rounded-full bg-white/10 flex items-center justify-center mb-6 overflow-hidden border border-white/5">
-                    <img 
-                      src={APP_LOGO_URL} 
-                      alt="Logo" 
-                      className="w-16 h-16 object-contain opacity-80"
-                      referrerPolicy="no-referrer"
-                    />
+                  <div className="relative w-32 h-32 rounded-full p-[4px] overflow-hidden flex items-center justify-center bg-black mb-8 shadow-[0_0_50px_rgba(255,204,0,0.2)]">
+                    {/* Rotating Neon Overlay */}
+                    <div className="absolute w-[200%] h-[200%] bg-[conic-gradient(transparent,#ffcc00,#ff3300,#00ffcc,transparent_30%)] animate-neon-rotate"></div>
+                    
+                    {/* Image Container */}
+                    <div className="relative z-10 w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
+                      <img 
+                        src={APP_LOGO_URL} 
+                        alt="Logo" 
+                        className="w-[75%] h-[75%] object-contain"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
                   </div>
                   <h3 className="text-2xl font-black italic text-gray-400 mb-3">Tahmin Bekleniyor</h3>
                   <p className="text-gray-500 text-sm max-w-sm leading-relaxed">Bu pist ({selectedTrack}) için şu an güncel bir tahmin girişi yapılmamıştır. Diğer pistleri inceleyebilir veya daha sonra tekrar kontrol edebilirsiniz.</p>

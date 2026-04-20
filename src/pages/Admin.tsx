@@ -462,13 +462,19 @@ export default function Admin() {
       <main className="max-w-7xl mx-auto py-20 px-4">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 border-l-4 border-[#ffcc00] pl-8">
           <div className="flex items-center space-x-6">
-            <div className="w-16 h-16 rounded-2xl bg-[#ffcc00] p-2 flex items-center justify-center shadow-lg shadow-[#ffcc00]/20">
-              <img 
-                src={APP_LOGO_URL} 
-                alt="Admin Logo" 
-                className="w-full h-full object-contain"
-                referrerPolicy="no-referrer"
-              />
+            <div className="relative w-20 h-20 rounded-full p-[3px] overflow-hidden flex items-center justify-center bg-black shadow-2xl shadow-[#ffcc00]/30">
+              {/* Rotating Neon Overlay */}
+              <div className="absolute w-[200%] h-[200%] bg-[conic-gradient(transparent,#ffcc00,#ff3300,#00ffcc,transparent_30%)] animate-neon-rotate"></div>
+              
+              {/* Image Container */}
+              <div className="relative z-10 w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
+                <img 
+                  src={APP_LOGO_URL} 
+                  alt="Admin Logo" 
+                  className="w-[80%] h-[80%] object-contain"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
             </div>
             <div>
               <h1 className="text-5xl font-black italic tracking-tighter mb-4">

@@ -24,3 +24,12 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #ffcc00;
 }
+
+@keyframes neon-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-neon-rotate {
+  animation: neon-rotate 8s linear infinite;
+}

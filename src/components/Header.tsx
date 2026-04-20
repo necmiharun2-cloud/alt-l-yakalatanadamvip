@@ -51,16 +51,27 @@ export default function Header() {
       <div className={`bg-[#ffcc00] py-2 px-4 border-b border-[#000]/5 transition-all duration-300 ${scrolled ? 'shadow-md py-1' : ''}`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 group">
-            <img 
-              src={APP_LOGO_URL} 
-              alt="ALTILIYAKALATANADAM Logo" 
-              className="w-8 h-8 object-contain group-hover:scale-110 transition-transform"
-              referrerPolicy="no-referrer"
-            />
-            <span className="text-sm md:text-lg font-black text-black italic tracking-tighter uppercase leading-none">
-              ALTILIYAKALA<span className="text-gray-900 opacity-60">TANADAM</span>
-            </span>
+          <Link to="/" className="flex items-center space-x-3 group">
+            <div className="relative w-12 h-12 rounded-full p-[2px] overflow-hidden flex items-center justify-center bg-black shadow-lg shadow-black/20">
+              {/* Rotating Neon Overlay */}
+              <div className="absolute w-[200%] h-[200%] bg-[conic-gradient(transparent,#ffcc00,#ff3300,#00ffcc,transparent_30%)] animate-neon-rotate opacity-80"></div>
+              
+              {/* Image Container */}
+              <div className="relative z-10 w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
+                <img 
+                  src={APP_LOGO_URL} 
+                  alt="ALTILIYAKALATANADAM Logo" 
+                  className="w-[85%] h-[85%] object-contain group-hover:scale-110 transition-transform duration-500"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm md:text-xl font-black text-black italic tracking-tighter uppercase leading-none">
+                ALTILIYAKALA<span className="text-gray-900 opacity-60">TANADAM</span>
+              </span>
+              <span className="text-[10px] font-bold text-black/40 uppercase tracking-[0.2em] mt-0.5 hidden sm:block">Türkiye'nin En İyisi</span>
+            </div>
           </Link>
 
           {/* Right Section (Help, Login, Register) */}
