@@ -30,7 +30,7 @@ export default function SuccessTable() {
   }, []);
 
   return (
-    <section className="bg-[#050b14] py-20 px-4 overflow-hidden relative">
+    <section className="bg-[#010a26] py-20 px-4 overflow-hidden relative">
       <div className="max-w-7xl mx-auto relative z-10">
         
         {/* Header Area */}
@@ -54,10 +54,10 @@ export default function SuccessTable() {
         </div>
 
         {/* Table Area */}
-        <div className="w-full rounded-2xl shadow-2xl border border-white/5 bg-[#191919] overflow-hidden">
+        <div className="w-full rounded-2xl shadow-2xl border border-white/5 bg-[#020f3a] overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[700px] text-left text-sm md:text-base border-collapse">
-              <thead className="bg-[#222222] text-white/90 font-semibold border-b border-white/10">
+              <thead className="bg-[#0a1b5d] text-white/90 font-semibold border-b border-white/10">
                 <tr className="divide-x divide-white/10">
                   <th className="px-6 py-5 font-semibold">Tarih</th>
                   <th className="px-6 py-5 font-semibold">Yorumcu</th>
@@ -82,7 +82,7 @@ export default function SuccessTable() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
                     onClick={() => navigate(`/tahmin/${p.slug}`)}
-                    className="hover:bg-[#222222] cursor-pointer transition-colors divide-x divide-white/5 even:bg-[#0f0f0f] odd:bg-[#191919]"
+                    className="hover:bg-[#102677] cursor-pointer transition-colors divide-x divide-white/5 even:bg-[#010a26] odd:bg-[#020f3a]"
                   >
                     <td className="px-6 py-4 whitespace-nowrap">
                        {formatDate(p.createdAt)}

@@ -369,7 +369,7 @@ function HomePage() {
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-[#0f0f0f] text-white selection:bg-[#ffcc00] selection:text-black">
+      <div className="min-h-screen bg-[#010a26] text-white selection:bg-[#ffcc00] selection:text-[#010a26]">
         <FloatingButtons />
         <Routes>
           <Route path="/" element={<><Header /><main><HomePage /></main><Footer /></>} />

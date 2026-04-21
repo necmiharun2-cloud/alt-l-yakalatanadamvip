@@ -2,23 +2,23 @@
 
 @layer base {
   ::selection {
-    @apply bg-[#ffcc00] text-black;
+    @apply bg-[#ffcc00] text-[#010a26];
   }
 }
 
-/* Custom Scrollbar for Nesine Theme */
+/* Custom Scrollbar for Sarı Lacivert Theme */
 ::-webkit-scrollbar {
   width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #111111;
+  background: #010a26;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #333333;
+  background: #102677;
   border-radius: 5px;
-  border: 2px solid #111111;
+  border: 2px solid #010a26;
 }
 
 ::-webkit-scrollbar-thumb:hover {

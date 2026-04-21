@@ -181,7 +181,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white">
+    <div className="min-h-screen bg-[#010a26] text-white">
       <Header />
       
       <main className="max-w-7xl mx-auto py-20 px-4">
@@ -199,7 +199,7 @@ export default function Dashboard() {
               <h2 className="text-3xl font-black italic tracking-tighter uppercase whitespace-nowrap">Kullanıcı <span className="text-gray-400">Menüsü</span></h2>
             </div>
             
-            <div className="bg-[#0a0a0a] border border-white/5 rounded-[40px] overflow-hidden shadow-2xl">
+            <div className="bg-[#020f3a] border border-white/5 rounded-[40px] overflow-hidden shadow-2xl">
               <div className="divide-y divide-white/5">
                 {menuItems.map((item, idx) => (
                   <button 
@@ -279,7 +279,7 @@ export default function Dashboard() {
             <motion.section 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-[#0a0a0a] border border-[#ffcc00]/10 rounded-[40px] p-8 md:p-12 shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)]"
+              className="bg-[#020f3a] border border-[#ffcc00]/10 rounded-[40px] p-8 md:p-12 shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)]"
             >
               <h3 className="text-xl font-black italic mb-6 tracking-tight uppercase flex items-center space-x-3 text-white">
                 <TrendingUp size={20} className="text-[#ffcc00]" />
@@ -357,9 +357,9 @@ export default function Dashboard() {
               <p className="text-gray-500 text-xs font-medium mb-8">Ana sayfada öncelikli görmek istediğiniz pistleri seçin.</p>
 
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-                {['Diyarbakır', 'Urfa', 'Elazığ', 'Adana', 'Ankara', 'İzmir', 'İstanbul', 'Kocaeli', 'Antalya'].map((track) => (
+                {['İstanbul', 'Ankara', 'İzmir', 'Adana', 'Bursa', 'Kocaeli', 'Şanlıurfa', 'Elazığ', 'Diyarbakır', 'Antalya'].map((track) => (
                    <div key={track} className="flex items-center space-x-3 bg-[#222222] p-4 rounded-xl border border-white/10">
-                      <input type="checkbox" id={`track-${track}`} checked={selectedTracks.includes(track)} onChange={() => toggleTrack(track)} className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#ffcc00] focus:ring-[#ffcc00]" />
+                      <input type="checkbox" id={`track-${track}`} checked={selectedTracks.includes(track)} onChange={() => toggleTrack(track)} className="w-5 h-5 rounded bg-[#020f3a] border-white/10 text-[#ffcc00] focus:ring-[#ffcc00]" />
                       <label htmlFor={`track-${track}`} className="text-sm font-bold text-gray-400 cursor-pointer">{track}</label>
                    </div>
                 ))}
@@ -378,7 +378,7 @@ export default function Dashboard() {
             <motion.section 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-[#0a0a0a] border border-white/5 rounded-[40px] p-8 md:p-12 shadow-2xl"
+              className="bg-[#020f3a] border border-white/5 rounded-[40px] p-8 md:p-12 shadow-2xl"
             >
               <h3 className="text-xl font-black italic mb-6 tracking-tight uppercase">
                 E-Posta <span className="text-gray-400">Değiştir</span>
@@ -405,7 +405,7 @@ export default function Dashboard() {
             <motion.section 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-[#0a0a0a] border border-white/5 rounded-[40px] p-8 md:p-12 shadow-2xl"
+              className="bg-[#020f3a] border border-white/5 rounded-[40px] p-8 md:p-12 shadow-2xl"
             >
               <h3 className="text-xl font-black italic mb-6 tracking-tight uppercase">
                 Telefon Numarası <span className="text-gray-400">Değiştir</span>
@@ -433,7 +433,7 @@ export default function Dashboard() {
             <motion.section 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-[#0a0a0a] border border-white/5 rounded-[40px] p-8 md:p-12 shadow-2xl"
+              className="bg-[#020f3a] border border-white/5 rounded-[40px] p-8 md:p-12 shadow-2xl"
             >
               <h3 className="text-xl font-black italic mb-6 tracking-tight uppercase">
                 Şifre <span className="text-gray-400">Değiştir</span>

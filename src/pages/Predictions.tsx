@@ -37,7 +37,7 @@ export default function Predictions() {
   const isVip = profile?.isVip || profile?.role === 'admin';
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white">
+    <div className="min-h-screen bg-[#010a26] text-white">
       <Header />
       
       <main className="max-w-7xl mx-auto py-20 px-4">
@@ -69,7 +69,7 @@ export default function Predictions() {
           <>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
               {predictions.length === 0 ? (
-                <div className="col-span-full py-12 text-center bg-[#0a0a0a] rounded-[40px] border border-white/5">
+                <div className="col-span-full py-12 text-center bg-[#020f3a] rounded-[40px] border border-white/5">
                   <p className="text-gray-500 italic">Henüz güncel tahmin bulunmuyor.</p>
                 </div>
               ) : (
@@ -80,10 +80,10 @@ export default function Predictions() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ delay: (idx % 2) * 0.1 }}
                     onClick={() => navigate(`/tahmin/${pred.slug}`)}
-                    className="bg-[#0a0a0a] rounded-[40px] p-6 border border-white/5 shadow-2xl flex flex-col sm:flex-row items-start sm:items-center group cursor-pointer hover:border-[#ffcc00]/30 transition-all relative overflow-hidden"
+                    className="bg-[#020f3a] rounded-[40px] p-6 border border-white/5 shadow-2xl flex flex-col sm:flex-row items-start sm:items-center group cursor-pointer hover:border-[#ffcc00]/30 transition-all relative overflow-hidden"
                   >
                     {!pred.isPublic && !isVip && pred.visibility !== 'sample' && pred.visibility !== 'public' && (
-                      <div className="absolute inset-0 bg-black/80 backdrop-blur-md z-20 flex items-center justify-center p-6 text-center">
+                      <div className="absolute inset-0 bg-[#000d33]/80 backdrop-blur-md z-20 flex items-center justify-center p-6 text-center">
                           <div className="flex flex-col items-center">
                             <div className="w-16 h-16 bg-[#ffcc00]/10 rounded-full flex items-center justify-center mb-4">
                                <Lock size={32} className="text-[#ffcc00]" />

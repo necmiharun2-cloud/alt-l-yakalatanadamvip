@@ -462,21 +462,21 @@ export default function Admin() {
   };
 
   if (authLoading) {
-    return <div className="min-h-screen bg-[#0f0f0f] flex items-center justify-center text-white">Yükleniyor...</div>;
+    return <div className="min-h-screen bg-[#010a26] flex items-center justify-center text-white">Yükleniyor...</div>;
   }
 
   if (!profile || profile.role !== 'admin') {
-     return <div className="min-h-screen bg-[#0f0f0f] flex items-center justify-center text-white">Yetkisiz Erişim</div>;
+     return <div className="min-h-screen bg-[#010a26] flex items-center justify-center text-white">Yetkisiz Erişim</div>;
   }
 
   return (
-    <div className="min-h-screen bg-[#0f0f0f] text-white">
+    <div className="min-h-screen bg-[#010a26] text-white">
       <Header />
       
       <main className="max-w-7xl mx-auto py-20 px-4">
         {/* KPI Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
-          <div className="bg-[#0a0a0a] border border-white/5 rounded-3xl p-6 shadow-xl">
+          <div className="bg-[#020f3a] border border-white/5 rounded-3xl p-6 shadow-xl">
              <div className="flex items-center space-x-3 mb-2">
                 <div className="w-8 h-8 rounded-full bg-[#ffcc00]/10 flex items-center justify-center">
                    <ListPlus size={16} className="text-[#ffcc00]" />
@@ -485,7 +485,7 @@ export default function Admin() {
              </div>
              <div className="text-3xl font-black italic">{predictions.filter(p => (p.status === 'published' || p.type === 'current')).length}</div>
           </div>
-          <div className="bg-[#0a0a0a] border border-white/5 rounded-3xl p-6 shadow-xl">
+          <div className="bg-[#020f3a] border border-white/5 rounded-3xl p-6 shadow-xl">
              <div className="flex items-center space-x-3 mb-2">
                 <div className="w-8 h-8 rounded-full bg-green-500/10 flex items-center justify-center">
                    <CheckCircle size={16} className="text-green-500" />
@@ -846,7 +846,7 @@ export default function Admin() {
                                   onChange={e => setFormData({...formData, track: e.target.value})}
                                   className="w-full bg-[#111111] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ffcc00] transition-colors appearance-none"
                                 >
-                                  {['Diyarbakır', 'Urfa', 'Elazığ', 'Adana', 'Ankara', 'İzmir', 'İstanbul', 'Kocaeli', 'Antalya'].map(t => (
+                                  {['İstanbul', 'Ankara', 'İzmir', 'Adana', 'Bursa', 'Kocaeli', 'Şanlıurfa', 'Elazığ', 'Diyarbakır', 'Antalya'].map(t => (
                                     <option key={t} value={t}>{t}</option>
                                   ))}
                                 </select>

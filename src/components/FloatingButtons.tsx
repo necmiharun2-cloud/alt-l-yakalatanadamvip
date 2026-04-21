@@ -49,7 +49,7 @@ export default function FloatingButtons() {
                         {/* Scroll Up Button */}
                         <button
                             onClick={scrollToTop}
-                            className="w-12 h-12 bg-black/80 backdrop-blur-md border border-white/10 text-white rounded-2xl flex items-center justify-center hover:bg-[#ffcc00] hover:text-black transition-all shadow-2xl group"
+                            className="w-12 h-12 bg-[#020f3a]/80 backdrop-blur-md border border-white/10 text-white rounded-2xl flex items-center justify-center hover:bg-[#ffcc00] hover:text-[#010a26] transition-all shadow-2xl group"
                             title="Yukarı Çık"
                         >
                             <ChevronUp size={24} className="group-hover:-translate-y-1 transition-transform" />
@@ -58,7 +58,7 @@ export default function FloatingButtons() {
                         {/* Scroll Down Button */}
                         <button
                             onClick={scrollToBottom}
-                            className="w-12 h-12 bg-black/80 backdrop-blur-md border border-white/10 text-white rounded-2xl flex items-center justify-center hover:bg-[#ffcc00] hover:text-black transition-all shadow-2xl group"
+                            className="w-12 h-12 bg-[#020f3a]/80 backdrop-blur-md border border-white/10 text-white rounded-2xl flex items-center justify-center hover:bg-[#ffcc00] hover:text-[#010a26] transition-all shadow-2xl group"
                             title="Aşağı İn"
                         >
                             <ChevronDown size={24} className="group-hover:translate-y-1 transition-transform" />
@@ -80,7 +80,7 @@ export default function FloatingButtons() {
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-600 text-[10px] font-black flex items-center justify-center rounded-full border-2 border-white shadow-lg animate-bounce z-20">1</span>
                 
                 {/* Tooltip */}
-                <div className="absolute right-20 bg-[#111111] text-white px-4 py-2 rounded-xl text-[10px] font-black whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-2xl border border-white/10 uppercase tracking-widest italic">
+                <div className="absolute right-20 bg-[#0a1b5d] text-white px-4 py-2 rounded-xl text-[10px] font-black whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-2xl border border-white/10 uppercase tracking-widest italic">
                    Bize Ulaşın
                 </div>
             </button>

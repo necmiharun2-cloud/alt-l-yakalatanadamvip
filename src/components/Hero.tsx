@@ -8,13 +8,13 @@ import { motion } from 'motion/react';
 
 export default function Hero() {
   return (
-    <section className="relative w-full h-[600px] overflow-hidden bg-[#0a0a0a]">
+    <section className="relative w-full h-[600px] overflow-hidden bg-[#001d3d]">
       {/* Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center transition-transform duration-10000 scale-110 hover:scale-100"
         style={{ backgroundImage: 'url("https://picsum.photos/seed/horserace/1920/1080")' }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#001d3d]/90 via-[#001d3d]/40 to-transparent" />
       </div>
 
       <div className="relative max-w-7xl mx-auto h-full flex items-center px-4">
@@ -39,7 +39,7 @@ export default function Hero() {
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          className="max-w-xl bg-black/40 backdrop-blur-md p-10 rounded-[40px] border border-white/10"
+          className="max-w-xl bg-[#001d3d]/60 backdrop-blur-md p-10 rounded-[40px] border border-white/10"
         >
           <span className="inline-block px-4 py-1 bg-[#ffcc00] text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-6 italic">
             ALTILIYAKALATANADAM'dan

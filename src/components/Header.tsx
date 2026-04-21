@@ -48,11 +48,12 @@ export default function Header() {
   return (
     <header className="w-full flex flex-col font-sans sticky top-0 z-50">
       {/* Nesine Style Top Bar */}
-      <div className={`bg-[#ffcc00] py-2 px-4 border-b border-[#000]/5 transition-all duration-300 ${scrolled ? 'shadow-md py-1' : ''}`}>
+      <div className={`bg-[#010a26] py-2 px-4 border-b border-white/10 transition-all duration-300 ${scrolled ? 'shadow-md py-1' : ''}`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3 group">
-            <div className="relative w-12 h-12 rounded-full p-[2px] overflow-hidden flex items-center justify-center bg-black shadow-lg shadow-black/20">
+          {/* Identity Section */}
+          <div className="flex items-center space-x-3">
+            {/* Logo Link */}
+            <Link to="/" className="relative w-12 h-12 rounded-full p-[2px] overflow-hidden flex items-center justify-center bg-[#010a26] shadow-lg shadow-black/20 group">
               {/* Rotating Neon Overlay */}
               <div className="absolute w-[200%] h-[200%] bg-[conic-gradient(transparent,#ffcc00,#ff3300,#00ffcc,transparent_30%)] animate-neon-rotate opacity-80"></div>
               
@@ -65,43 +66,45 @@ export default function Header() {
                   referrerPolicy="no-referrer"
                 />
               </div>
-            </div>
+            </Link>
+
             <div className="flex flex-col">
               <div className="flex items-center space-x-2">
-                <span className="text-sm md:text-xl font-black text-black italic tracking-tighter uppercase leading-none">
-                  ALTILIYAKALA<span className="text-gray-900 opacity-60">TANADAM</span>
-                </span>
+                <Link to="/" className="text-sm md:text-xl font-black text-white italic tracking-tighter uppercase leading-none hover:opacity-80 transition-opacity">
+                  ALTILIYAKALA<span className="text-white/60">TANADAM</span>
+                </Link>
                 <a 
                   href="https://wa.me/905336711463" 
                   target="_blank" 
                   rel="noreferrer"
-                  onClick={(e) => e.stopPropagation()}
                   className="bg-[#25D366] p-1 rounded-full text-white hover:scale-110 transition-transform shadow-md"
                 >
                   <MessageCircle size={14} fill="currentColor" />
                 </a>
               </div>
-              <span className="text-[10px] font-bold text-black/40 uppercase tracking-[0.2em] mt-0.5 hidden sm:block">Türkiye'nin En İyisi</span>
+              <Link to="/" className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mt-0.5 hidden sm:block hover:text-white/60 transition-colors">
+                Türkiye'nin En İyisi
+              </Link>
             </div>
-          </Link>
+          </div>
 
           {/* Right Section (Help, Login, Register) */}
           <div className="hidden lg:flex items-center space-x-3">
             {user && (
                <button 
                  onClick={() => alert('Henüz yeni bildiriminiz bulunmuyor.')}
-                 className="relative p-2 text-black hover:scale-110 transition-all mr-2 cursor-pointer"
+                 className="relative p-2 text-[#ffcc00] hover:scale-110 transition-all mr-2 cursor-pointer"
                >
                  <Bell size={20} />
-                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-600 rounded-full border border-[#ffcc00]"></span>
+                 <span className="absolute top-1 right-1 w-2 h-2 bg-red-600 rounded-full border border-[#010a26]"></span>
                </button>
             )}
             {/* Yardım */}
-            <Link to="/kurumsal/yardim" className="flex items-center space-x-1 text-black text-[11px] font-black uppercase tracking-tight hover:opacity-70 mr-2">
-              <div className="w-5 h-5 bg-black rounded-full flex items-center justify-center">
+            <Link to="/kurumsal/yardim" className="flex items-center space-x-1 text-white text-[11px] font-black uppercase tracking-tight hover:text-[#ffcc00] mr-2">
+              <div className="w-5 h-5 bg-white/10 rounded-full flex items-center justify-center">
                 <HelpCircle size={12} className="text-[#ffcc00]" />
               </div>
-              <span className="!text-black uppercase">YARDIM</span>
+              <span className="uppercase">YARDIM</span>
             </Link>
 
             {!user ? (
@@ -129,23 +132,23 @@ export default function Header() {
                     <Link 
                       to="/giris-yap" 
                       state={{ showReset: true }}
-                      className="bg-gray-700 text-white text-[9px] px-2 font-bold hover:bg-black transition-colors flex items-center"
+                      className="bg-[#020f3a] text-white/70 text-[9px] px-2 font-bold hover:bg-[#ffcc00] hover:text-[#010a26] border-l border-white/10 transition-colors flex items-center"
                     >
                       Unuttum
                     </Link>
                   </div>
                   
-                  <div className="flex items-center space-x-1 text-[10px] font-bold text-black px-1">
-                    <input type="checkbox" id="remember" className="w-3 h-3 border-gray-300 rounded" />
+                  <div className="flex items-center space-x-1 text-[10px] font-bold text-white/70 px-1">
+                    <input type="checkbox" id="remember" className="w-3 h-3 border-white/20 bg-white/5 rounded" />
                     <label htmlFor="remember">Beni Hatırla</label>
                   </div>
 
                   <button 
                     onClick={() => navigate('/giris-yap')}
-                    className="h-9 px-4 bg-black text-[#ffcc00] font-black text-xs rounded-md shadow-sm hover:opacity-90 transition-all flex items-center space-x-1"
+                    className="h-9 px-4 bg-[#ffcc00] text-[#010a26] font-black text-xs rounded-md shadow-sm hover:opacity-90 transition-all flex items-center space-x-1"
                   >
                     <span>GİRİŞ</span>
-                    <div className="w-0 h-0 border-t-4 border-t-transparent border-b-4 border-b-transparent border-l-4 border-l-[#ffcc00] ml-1"></div>
+                    <div className="w-0 h-0 border-t-4 border-t-transparent border-b-4 border-b-transparent border-l-4 border-l-[#010a26] ml-1"></div>
                   </button>
 
                   <Link 
@@ -158,12 +161,12 @@ export default function Header() {
             ) : (
               <div className="flex items-center space-x-4">
                  <div className="flex flex-col items-end">
-                   <span className="text-[10px] font-bold !text-black uppercase tracking-tight">Hoşgeldiniz</span>
-                   <span className="text-xs font-black !text-black">{profile?.fullName || user?.email}</span>
+                   <span className="text-[10px] font-bold text-white/60 uppercase tracking-tight">Hoşgeldiniz</span>
+                   <span className="text-xs font-black text-white">{profile?.fullName || user?.email}</span>
                  </div>
                  
                  {profile?.isVip && (
-                   <div className="bg-black text-[#ffcc00] px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center space-x-1">
+                   <div className="bg-[#010a26] text-[#ffcc00] px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest flex items-center space-x-1">
                      <Star size={10} className="fill-[#ffcc00]" />
                      <span>VIP</span>
                    </div>
@@ -171,7 +174,7 @@ export default function Header() {
 
                  <div className="flex items-center space-x-2">
                     {profile?.role === 'admin' && (
-                      <Link to="/admin" className="p-2 bg-black text-[#ffcc00] rounded-lg hover:bg-gray-800 transition-colors flex items-center space-x-1">
+                      <Link to="/admin" className="p-2 bg-[#010a26] text-[#ffcc00] rounded-lg hover:bg-[#102677] transition-colors flex items-center space-x-1">
                         <LayoutGrid size={16} />
                         <span className="text-[10px] font-black uppercase tracking-tight hidden sm:inline">Panel</span>
                       </Link>
@@ -199,11 +202,11 @@ export default function Header() {
           {/* Mobile Menu Button Section */}
           <div className="lg:hidden flex items-center space-x-2">
             {!user && (
-              <Link to="/giris-yap" className="bg-black text-[#ffcc00] px-4 py-2 rounded-lg font-black text-xs uppercase tracking-widest">Giriş</Link>
+              <Link to="/giris-yap" className="bg-[#ffcc00] text-[#010a26] px-4 py-2 rounded-lg font-black text-xs uppercase tracking-widest">Giriş</Link>
             )}
             <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="text-black p-2 bg-black/5 rounded-lg"
+              className="text-white p-2 bg-white/10 rounded-lg"
             >
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -212,7 +215,7 @@ export default function Header() {
       </div>
 
       {/* Nesine Style Sub Nav (Bottom Bar) */}
-      <div className="bg-[#191919] border-b border-white/5 py-1 hidden lg:block">
+      <div className="bg-[#010a26] border-b border-white/5 py-1 hidden lg:block">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <ul className="flex items-center space-x-1">
             {menuItems.map((item) => (
@@ -222,7 +225,7 @@ export default function Header() {
                   className="px-6 py-3 text-[11px] font-black text-white hover:text-[#ffcc00] uppercase tracking-tighter transition-all block relative group"
                 >
                   {item.label}
-                  <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#ffcc00] transition-all group-hover:w-full"></div>
+                  <div className="absolute bottom-0 left-0 w-0 h-1 bg-[#ffcc00] transition-all group-hover:w-full"></div>
                 </Link>
               </li>
             ))}
@@ -248,7 +251,7 @@ export default function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden border-t border-white/5 bg-[#191919] overflow-hidden"
+            className="lg:hidden border-t border-white/5 bg-[#010a26] overflow-hidden"
           >
             <ul className="flex flex-col space-y-2 p-6 text-sm font-black text-white uppercase tracking-tight">
               {menuItems.map((item) => (
