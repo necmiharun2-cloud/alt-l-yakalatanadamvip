@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { motion, AnimatePresence } from 'motion/react';
-import { LayoutDashboard, FileText, CheckCircle, ListPlus, Send, ImageIcon, Type, Link as LinkIcon, Users, Eye, Clock, ExternalLink, Building2, Database, ShieldCheck, AlertOctagon, Star, Trophy, Gauge, Info } from 'lucide-react';
+import { LayoutDashboard, FileText, CheckCircle, ListPlus, Send, ImageIcon, Type, Link as LinkIcon, Users, Eye, Clock, ExternalLink, Building2, Database, ShieldCheck, AlertOctagon, Star, Trophy, Gauge, Info, CreditCard } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../lib/firebase';
@@ -727,59 +727,6 @@ export default function Admin() {
                         </div>
                     ))}
 
-                    {activeSection === 'users' && (
-                      <div className="space-y-8">
-                         <div className="space-y-4">
-                            <h3 className="text-[10px] font-black uppercase tracking-widest text-[#ffcc00] flex items-center">BEKLEYEN ÖDEMELER</h3>
-                            {payments.filter(p => p.status === 'pending').map(p => (
-                               <div key={p.id} className="bg-white/5 rounded-2xl p-3 border border-white/5">
-                                  <div className="text-[10px] font-bold truncate text-white mb-1">{p.fullName}</div>
-                                  <div className="text-[9px] text-gray-500 mb-2 truncate">
-                                     {p.package} - {p.amount}₺
-                                  </div>
-                                  <div className="grid grid-cols-2 gap-2">
-                                     <button onClick={() => handlePaymentAction(p.id, 'approved', p.userId, p.package)} className="bg-green-500/20 text-green-500 py-1.5 rounded-lg text-[8px] font-black uppercase hover:bg-green-500 hover:text-black transition-all">ONAY</button>
-                                     <button onClick={() => handlePaymentAction(p.id, 'rejected', p.userId)} className="bg-red-500/20 text-red-500 py-1.5 rounded-lg text-[8px] font-black uppercase hover:bg-red-500 hover:text-white transition-all">RED</button>
-                                  </div>
-                               </div>
-                            ))}
-                            {payments.filter(p => p.status === 'pending').length === 0 && <p className="text-[9px] text-gray-700 italic">Bekleyen ödeme yok.</p>}
-                         </div>
-
-                         <div className="space-y-4 pt-6 border-t border-white/10">
-                            <h3 className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center">TÜM KULLANICILAR ({allUsers.length})</h3>
-                            <div className="space-y-3">
-                               {allUsers.map(u => (
-                                  <div key={u.id} className={`bg-white/5 rounded-2xl p-4 border transition-all ${u.isBanned ? 'border-red-500/30 opacity-60' : 'border-white/5'}`}>
-                                     <div className="flex justify-between items-start mb-2">
-                                        <div className="min-w-0 flex-1">
-                                           <div className="text-xs font-black truncate text-white">{u.fullName || u.email}</div>
-                                           <div className="text-[9px] text-gray-500 truncate">{u.email}</div>
-                                        </div>
-                                        <div className={`px-2 py-0.5 rounded text-[8px] font-black uppercase shrink-0 ${u.role === 'admin' ? 'bg-purple-500 text-white' : u.isVip ? 'bg-[#ffcc00] text-black' : 'bg-gray-700 text-white'}`}>
-                                           {u.isBanned ? 'YASAKLI' : u.role}
-                                        </div>
-                                     </div>
-                                     <div className="grid grid-cols-3 gap-1.5 pt-2 border-t border-white/5">
-                                        {!u.isVip && u.role !== 'admin' && (
-                                           <button onClick={() => handleUserAction(u.id, 'makeVip')} className="bg-[#ffcc00]/10 text-[#ffcc00] py-1 rounded text-[8px] font-black uppercase hover:bg-[#ffcc00] hover:text-black">VİP YAP</button>
-                                        )}
-                                        {u.role !== 'admin' && (
-                                           u.isBanned ? (
-                                              <button onClick={() => handleUserAction(u.id, 'unban')} className="bg-green-500/10 text-green-500 py-1 rounded text-[8px] font-black uppercase hover:bg-green-500 hover:text-black">YASAĞI AÇ</button>
-                                           ) : (
-                                              <button onClick={() => handleUserAction(u.id, 'ban')} className="bg-red-500/10 text-red-500 py-1 rounded text-[8px] font-black uppercase hover:bg-red-500 hover:text-white">BANLA</button>
-                                           )
-                                        )}
-                                        <button onClick={() => handleUserAction(u.id, 'delete')} className="bg-white/5 text-gray-500 py-1 rounded text-[8px] font-black uppercase hover:bg-white/10">SİL</button>
-                                     </div>
-                                  </div>
-                               ))}
-                            </div>
-                         </div>
-                      </div>
-                    )}
-
                     {((activeSection === 'banks' && banks.length === 0) || 
                       (activeSection === 'slider' && sliderItems.length === 0) ||
                       (activeSection === 'blog' && blogs.length === 0) ||
@@ -813,25 +760,183 @@ export default function Admin() {
                 {/* Form Wrapper with Preview if applicable */}
                 {activeSection === 'users' ? (
                    <div className="p-8 md:p-12 space-y-12">
-                      <div className="flex items-center space-x-4 mb-10">
-                        <div className="w-12 h-12 bg-[#ffcc00]/10 rounded-2xl flex items-center justify-center">
-                           <Users size={24} className="text-[#ffcc00]" />
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+                        <div className="flex items-center space-x-4">
+                          <div className="w-12 h-12 bg-[#ffcc00]/10 rounded-2xl flex items-center justify-center">
+                             <Users size={24} className="text-[#ffcc00]" />
+                          </div>
+                          <div>
+                            <h2 className="text-2xl font-black italic tracking-tight uppercase">Kullanıcı Yönetimi</h2>
+                            <p className="text-gray-500 text-xs font-medium uppercase tracking-widest">Sistemdeki tüm kullanıcıları ve ödemeleri buradan yönetin.</p>
+                          </div>
                         </div>
-                        <div>
-                          <h2 className="text-2xl font-black italic tracking-tight uppercase">Kullanıcı Yönetimi</h2>
-                          <p className="text-gray-500 text-xs font-medium uppercase tracking-widest">Mevcut aboneleri ve ödemelerini buradan yönetin.</p>
+                        <div className="flex items-center space-x-3">
+                           <div className="bg-[#0a0a0a] border border-white/5 px-4 py-2 rounded-xl flex items-center space-x-2">
+                              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                              <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">{allUsers.length} Toplam Üye</span>
+                           </div>
+                           <div className="bg-[#0a0a0a] border border-white/5 px-4 py-2 rounded-xl flex items-center space-x-2">
+                              <div className="w-2 h-2 bg-[#ffcc00] rounded-full"></div>
+                              <span className="text-[10px] font-black uppercase tracking-widest text-[#ffcc00]">{allUsers.filter(u => u.isVip).length} VIP Üye</span>
+                           </div>
                         </div>
                       </div>
 
-                      <div className="bg-[#222222] border border-[#ffcc00]/20 rounded-[30px] p-12 text-center mt-4 shadow-2xl">
-                         <Users size={64} className="text-[#ffcc00] mx-auto mb-6 opacity-30" />
-                         <h4 className="text-xl font-black mb-2 uppercase tracking-tight">KULLANICI VERİ TABANI</h4>
-                         <p className="text-sm text-gray-500 mb-6 font-medium max-w-sm mx-auto">
-                            Yeni kullanıcılar "Kayıt Ol" sayfası üzerinden eklenmelidir. Mevcut aboneleri buradan yönetebilirsiniz.
-                         </p>
-                         <div className="inline-flex items-center space-x-2 bg-[#ffcc00]/10 border border-[#ffcc00]/20 px-6 py-3 rounded-2xl">
-                            <Info size={16} className="text-[#ffcc00]" />
-                            <span className="text-[10px] text-[#ffcc00] font-black uppercase tracking-widest">Sistem v2.0 Aktif</span>
+                      {/* Pending Payments Section */}
+                      <div className="space-y-6">
+                         <div className="flex items-center space-x-3">
+                            <h3 className="text-sm font-black uppercase tracking-widest text-[#ffcc00]">Bekleyen Ödeme Bildirimleri</h3>
+                            <div className="h-[1px] flex-1 bg-[#ffcc00]/10"></div>
+                            <span className="bg-[#ffcc00] text-black text-[10px] font-black px-2 py-0.5 rounded-full">{payments.filter(p => p.status === 'pending').length}</span>
+                         </div>
+                         
+                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {payments.filter(p => p.status === 'pending').map(p => (
+                               <motion.div 
+                                 initial={{ opacity: 0, y: 10 }}
+                                 animate={{ opacity: 1, y: 0 }}
+                                 key={p.id} 
+                                 className="bg-[#111111] rounded-[32px] p-6 border border-white/5 hover:border-[#ffcc00]/30 transition-all relative overflow-hidden group shadow-xl"
+                               >
+                                  <div className="absolute top-0 right-0 w-24 h-24 bg-[#ffcc00] blur-[80px] opacity-10 group-hover:opacity-20 transition-opacity" />
+                                  
+                                  <div className="flex justify-between items-start mb-4">
+                                     <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center">
+                                        <CreditCard size={18} className="text-[#ffcc00]" />
+                                     </div>
+                                     <div className="text-[10px] font-black text-[#ffcc00] uppercase tracking-widest bg-[#ffcc00]/10 px-2 py-1 rounded-lg">BEKLEYEN</div>
+                                  </div>
+
+                                  <div className="space-y-4">
+                                     <div>
+                                        <div className="text-sm font-black text-white mb-1">{p.fullName}</div>
+                                        <div className="text-[10px] text-gray-500 font-medium truncate">{p.userId}</div>
+                                     </div>
+                                     
+                                     <div className="bg-[#0a0a0a] rounded-2xl p-4 border border-white/5">
+                                        <div className="flex justify-between items-center mb-2">
+                                           <span className="text-[10px] text-gray-500 font-black uppercase">Paket</span>
+                                           <span className="text-xs font-black text-white">{p.package}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                           <span className="text-[10px] text-gray-500 font-black uppercase">Tutar</span>
+                                           <span className="text-lg font-black text-[#ffcc00] italic">{p.amount} ₺</span>
+                                        </div>
+                                     </div>
+
+                                     <div className="grid grid-cols-2 gap-3 pt-2">
+                                        <button 
+                                          onClick={() => handlePaymentAction(p.id, 'approved', p.userId, p.package)}
+                                          className="bg-green-600 text-white py-3 rounded-2xl text-[10px] font-black uppercase hover:bg-green-500 transition-all shadow-lg shadow-green-600/10 active:scale-95"
+                                        >
+                                           Onayla
+                                        </button>
+                                        <button 
+                                          onClick={() => handlePaymentAction(p.id, 'rejected', p.userId)}
+                                          className="bg-[#222222] text-red-500 py-3 rounded-2xl text-[10px] font-black uppercase hover:bg-red-500 hover:text-white transition-all active:scale-95 border border-red-500/20"
+                                        >
+                                           Reddet
+                                        </button>
+                                     </div>
+                                  </div>
+                               </motion.div>
+                            ))}
+                         </div>
+                         {payments.filter(p => p.status === 'pending').length === 0 && (
+                            <div className="bg-[#0a0a0a] border border-white/5 border-dashed rounded-[32px] p-12 text-center">
+                               <CheckCircle size={32} className="text-gray-700 mx-auto mb-4 opacity-20" />
+                               <p className="text-xs text-gray-600 font-black uppercase tracking-widest">Bekleyen ödeme bildirimi bulunmuyor.</p>
+                            </div>
+                         )}
+                      </div>
+
+                      {/* Full Users List section */}
+                      <div className="space-y-6 pt-6">
+                         <div className="flex items-center space-x-3">
+                            <h3 className="text-sm font-black uppercase tracking-widest text-gray-400">Tüm Kullanıcılar</h3>
+                            <div className="h-[1px] flex-1 bg-white/5"></div>
+                         </div>
+
+                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                            {allUsers.map(u => (
+                               <motion.div 
+                                 initial={{ opacity: 0 }}
+                                 animate={{ opacity: 1 }}
+                                 key={u.id} 
+                                 className={`bg-[#0a0a0a] border rounded-[32px] p-6 transition-all group ${u.isBanned ? 'border-red-500/20 opacity-50' : 'border-white/5 hover:border-white/10 shadow-xl'}`}
+                               >
+                                  <div className="flex items-center space-x-4 mb-6">
+                                     <div className="relative">
+                                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-black ${u.role === 'admin' ? 'bg-purple-500/20 text-purple-500' : u.isVip ? 'bg-[#ffcc00]/20 text-[#ffcc00]' : 'bg-gray-800 text-gray-500'}`}>
+                                           {u.fullName?.charAt(0) || u.email?.charAt(0) || 'U'}
+                                        </div>
+                                        {u.isVip && (
+                                           <div className="absolute -top-1 -right-1 w-5 h-5 bg-[#ffcc00] rounded-lg flex items-center justify-center shadow-lg border-2 border-black">
+                                              <Star size={10} className="text-black fill-black" />
+                                           </div>
+                                        )}
+                                     </div>
+                                     <div className="flex-1 min-w-0">
+                                        <div className="flex items-center space-x-2 mb-0.5">
+                                           <h4 className="text-sm font-black text-white truncate">{u.fullName || 'İsimsiz Kullanıcı'}</h4>
+                                           {u.role === 'admin' && <div className="bg-purple-500 text-[8px] px-1.5 py-0.5 rounded font-black text-white uppercase tracking-widest">ADMIN</div>}
+                                        </div>
+                                        <p className="text-[10px] text-gray-500 font-medium truncate">{u.email}</p>
+                                     </div>
+                                  </div>
+
+                                  <div className="grid grid-cols-2 gap-3 mb-6">
+                                     <div className="bg-[#111111] p-3 rounded-2xl border border-white/5">
+                                        <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest block mb-1">Yetki</span>
+                                        <span className={`text-[10px] font-black uppercase italic ${u.isVip ? 'text-[#ffcc00]' : 'text-gray-400'}`}>
+                                           {u.isBanned ? 'YASAKLI' : u.role.toUpperCase()}
+                                        </span>
+                                     </div>
+                                     <div className="bg-[#111111] p-3 rounded-2xl border border-white/5">
+                                        <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest block mb-1">Durum</span>
+                                        <span className={`text-[10px] font-black uppercase italic ${u.isVip ? 'text-green-500' : 'text-gray-600'}`}>
+                                           {u.isVip ? 'AKTİF VİP' : 'STANDART'}
+                                        </span>
+                                     </div>
+                                  </div>
+
+                                  <div className="flex items-center space-x-2 pt-4 border-t border-white/5">
+                                     {!u.isVip && u.role !== 'admin' && (
+                                        <button 
+                                          onClick={() => handleUserAction(u.id, 'makeVip')}
+                                          className="flex-1 bg-[#ffcc00]/10 text-[#ffcc00] border border-[#ffcc00]/20 py-2.5 rounded-xl text-[9px] font-black uppercase hover:bg-[#ffcc00] hover:text-black transition-all active:scale-95"
+                                        >
+                                           Vip Yap
+                                        </button>
+                                     )}
+                                     {u.role !== 'admin' && (
+                                        u.isBanned ? (
+                                           <button 
+                                             onClick={() => handleUserAction(u.id, 'unban')}
+                                             className="flex-1 bg-green-500/10 text-green-500 border border-green-500/20 py-2.5 rounded-xl text-[9px] font-black uppercase hover:bg-green-500 hover:text-black transition-all active:scale-95"
+                                           >
+                                              Yasağı Kaldır
+                                           </button>
+                                        ) : (
+                                           <button 
+                                             onClick={() => handleUserAction(u.id, 'ban')}
+                                             className="flex-1 bg-red-500/10 text-red-500 border border-red-500/20 py-2.5 rounded-xl text-[9px] font-black uppercase hover:bg-red-500 hover:text-white transition-all active:scale-95"
+                                           >
+                                              Banla
+                                           </button>
+                                        )
+                                     )}
+                                     {u.role !== 'admin' && (
+                                       <button 
+                                          onClick={() => handleUserAction(u.id, 'delete')}
+                                          className="w-10 h-10 bg-white/5 flex items-center justify-center rounded-xl text-gray-500 hover:text-red-500 transition-colors"
+                                       >
+                                          <Database size={16} />
+                                       </button>
+                                     )}
+                                  </div>
+                               </motion.div>
+                            ))}
                          </div>
                       </div>
                    </div>
