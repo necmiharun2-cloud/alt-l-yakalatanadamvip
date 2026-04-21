@@ -103,7 +103,7 @@ function HomePage() {
   useEffect(() => {
     const fetchLatest = async () => {
         try {
-            const data = await dbService.getPredictions('current');
+            const data = await dbService.getPredictions('current', profile?.role || 'user', profile?.isVip || false);
             if (data && Array.isArray(data)) {
                 setPredictions(data);
             }

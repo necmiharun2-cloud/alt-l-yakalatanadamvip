@@ -12,13 +12,11 @@ service cloud.firestore {
     function incoming() { return request.resource.data; }
     function existing() { return resource.data; }
     
-    // Role Helpers (ÖNEMLİ: Admin İzni Genişletildi)
+    // Role Helpers
     function isAdmin() {
       return isSignedIn() && 
-             (request.auth.token.email == 'necmiharun3@gmail.com' || 
-              request.auth.token.email == 'corbacicengizustabuca@gmail.com' ||
-              (exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
-               get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'));
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
     }
     function isVip() {
       return isSignedIn() && 

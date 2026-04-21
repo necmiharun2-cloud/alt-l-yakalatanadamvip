@@ -16,28 +16,57 @@ import {
 } from 'firebase/firestore';
 
 export const dbService = {
-  async getPredictions(type: 'current' | 'success') {
+  async getPredictions(type: 'current' | 'success', role: string = 'user', isVip: boolean = false) {
     try {
-      const q = query(
-        collection(db, 'predictions'), 
-        where('type', '==', type),
-        orderBy('createdAt', 'desc')
-      );
+      const statusToQuery = type === 'current' ? 'published' : 'settled';
+      let q: any;
+
+      if (role === 'admin') {
+        q = query(
+          collection(db, 'predictions'), 
+          where('type', '==', type),
+          orderBy('createdAt', 'desc')
+        );
+      } else if (isVip) {
+        q = query(
+          collection(db, 'predictions'), 
+          where('type', '==', type),
+          where('status', '==', statusToQuery),
+          orderBy('createdAt', 'desc')
+        );
+      } else {
+        q = query(
+          collection(db, 'predictions'), 
+          where('type', '==', type),
+          where('status', '==', statusToQuery),
+          where('visibility', 'in', ['public', 'sample']),
+          orderBy('createdAt', 'desc')
+        );
+      }
+      
       const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      return querySnapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as Record<string, any>) }));
     } catch (err) {
       console.error('getPredictions error:', err);
       return [];
     }
   },
 
-  async getPredictionBySlug(slug: string) {
+  async getPredictionBySlug(slug: string, role: string = 'user', isVip: boolean = false) {
     try {
-      const q = query(collection(db, 'predictions'), where('slug', '==', slug), limit(1));
+      let q: any;
+      if (role === 'admin') {
+         q = query(collection(db, 'predictions'), where('slug', '==', slug), limit(1));
+      } else if (isVip) {
+         q = query(collection(db, 'predictions'), where('slug', '==', slug), where('status', 'in', ['published', 'settled']), limit(1));
+      } else {
+         q = query(collection(db, 'predictions'), where('slug', '==', slug), where('status', 'in', ['published', 'settled']), where('visibility', 'in', ['public', 'sample']), limit(1));
+      }
+      
       const querySnapshot = await getDocs(q);
       if (querySnapshot.empty) return null;
       const docData = querySnapshot.docs[0];
-      return { id: docData.id, ...docData.data() };
+      return { id: docData.id, ...(docData.data() as Record<string, any>) };
     } catch (err) {
       console.error('getPredictionBySlug error:', err);
       return null;

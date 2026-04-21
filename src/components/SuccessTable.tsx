@@ -7,10 +7,12 @@ import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { dbService } from '../services/dbService';
+import { useAuth } from '../context/AuthContext';
 import { formatDate } from '../lib/utils';
 import { APP_LOGO_URL } from '../constants';
 
 export default function SuccessTable() {
+  const { profile } = useAuth();
   const navigate = useNavigate();
   const [successList, setSuccessList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -18,7 +20,7 @@ export default function SuccessTable() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await dbService.getPredictions('success');
+        const data = await dbService.getPredictions('success', profile?.role || 'user', profile?.isVip || false);
         setSuccessList(data.slice(0, 6)); // show latest 6 to fill grid
       } catch (error) {
         console.error(error);

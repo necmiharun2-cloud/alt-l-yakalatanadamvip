@@ -9,16 +9,18 @@ import Footer from '../components/Footer';
 import { motion } from 'motion/react';
 import { ChevronRight, ChevronLeft, Calendar, User, Trophy } from 'lucide-react';
 import { dbService } from '../services/dbService';
+import { useAuth } from '../context/AuthContext';
 import { formatDate } from '../lib/utils';
 
 export default function PastSuccess() {
+  const { profile } = useAuth();
   const [successList, setSuccessList] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchSuccess = async () => {
       try {
-        const data = await dbService.getPredictions('success');
+        const data = await dbService.getPredictions('success', profile?.role || 'user', profile?.isVip || false);
         setSuccessList(data);
       } catch (err) {
         console.error('Error fetching success list:', err);

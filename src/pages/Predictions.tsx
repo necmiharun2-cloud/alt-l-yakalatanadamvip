@@ -22,7 +22,7 @@ export default function Predictions() {
   useEffect(() => {
     const fetchPredictions = async () => {
       try {
-        const data = await dbService.getPredictions('current');
+        const data = await dbService.getPredictions('current', profile?.role || 'user', profile?.isVip || false);
         setPredictions(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error('Error fetching predictions:', err);

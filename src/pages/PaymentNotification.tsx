@@ -50,7 +50,23 @@ export default function PaymentNotification() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+      const selectedFile = e.target.files[0];
+      
+      // Limit file size to 5MB
+      if (selectedFile.size > 5 * 1024 * 1024) {
+        alert('Dosya boyutu 5MB\'dan küçük olmalıdır.');
+        e.target.value = '';
+        return;
+      }
+      
+      // Allow only images and PDFs
+      if (!selectedFile.type.startsWith('image/') && selectedFile.type !== 'application/pdf') {
+        alert('Lütfen sadece resim (JPG, PNG) veya PDF dosyası yükleyin.');
+        e.target.value = '';
+        return;
+      }
+
+      setFile(selectedFile);
     }
   };
 

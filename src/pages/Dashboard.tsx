@@ -16,7 +16,7 @@ import { updatePassword, EmailAuthProvider, reauthenticateWithCredential } from 
 import { formatDate } from '../lib/utils';
 
 export default function Dashboard() {
-  const { user, profile, signOut } = useAuth();
+  const { user, profile, loading: authLoading, signOut } = useAuth();
   const navigate = useNavigate();
 
   const [phone, setPhone] = useState(profile?.phone || '');
@@ -26,10 +26,10 @@ export default function Dashboard() {
   const [isSavingPrefs, setIsSavingPrefs] = useState(false);
   
   React.useEffect(() => {
-    if (!loading && !user && !profile) {
+    if (!authLoading && !user && !profile) {
       navigate('/');
     }
-  }, [user, profile, loading, navigate]);
+  }, [user, profile, authLoading, navigate]);
 
   const [notifState, setNotifState] = useState({
     email: profile?.notificationSettings?.email ?? true,
@@ -98,10 +98,18 @@ export default function Dashboard() {
     { label: 'Çıkış', icon: LogOut, action: () => { signOut(); navigate('/'); } },
   ];
 
+  if (authLoading) {
+     return (
+        <div className="min-h-screen bg-[#0f0f0f] flex items-center justify-center text-white">
+           Yükleniyor...
+        </div>
+     )
+  }
+
   if (!profile || !user) {
      return (
         <div className="min-h-screen bg-[#0f0f0f] flex items-center justify-center text-white">
-           Yükleniyor veya Giriş Yapılmadı...
+           Giriş Yapılmadı...
         </div>
      )
   }

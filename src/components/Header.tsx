@@ -22,19 +22,24 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPass, setLoginPass] = useState('');
+  const [loginError, setLoginError] = useState('');
   const [scrolled, setScrolled] = useState(false);
   const [headerLoading, setHeaderLoading] = useState(false);
 
   const handleHeaderLogin = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
-    if (!loginEmail || !loginPass) return;
+    if (!loginEmail || !loginPass) {
+      setLoginError('Bilgiler eksik.');
+      return;
+    }
     
     setHeaderLoading(true);
+    setLoginError('');
     try {
       await signIn(loginEmail, loginPass);
       navigate('/bilgilerim');
     } catch (err: any) {
-      alert('Giriş başarısız: ' + (err.message || 'Lütfen bilgilerinizi kontrol edin.'));
+      setLoginError('Giriş başarısız. Bilgilerinizi kontrol ediniz.');
     } finally {
       setHeaderLoading(false);
     }
@@ -165,9 +170,11 @@ export default function Header() {
             </Link>
 
              {!user ? (
-                <form onSubmit={handleHeaderLogin} className="flex items-center space-x-2">
-                   {/* Pseudo Login Fields for Nesine Look */}
-                   <div className="flex bg-white rounded-md border border-gray-300 overflow-hidden h-9">
+                <div className="flex flex-col">
+                  {loginError && <div className="text-red-500 text-[10px] font-bold mb-1 ml-1">{loginError}</div>}
+                  <form onSubmit={handleHeaderLogin} className="flex items-center space-x-2">
+                     {/* Pseudo Login Fields for Nesine Look */}
+                     <div className="flex bg-white rounded-md border border-gray-300 overflow-hidden h-9">
                      <div className="flex items-center px-2 bg-gray-100 border-r border-gray-300">
                        <User size={14} className="text-gray-400" />
                      </div>
@@ -220,6 +227,7 @@ export default function Header() {
                      HEMEN ÜYE OL
                    </Link>
                 </form>
+              </div>
             ) : (
               <div className="flex items-center space-x-4">
                  <div className="flex flex-col items-end">

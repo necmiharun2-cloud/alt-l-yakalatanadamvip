@@ -27,7 +27,7 @@ export default function PredictionDetail() {
       setLoading(true);
       try {
         if (slug) {
-          const detail = await dbService.getPredictionBySlug(slug);
+          const detail = await dbService.getPredictionBySlug(slug, profile?.role || 'user', profile?.isVip || false);
           if (detail) {
             setPrediction(detail);
             // Increment view count (non-blocking)
@@ -41,7 +41,7 @@ export default function PredictionDetail() {
             });
           }
         }
-        const current = await dbService.getPredictions('current');
+        const current = await dbService.getPredictions('current', profile?.role || 'user', profile?.isVip || false);
         setSidebarTahminler(current);
       } catch (err) {
         console.error('Error fetching prediction detail:', err);
