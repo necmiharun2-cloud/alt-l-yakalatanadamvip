@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Mail, LayoutGrid, LogIn, UserPlus, CreditCard, ChevronDown, User, Star, MessageSquare, LogOut, Settings, Tv, Menu, X, Bell, HelpCircle } from 'lucide-react';
+import { Mail, LayoutGrid, LogIn, UserPlus, CreditCard, ChevronDown, User, Star, MessageSquare, LogOut, Settings, Tv, Menu, X, Bell, HelpCircle, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -67,9 +67,20 @@ export default function Header() {
               </div>
             </div>
             <div className="flex flex-col">
-              <span className="text-sm md:text-xl font-black text-black italic tracking-tighter uppercase leading-none">
-                ALTILIYAKALA<span className="text-gray-900 opacity-60">TANADAM</span>
-              </span>
+              <div className="flex items-center space-x-2">
+                <span className="text-sm md:text-xl font-black text-black italic tracking-tighter uppercase leading-none">
+                  ALTILIYAKALA<span className="text-gray-900 opacity-60">TANADAM</span>
+                </span>
+                <a 
+                  href="https://wa.me/905336711463" 
+                  target="_blank" 
+                  rel="noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="bg-[#25D366] p-1 rounded-full text-white hover:scale-110 transition-transform shadow-md"
+                >
+                  <MessageCircle size={14} fill="currentColor" />
+                </a>
+              </div>
               <span className="text-[10px] font-bold text-black/40 uppercase tracking-[0.2em] mt-0.5 hidden sm:block">Türkiye'nin En İyisi</span>
             </div>
           </Link>

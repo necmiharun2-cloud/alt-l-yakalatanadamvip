@@ -47,7 +47,7 @@ export default function PastSuccess() {
             <div className="flex items-center space-x-3 text-xs font-bold uppercase tracking-widest text-[#ffcc00]">
               <span>Anasayfa</span>
               <ChevronRight size={14} />
-              <span className="text-gray-400">Geçmiş Başarılı Tahminler</span>
+              <span className="text-gray-400">Kupon Arşivi (Kazananlar)</span>
             </div>
           </div>
         </section>
@@ -57,18 +57,21 @@ export default function PastSuccess() {
           <div className="flex flex-col md:flex-row items-center justify-between mb-12">
             <div className="border-l-4 border-[#ffcc00] pl-8">
               <h1 className="text-5xl font-black italic tracking-tighter">
-                Başarılı <span className="text-gray-400">Tahminler</span>
+                Kazananlar <span className="text-gray-400">Arşivi</span>
               </h1>
             </div>
-            <div className="bg-[#222222]/50 border border-white/5 rounded-3xl p-8 flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-12 mt-8 md:mt-0">
-               <div className="flex flex-col text-center md:text-left">
-                  <span className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-1">Toplam Koşu</span>
-                  <span className="text-2xl font-black text-[#ffcc00]">5.790</span>
+            <div className="bg-[#222222]/50 border border-white/5 rounded-3xl p-8 flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-12 mt-8 md:mt-0 shadow-2xl relative overflow-hidden group hover:border-[#ffcc00]/20 transition-all">
+               <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
+                  <Trophy size={60} className="text-[#ffcc00]" />
+               </div>
+               <div className="flex flex-col text-center md:text-left relative z-10">
+                  <span className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-1">Toplam İkramiye</span>
+                  <span className="text-2xl font-black text-[#ffcc00]">6.177.230,75 TL</span>
                </div>
                <div className="w-px h-12 bg-white/10 hidden md:block" />
-               <div className="flex flex-col text-center md:text-left">
-                  <span className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-1">Toplam Kazanç</span>
-                  <span className="text-2xl font-black text-[#ffcc00]">6.177.230,75 TL</span>
+               <div className="flex flex-col text-center md:text-left relative z-10">
+                  <span className="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-1">Kazanma Oranı</span>
+                  <span className="text-2xl font-black text-green-500">%89.4</span>
                </div>
             </div>
           </div>
@@ -80,17 +83,17 @@ export default function PastSuccess() {
           ) : (
             <>
               {/* Full Width Table */}
-              <div className="bg-[#0a0a0a] rounded-[40px] border border-white/5 overflow-hidden shadow-2xl">
-                <div className="grid grid-cols-4 bg-[#222222] p-6 text-[10px] font-black uppercase tracking-[0.2em] text-[#ffcc00]">
-                  <div className="flex items-center space-x-2"><Calendar size={12} /><span>Tarih</span></div>
-                  <div className="flex items-center space-x-2"><User size={12} /><span>Yorumcu</span></div>
-                  <div className="flex items-center space-x-2"><Trophy size={12} /><span>Koşu Adı</span></div>
-                  <div className="text-right">İkramiye</div>
+              <div className="bg-[#0a0a0a] rounded-[40px] border border-white/5 overflow-hidden shadow-3xl">
+                <div className="grid grid-cols-4 bg-[#111111] p-6 text-[10px] font-black uppercase tracking-[0.3em] text-[#ffcc00] border-b border-white/5">
+                  <div className="flex items-center space-x-2"><Calendar size={12} /><span>TARİH / YARIŞ</span></div>
+                  <div className="flex items-center space-x-2"><User size={12} /><span>YAZAR</span></div>
+                  <div className="flex items-center space-x-2"><Trophy size={12} /><span>KAVRAM / KUPON</span></div>
+                  <div className="text-right">İKRAMİYE</div>
                 </div>
                 
                 <div className="divide-y divide-white/5">
                   {successList.length === 0 ? (
-                    <div className="p-12 text-center text-gray-500 italic">Henüz başarılı tahmin kaydı bulunmuyor.</div>
+                    <div className="p-12 text-center text-gray-500 italic">Henüz arşivlenmiş başarılı kupon bulunmuyor.</div>
                   ) : (
                     successList.map((item, idx) => (
                       <motion.div 
@@ -98,25 +101,34 @@ export default function PastSuccess() {
                         initial={{ opacity: 0, y: 10 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ delay: idx * 0.05 }}
-                        className="grid grid-cols-4 p-8 hover:bg-white/5 transition-colors group cursor-default"
+                        className="grid grid-cols-4 p-8 hover:bg-[#ffcc00]/5 transition-all group cursor-default"
                       >
-                        <div className="text-gray-400 font-bold text-sm flex items-center">
-                            {formatDate(item.createdAt, { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                        <div className="flex flex-col">
+                           <span className="text-gray-300 font-black text-xs uppercase tracking-widest mb-1">{formatDate(item.createdAt, { day: '2-digit', month: '2-digit', year: 'numeric' })}</span>
+                           <span className="text-[9px] text-[#ffcc00] font-black uppercase">{item.track || 'Genel'}</span>
                         </div>
                         <div className="flex items-center space-x-4">
-                          <img src="https://i.pravatar.cc/100?u=altili" alt="ALTILIYAKALATANADAM" className="w-8 h-8 rounded-full border border-white/10 group-hover:border-[#ffcc00] transition-colors" />
-                          <span className="text-white font-black italic text-xs uppercase group-hover:text-[#ffcc00] transition-colors">{item.authorName || 'ALTILIYAKALATANADAM'}</span>
+                          <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden">
+                             <img src="https://i.pravatar.cc/100?u=altili" alt="ALTILIYAKALATANADAM" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all" />
+                          </div>
+                          <span className="text-white font-black italic text-xs uppercase group-hover:text-[#ffcc00] transition-colors">ALTILIYAKALATANADAM</span>
                         </div>
-                        <div className="text-gray-400 font-bold italic text-sm flex items-center tracking-tight">
-                          <span className="flex-1">{item.title}</span>
-                          {item.resultStatus === 'won' && (
-                            <span className="ml-2 bg-green-500/20 text-green-500 text-[10px] font-black uppercase px-2 py-1 rounded-full border border-green-500/20 whitespace-nowrap">Tuttu</span>
-                          )}
-                          {item.resultStatus === 'partial' && (
-                            <span className="ml-2 bg-orange-500/20 text-orange-500 text-[10px] font-black uppercase px-2 py-1 rounded-full border border-orange-500/20 whitespace-nowrap">Kısmen Tuttu</span>
-                          )}
+                        <div className="flex flex-col justify-center">
+                          <span className="text-white font-black italic text-sm group-hover:text-[#ffcc00] transition-colors line-clamp-1 uppercase tracking-tight">{item.title}</span>
+                          <div className="flex items-center mt-1">
+                             {item.resultStatus === 'won' && (
+                               <span className="bg-green-500 text-black text-[7px] font-black uppercase px-2 py-0.5 rounded-full mr-2">KAZANDI</span>
+                             )}
+                             {item.resultStatus === 'partial' && (
+                               <span className="bg-orange-500 text-black text-[7px] font-black uppercase px-2 py-0.5 rounded-full mr-2">KISMİ</span>
+                             )}
+                             <span className="text-[8px] text-gray-500 font-bold uppercase">{item.couponType === 'aggressive' ? 'Agresif' : item.couponType === 'economic' ? 'Ekonomik' : 'Standart'} Kupon</span>
+                          </div>
                         </div>
-                        <div className="text-right text-[#ffcc00] font-black text-lg italic">{item.winnings || '0,00 TL'}</div>
+                        <div className="text-right flex flex-col justify-center items-end">
+                           <span className="text-[#ffcc00] font-black text-2xl italic tracking-tighter leading-none">{item.winnings || '0,00 TL'}</span>
+                           <span className="text-[8px] text-gray-500 font-bold uppercase mt-1">Net Ödeme</span>
+                        </div>
                       </motion.div>
                     ))
                   )}

@@ -357,7 +357,7 @@ export default function Dashboard() {
               <p className="text-gray-500 text-xs font-medium mb-8">Ana sayfada öncelikli görmek istediğiniz pistleri seçin.</p>
 
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-                {['İstanbul', 'İzmir', 'Ankara', 'Adana', 'Şanlıurfa', 'Bursa', 'Kocaeli', 'Antalya'].map((track) => (
+                {['Diyarbakır', 'Urfa', 'Elazığ', 'Adana', 'Ankara', 'İzmir', 'İstanbul', 'Kocaeli', 'Antalya'].map((track) => (
                    <div key={track} className="flex items-center space-x-3 bg-[#222222] p-4 rounded-xl border border-white/10">
                       <input type="checkbox" id={`track-${track}`} checked={selectedTracks.includes(track)} onChange={() => toggleTrack(track)} className="w-5 h-5 rounded bg-[#0a0a0a] border-white/10 text-[#ffcc00] focus:ring-[#ffcc00]" />
                       <label htmlFor={`track-${track}`} className="text-sm font-bold text-gray-400 cursor-pointer">{track}</label>

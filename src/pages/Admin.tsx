@@ -96,7 +96,7 @@ export default function Admin() {
   const [formData, setFormData] = useState(initialFormState);
 
   const sections = [
-    { id: 'guncel', label: 'VIP Kuponlar', icon: ListPlus },
+    { id: 'guncel', label: 'VIP Kupon Builder', icon: ListPlus },
     { id: 'basarili', label: 'Kazanan Kuponlar', icon: CheckCircle },
     { id: 'blog', label: 'Blog Yazıları', icon: FileText },
     { id: 'slider', label: 'Slider Ayarları', icon: ImageIcon },
@@ -152,6 +152,7 @@ export default function Admin() {
           views: Number(formData.views),
           ayaklar: formData.ayaklar,
           commentsEnabled: formData.commentsEnabled,
+          type: activeSection === 'basarili' ? 'success' : 'current',
           createdAt: editId ? (formData as any).createdAt : serverTimestamp(),
           updatedAt: serverTimestamp()
         };
@@ -845,7 +846,7 @@ export default function Admin() {
                                   onChange={e => setFormData({...formData, track: e.target.value})}
                                   className="w-full bg-[#111111] border border-white/10 rounded-2xl p-5 text-sm font-bold focus:outline-none focus:border-[#ffcc00] transition-colors appearance-none"
                                 >
-                                  {['İstanbul', 'Adana', 'İzmir', 'Şanlıurfa', 'Ankara', 'Bursa', 'Kocaeli', 'Turffontein', 'Laurel Park', 'Keeneland', 'Santa Anita'].map(t => (
+                                  {['Diyarbakır', 'Urfa', 'Elazığ', 'Adana', 'Ankara', 'İzmir', 'İstanbul', 'Kocaeli', 'Antalya'].map(t => (
                                     <option key={t} value={t}>{t}</option>
                                   ))}
                                 </select>

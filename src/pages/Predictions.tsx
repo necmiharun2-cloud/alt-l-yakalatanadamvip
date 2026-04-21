@@ -8,7 +8,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { motion } from 'motion/react';
 import { APP_LOGO_URL } from '../constants';
-import { ChevronRight, ChevronLeft, Eye, Lock } from 'lucide-react';
+import { ChevronRight, ChevronLeft, Eye, Lock, Calendar, Star } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { dbService } from '../services/dbService';
@@ -52,12 +52,12 @@ export default function Predictions() {
               />
               <div>
                 <h1 className="text-3xl md:text-5xl font-black italic tracking-tighter mb-4">
-                  Güncel <span className="text-gray-400">Tahminler</span>
+                  VIP <span className="text-gray-400">Kupon Stüdyosu</span>
                 </h1>
               </div>
             </div>
             <div className="max-w-md text-xs md:text-sm text-gray-500 font-medium">
-              At yarışı tutkunları için en güncel analizler, ALTILIYAKALATANADAM tahminleri ve yarış öncesi stratejiler için VIP üye olmayı unutmayın!
+              Profesyonel at yarışı analizleri, %90+ güven endeksli VIP kuponlar ve günlük banko tercihlerimizle kazancınızı katlayın.
             </div>
           </div>
 
@@ -80,55 +80,96 @@ export default function Predictions() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ delay: (idx % 2) * 0.1 }}
                     onClick={() => navigate(`/tahmin/${pred.slug}`)}
-                    className="bg-[#0a0a0a] rounded-3xl md:rounded-[40px] p-6 border border-white/5 shadow-2xl flex flex-col sm:flex-row items-start sm:items-center group cursor-pointer hover:border-[#ffcc00]/30 transition-all relative overflow-hidden"
+                    className="bg-[#0a0a0a] rounded-[40px] p-6 border border-white/5 shadow-2xl flex flex-col sm:flex-row items-start sm:items-center group cursor-pointer hover:border-[#ffcc00]/30 transition-all relative overflow-hidden"
                   >
-                    {!pred.isPublic && !isVip && (
-                      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm z-10 flex items-center justify-center">
+                    {!pred.isPublic && !isVip && pred.visibility !== 'sample' && pred.visibility !== 'public' && (
+                      <div className="absolute inset-0 bg-black/80 backdrop-blur-md z-20 flex items-center justify-center p-6 text-center">
                           <div className="flex flex-col items-center">
-                            <Lock size={32} className="text-[#ffcc00] mb-2" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#ffcc00]">VIP Kilitli</span>
+                            <div className="w-16 h-16 bg-[#ffcc00]/10 rounded-full flex items-center justify-center mb-4">
+                               <Lock size={32} className="text-[#ffcc00]" />
+                            </div>
+                            <span className="text-sm font-black uppercase tracking-[0.3em] text-[#ffcc00] mb-2">VIP ÖZEL İÇERİK</span>
+                            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Bu kuponu görmek için VIP üye olmalısınız.</p>
                           </div>
                       </div>
                     )}
-                    <div className="w-full sm:w-1/3 overflow-hidden rounded-2xl sm:rounded-3xl mb-4 sm:mb-0 sm:mr-8 relative aspect-square sm:aspect-auto">
+
+                    {/* Ribbon Badge */}
+                    {(pred.badge || pred.couponType) && (
+                       <div className="absolute top-0 right-0 z-10">
+                          <div className="bg-[#ffcc00] text-black text-[9px] font-black px-4 py-1 uppercase tracking-widest -rotate-0 rounded-bl-2xl shadow-xl">
+                             {pred.badge || (pred.couponType === 'aggressive' ? 'AGRESİF' : pred.couponType === 'economic' ? 'EKONOMİK' : 'STANDART')}
+                          </div>
+                       </div>
+                    )}
+
+                    <div className="w-full sm:w-1/3 overflow-hidden rounded-[30px] mb-4 sm:mb-0 sm:mr-8 relative aspect-square shadow-2xl">
                       <img 
                         src={pred.image || 'https://picsum.photos/seed/horse/300/300'} 
                         alt={pred.authorName || 'ALTILIYAKALATANADAM'} 
-                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" 
+                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100" 
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </div>
-                    <div className="w-full sm:w-2/3 flex flex-col justify-center">
-                      <div className="flex items-center space-x-2 text-[10px] font-black uppercase text-[#ffcc00] tracking-widest mb-3">
-                        <Eye size={12} />
-                        <span>{pred.views || 0} Görüntülenme</span>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-40" />
+                      
+                      {/* Track Tag on Image */}
+                      <div className="absolute bottom-4 left-4 flex items-center space-x-2">
+                         <div className="bg-black/80 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
+                            <span className="text-[8px] font-black uppercase text-[#ffcc00] tracking-widest">{pred.track}</span>
+                         </div>
                       </div>
-                      <h3 className="text-xl font-black italic mb-3 leading-tight tracking-tight group-hover:text-[#ffcc00] transition-colors uppercase">
+                    </div>
+
+                    <div className="w-full sm:w-2/3 flex flex-col justify-center">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center space-x-2 text-[8px] font-black uppercase text-gray-500 tracking-widest">
+                          <Calendar size={10} className="text-[#ffcc00]" />
+                          <span>{pred.raceDate}</span>
+                        </div>
+                        <div className="flex items-center space-x-1 bg-[#ffcc00]/10 px-2 py-1 rounded-lg border border-[#ffcc00]/20">
+                           <Star size={10} className="text-[#ffcc00] fill-[#ffcc00]" />
+                           <span className="text-[9px] font-black text-[#ffcc00]">%{pred.confidenceScore || 85}</span>
+                        </div>
+                      </div>
+
+                      <h3 className="text-xl font-black italic mb-2 leading-tight tracking-tight group-hover:text-[#ffcc00] transition-colors uppercase">
                         {pred.title}
                       </h3>
-                      <p className="text-[#ffcc00] text-xs font-black italic mb-6">
-                        {pred.subTitle}
-                      </p>
+                      
+                      <div className="flex items-center space-x-2 mb-6">
+                        <span className={`text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded ${
+                          pred.couponType === 'aggressive' ? 'bg-red-500/20 text-red-500' :
+                          pred.couponType === 'economic' ? 'bg-green-500/20 text-green-500' :
+                          'bg-[#ffcc00]/20 text-[#ffcc00]'
+                        }`}>
+                          {pred.couponType === 'aggressive' ? 'Agresif' : pred.couponType === 'economic' ? 'Ekonomik' : 'Standart'} KUPON
+                        </span>
+                        <span className="text-[8px] font-bold text-gray-600 uppercase tracking-widest">•</span>
+                        <span className="text-[8px] font-bold text-gray-500 uppercase tracking-widest">{pred.priceLabel || 'Orta Risk'}</span>
+                      </div>
 
                       {pred.ayaklar && pred.ayaklar.length > 0 && (
                         <div className="mb-6 flex flex-wrap gap-2">
-                           {pred.ayaklar.slice(0, 4).map((a: string, i: number) => (
-                             <div key={i} className="bg-white/5 border border-white/10 px-2 py-1 rounded-lg flex items-center space-x-1">
-                               <span className="text-[7px] font-black text-[#ffcc00] uppercase">{i + 1}.A:</span>
-                               <span className="text-[9px] font-bold text-gray-300 truncate max-w-[30px]">{a}</span>
-                             </div>
-                           ))}
-                           {pred.ayaklar.length > 4 && (
-                             <div className="bg-white/5 border border-white/10 px-2 py-1 rounded-lg">
-                               <span className="text-[8px] font-black text-gray-500">+{pred.ayaklar.length - 4}</span>
-                             </div>
-                           )}
+                           {pred.ayaklar.slice(0, 6).map((a: any, i: number) => {
+                             const horseInfo = typeof a === 'object' ? a.horses : a;
+                             return (
+                               <div key={i} className="bg-white/5 border border-white/5 px-2 py-1 rounded-lg flex items-center space-x-1">
+                                 <span className="text-[7px] font-black text-[#ffcc00] uppercase">{i + 1}.A:</span>
+                                 <span className="text-[9px] font-bold text-gray-400 truncate max-w-[40px] uppercase">{horseInfo || '?'}</span>
+                               </div>
+                             );
+                           })}
                         </div>
                       )}
 
-                      <div className="flex flex-col border-t border-white/5 pt-4">
-                        <span className="text-sm font-black italic uppercase tracking-tight">{pred.authorName || 'ALTILIYAKALATANADAM'}</span>
-                        <span className="text-[10px] text-gray-500 uppercase font-bold tracking-tight">At Yarışı Tahmincisi & Yarış Yazarı</span>
+                      <div className="flex items-center justify-between border-t border-white/5 pt-4">
+                        <div className="flex flex-col">
+                           <span className="text-xs font-black italic uppercase tracking-tight">{pred.authorName || 'ALTILIYAKALATANADAM'}</span>
+                           <span className="text-[8px] text-gray-500 uppercase font-bold tracking-tight">Yarış Yazarı</span>
+                        </div>
+                        <div className="flex items-center space-x-1 text-[10px] font-black text-gray-400">
+                           <Eye size={12} />
+                           <span>{pred.views || 0}</span>
+                        </div>
                       </div>
                     </div>
                   </motion.div>

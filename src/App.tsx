@@ -35,6 +35,7 @@ import CompliancePage from './pages/CompliancePage';
 import LegalPage from './pages/LegalPage';
 
 import Program from './pages/Program';
+import FloatingButtons from './components/FloatingButtons';
 
 // Services & Context
 import { dbService } from './services/dbService';
@@ -75,14 +76,15 @@ function LegalPageWrapper() {
 }
 
 const TRACKS = [
-  'Şanlıurfa',
-  'Turffontein',
-  'İstanbul',
+  'Diyarbakır',
+  'Urfa',
+  'Elazığ',
   'Adana',
-  'Laurel Park',
-  'Keeneland',
-  'Santa Anita',
-  'İzmir'
+  'Ankara',
+  'İzmir',
+  'İstanbul',
+  'Kocaeli',
+  'Antalya'
 ];
 
 function HomePage() {
@@ -368,6 +370,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-[#0f0f0f] text-white selection:bg-[#ffcc00] selection:text-black">
+        <FloatingButtons />
         <Routes>
           <Route path="/" element={<><Header /><main><HomePage /></main><Footer /></>} />
           <Route path="/kayit-ol" element={<Register />} />

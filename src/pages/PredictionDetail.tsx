@@ -9,7 +9,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Comments from '../components/Comments';
 import { motion } from 'motion/react';
-import { Calendar, ThumbsUp, Heart, Eye, Lock, MessageCircle } from 'lucide-react';
+import { Calendar, ThumbsUp, Heart, Eye, Lock, MessageCircle, Trophy, Star } from 'lucide-react';
 import { dbService } from '../services/dbService';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../lib/firebase';
@@ -79,7 +79,7 @@ export default function PredictionDetail() {
     );
   }
 
-  const showContent = prediction.isPublic || isVip || prediction.type === 'success';
+  const showContent = prediction.visibility === 'public' || isVip || prediction.status === 'settled' || prediction.isPublic || prediction.type === 'success';
 
   return (
     <div className="min-h-screen bg-[#0f0f0f] text-white">
@@ -103,7 +103,7 @@ export default function PredictionDetail() {
             </div>
 
             <div className="bg-[#0a0a0a] border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
-              <div className="p-4 border-b border-white/5 bg-black/20 text-xs font-black uppercase tracking-widest text-center">Güncel Tahminler</div>
+              <div className="p-4 border-b border-white/5 bg-black/20 text-xs font-black uppercase tracking-widest text-center">VIP Kupon Stüdyosu</div>
               <div className="divide-y divide-white/5">
                 {sidebarTahminler.map((t, i) => (
                   <Link 
@@ -131,54 +131,123 @@ export default function PredictionDetail() {
                  </div>
              </div>
 
-             <h1 className="text-2xl md:text-3xl font-black italic mb-8 uppercase leading-tight">
-               {prediction.title}
-             </h1>
+              <h1 className="text-2xl md:text-5xl font-black italic mb-2 uppercase leading-tight tracking-tighter">
+                {prediction.title}
+              </h1>
 
-             {prediction.subTitle && (
-                <div className="bg-[#ffcc00]/10 border-l-4 border-[#ffcc00] text-sm p-4 mb-8 font-bold italic">
-                   {prediction.subTitle}
+              {prediction.badge && (
+                <div className="inline-block bg-[#ffcc00] text-black text-[10px] font-black px-4 py-1 uppercase tracking-widest rounded-full mb-6 italic">
+                  {prediction.badge}
                 </div>
-             )}
+              )}
 
-             <div className="relative">
-                <div className={`text-sm md:text-base text-gray-300 leading-relaxed ${!showContent ? 'blur font-mono opacity-30 select-none' : ''}`}>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div className="bg-[#111111] border border-white/5 p-4 rounded-2xl">
+                   <div className="text-[8px] font-black uppercase text-gray-500 tracking-widest mb-1">Güven Endeksi</div>
+                   <div className="text-xl font-black italic text-[#ffcc00]">%{prediction.confidenceScore || 85}</div>
+                </div>
+                <div className="bg-[#111111] border border-white/5 p-4 rounded-2xl">
+                   <div className="text-[8px] font-black uppercase text-gray-500 tracking-widest mb-1">Kupon Türü</div>
+                   <div className="text-xl font-black italic uppercase">{prediction.couponType === 'aggressive' ? 'Agresif' : prediction.couponType === 'economic' ? 'Ekonomik' : 'Standart'}</div>
+                </div>
+                <div className="bg-[#111111] border border-white/5 p-4 rounded-2xl">
+                   <div className="text-[8px] font-black uppercase text-gray-500 tracking-widest mb-1">Risk Durumu</div>
+                   <div className="text-xl font-black italic uppercase text-gray-300">{prediction.priceLabel || 'Orta Risk'}</div>
+                </div>
+              </div>
+
+              {prediction.subTitle && (
+                 <div className="bg-[#ffcc00]/5 border-l-4 border-[#ffcc00] text-sm p-5 mb-8 font-bold italic text-gray-300">
+                    {prediction.subTitle}
+                 </div>
+              )}
+
+              <div className="relative">
+                {/* Sample Content for non-VIPs if enabled */}
+                {!showContent && prediction.visibility === 'sample' && prediction.sampleContent && (
+                   <div className="mb-8 p-6 bg-blue-600/10 border border-blue-500/20 rounded-3xl">
+                      <div className="flex items-center space-x-2 mb-4">
+                         <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                         <h4 className="text-[10px] font-black uppercase tracking-widest text-blue-400">Ücretsiz Örnek Analiz</h4>
+                      </div>
+                      <div className="text-sm italic text-gray-300 leading-relaxed whitespace-pre-wrap">{prediction.sampleContent}</div>
+                   </div>
+                )}
+
+                <div className={`text-sm md:text-base text-gray-300 leading-relaxed ${(!showContent && prediction.visibility !== 'public') ? 'blur-sm opacity-20 select-none pointer-events-none' : ''}`}>
                     
+                    {/* Daily Features */}
+                    {showContent && (
+                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                          {prediction.dailyBanko && (
+                             <div className="bg-green-500/10 border border-green-500/20 p-5 rounded-2xl relative overflow-hidden group">
+                                <div className="absolute -right-4 -top-4 opacity-10 group-hover:scale-110 transition-transform">
+                                   <Trophy size={80} className="text-green-500" />
+                                </div>
+                                <h4 className="text-[10px] font-black uppercase tracking-widest text-green-500 mb-2">Günün Bankosu</h4>
+                                <p className="text-lg font-black italic uppercase">{prediction.dailyBanko}</p>
+                             </div>
+                          )}
+                          {prediction.dailySurpriz && (
+                             <div className="bg-purple-500/10 border border-purple-500/20 p-5 rounded-2xl relative overflow-hidden group">
+                                <div className="absolute -right-4 -top-4 opacity-10 group-hover:scale-110 transition-transform">
+                                   <Star size={80} className="text-purple-500" />
+                                </div>
+                                <h4 className="text-[10px] font-black uppercase tracking-widest text-purple-500 mb-2">Günün Sürprizi</h4>
+                                <p className="text-lg font-black italic uppercase">{prediction.dailySurpriz}</p>
+                             </div>
+                          )}
+                       </div>
+                    )}
+
                     {/* Show Horse Race Features if any */}
                     {showContent && prediction.ayaklar && prediction.ayaklar.length > 0 && (
-                      <div className="mb-8 w-full overflow-x-auto rounded-xl border border-[#ffcc00] relative bg-[#000000] custom-scrollbar">
+                      <div className="mb-8 w-full overflow-x-auto rounded-[30px] border border-[#ffcc00]/30 relative bg-[#000000] custom-scrollbar shadow-2xl">
                         {/* Background Watermark */}
                         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.03] overflow-hidden">
                            <span className="text-white font-black text-6xl md:text-8xl -rotate-12 whitespace-nowrap">ALTILIYAKALATANADAM.COM</span>
                         </div>
 
                         <div className="relative z-10">
-                          <div className="bg-[#191919] flex flex-col justify-center items-center py-3 border-b border-[#ffcc00]/30">
-                            <span className="text-[#ffcc00] font-black tracking-widest text-lg md:text-xl uppercase">ALTILIYAKALATANADAM</span>
-                            <span className="text-white font-bold tracking-widest text-xs md:text-sm uppercase mt-1">
-                              {prediction.track ? `${prediction.track} ` : ''}AGF TABLOSU
-                            </span>
+                          <div className="bg-[#191919] flex flex-col justify-center items-center py-6 border-b border-[#ffcc00]/30">
+                            <span className="text-[#ffcc00] font-black tracking-[0.4em] text-lg md:text-2xl uppercase italic">ALTILIYAKALATANADAM</span>
+                            <div className="flex items-center space-x-2 mt-2">
+                               <div className="h-2 w-2 rounded-full bg-red-500 animate-pulse"></div>
+                               <span className="text-white font-black tracking-[0.2em] text-[10px] md:text-xs uppercase">
+                                 {prediction.track ? `${prediction.track} ` : ''}VIP KUPON DETAYI
+                               </span>
+                            </div>
                           </div>
-                          <div className="grid grid-cols-2 md:grid-cols-6 divide-x divide-y md:divide-y-0 divide-[#ffcc00]/30 text-center min-w-full md:min-w-[500px]">
-                            {prediction.ayaklar.slice(0, 6).map((a: string, i: number) => {
-                              const horseLines = typeof a === 'string' ? a.split('\n').map(line => line.trim()).filter(Boolean) : [];
+                          <div className="grid grid-cols-2 md:grid-cols-6 divide-x divide-y md:divide-y-0 divide-[#ffcc00]/20 text-center min-w-full md:min-w-[800px]">
+                            {prediction.ayaklar.slice(0, 6).map((a: any, i: number) => {
+                              const horses = typeof a === 'object' ? a.horses : a;
+                              const horseLines = typeof horses === 'string' ? horses.split(/[,/\s-]/).map(line => line.trim()).filter(Boolean) : [];
+                              const isBanko = typeof a === 'object' ? a.banko : false;
+                              const analysis = typeof a === 'object' ? a.analysis : '';
+
                               return (
-                                <div key={i} className="flex flex-col">
-                                  <div className="bg-[#ffcc00] text-black text-center py-1 text-xs md:text-sm font-black border-b border-[#191919]">
-                                    {i + 1}. AYAK
+                                <div key={i} className={`flex flex-col ${isBanko ? 'bg-[#ffcc00]/5' : ''}`}>
+                                  <div className={`text-center py-3 text-xs md:text-sm font-black border-b border-[#191919] ${isBanko ? 'bg-[#ffcc00] text-black' : 'bg-[#111111] text-[#ffcc00]'}`}>
+                                    {i + 1}. AYAK {isBanko && '(TEK)'}
                                   </div>
-                                  <div className="bg-[#191919] text-white text-center py-0.5 text-[10px] md:text-xs font-bold shadow-inner border-b border-white/5">
-                                    AT NO
+                                  <div className="bg-[#050505] text-gray-500 text-center py-1 text-[8px] md:text-[10px] font-black border-b border-white/5 uppercase tracking-widest">
+                                    Numaralar
                                   </div>
-                                  <div className="flex flex-col p-2 space-y-2 flex-1 bg-transparent">
-                                    {horseLines.map((line, idx) => (
-                                      <div key={idx} className="flex items-center space-x-2 text-xs md:text-sm relative z-20">
-                                        <span className="font-bold text-white w-4 text-right shrink-0">{idx + 1}</span>
-                                        <span className={`font-bold tabular-nums truncate ${idx === 0 ? 'text-[#ffcc00]' : 'text-gray-300'}`}>{line}</span>
-                                      </div>
-                                    ))}
-                                    {horseLines.length === 0 && (
-                                      <div className="text-gray-600 text-xs text-center italic py-2 relative z-20">Belirtilmedi</div>
+                                  <div className="flex flex-col p-4 space-y-3 flex-1">
+                                    <div className="flex flex-wrap justify-center gap-2">
+                                       {horseLines.map((num, idx) => (
+                                          <div key={idx} className={`w-8 h-8 rounded-full flex items-center justify-center font-black text-sm border-2 ${idx === 0 ? 'bg-[#ffcc00] text-black border-white' : 'bg-white/5 text-white border-white/10'}`}>
+                                             {num}
+                                          </div>
+                                       ))}
+                                       {horseLines.length === 0 && (
+                                          <div className="text-gray-600 text-[10px] italic py-2">Belirtilmedi</div>
+                                       )}
+                                    </div>
+                                    {analysis && (
+                                       <div className="mt-4 pt-4 border-t border-white/5 text-[9px] text-gray-400 leading-tight italic">
+                                          {analysis}
+                                       </div>
                                     )}
                                   </div>
                                 </div>
@@ -189,22 +258,33 @@ export default function PredictionDetail() {
                       </div>
                     )}
 
+                    {showContent && prediction.dailyTemplate && (
+                       <div className="mb-8 p-6 bg-[#0a0a0a] border border-white/10 rounded-2xl shadow-xl">
+                          <h4 className="text-[10px] font-black uppercase tracking-widest text-[#ffcc00] mb-4">Günün Şablonu</h4>
+                          <p className="font-mono text-sm text-gray-300 whitespace-pre-wrap">{prediction.dailyTemplate}</p>
+                       </div>
+                    )}
+
                     {showContent && prediction.fiyat && (
-                      <div className="mb-8 p-4 bg-[#ffcc00]/20 border border-[#ffcc00]/50 rounded-xl inline-block">
-                         <span className="text-xs font-black uppercase text-[#ffcc00]">Şablon Tutarı: </span>
-                         <span className="font-black text-white italic ml-2">{prediction.fiyat}</span>
+                      <div className="mb-8 p-6 bg-[#ffcc00] border-4 border-black rounded-2xl shadow-2xl inline-flex flex-col">
+                         <span className="text-[10px] font-black uppercase text-black italic tracking-widest mb-1">Tahmini Kupon Tutarı</span>
+                         <span className="font-black text-3xl text-black italic">{prediction.fiyat}</span>
                       </div>
                     )}
 
-                    <div className="whitespace-pre-wrap break-all text-gray-300 leading-relaxed min-h-[100px]">{prediction.content}</div>
+                    <div className="whitespace-pre-wrap break-all text-gray-300 leading-relaxed min-h-[100px] text-lg font-medium">{prediction.content}</div>
                 </div>
 
-                {!showContent && (
-                  <div className="absolute inset-0 flex items-center justify-center p-4">
-                    <div className="bg-black/90 p-8 rounded-2xl border border-[#ffcc00]/20 text-center">
-                        <Lock size={40} className="text-[#ffcc00] mx-auto mb-4" />
-                        <h4 className="font-bold mb-2">İçerik Kilitli</h4>
-                        <a href="https://wa.me/905336711463" target="_blank" rel="noreferrer" className="text-[#ffcc00] font-black underline text-sm uppercase">VIP Üye Ol</a>
+                {!showContent && (prediction.visibility !== 'public') && (
+                  <div className="absolute inset-x-0 bottom-0 top-20 flex items-center justify-center p-4">
+                    <div className="bg-black/95 p-10 rounded-[40px] border border-[#ffcc00]/30 text-center shadow-3xl max-w-sm w-full backdrop-blur-xl">
+                        <div className="w-20 h-20 bg-[#ffcc00]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                           <Lock size={48} className="text-[#ffcc00]" />
+                        </div>
+                        <h4 className="text-xl font-black uppercase italic mb-2 tracking-tight">KUPON KİLİTLİ</h4>
+                        <p className="text-xs text-gray-500 font-medium mb-8">Bu özel VIP analizi ve 6 ayaklı kupon detaylarını görmek için aboneliğinizi başlatın.</p>
+                        <Link to="/paketler" className="block w-full bg-[#ffcc00] text-black font-black py-4 rounded-2xl uppercase tracking-widest hover:scale-105 transition-transform mb-4 shadow-xl shadow-[#ffcc00]/20">VIP Üye Ol</Link>
+                        <p className="text-[10px] text-gray-500">Zaten üye misiniz? <Link to="/login" className="text-[#ffcc00] underline">Giriş yapın</Link></p>
                     </div>
                   </div>
                 )}
