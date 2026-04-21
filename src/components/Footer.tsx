@@ -37,6 +37,12 @@ export default function Footer() {
                 <li><Link to="/kurumsal/reklam" className="text-white/60 hover:text-white transition-colors text-xs font-black uppercase">Reklam</Link></li>
                 <li><Link to="/kurumsal/yardim" className="text-white/60 hover:text-white transition-colors text-xs font-black uppercase">Yardım</Link></li>
                 <li><Link to="/iletisim" className="text-white/60 hover:text-white transition-colors text-xs font-black uppercase">İletişim</Link></li>
+                <li>
+                  <a href="https://wa.me/905336711463" target="_blank" rel="noreferrer" className="flex items-center space-x-4 text-white/60 hover:text-white transition-colors group">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" className="w-5 h-5 group-hover:scale-110 transition-all" referrerPolicy="no-referrer" />
+                    <span className="text-xs font-black uppercase">WhatsApp Destek</span>
+                  </a>
+                </li>
               </ul>
             </div>
 
@@ -59,10 +65,10 @@ export default function Footer() {
                   </div>
                 </Link>
                 <a href="https://wa.me/905336711463" target="_blank" rel="noreferrer" className="flex items-start space-x-3 bg-white/5 p-4 rounded-2xl border border-white/5 hover:bg-white/10 transition-all group">
-                  <Send size={16} className="text-[#ffcc00] group-hover:scale-125 transition-transform" />
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" className="w-5 h-5 group-hover:scale-125 transition-transform" referrerPolicy="no-referrer" />
                   <div className="flex flex-col">
                     <span className="text-white text-xs font-black italic">WhatsApp Destek</span>
-                    <span className="text-[9px] text-white/60 font-bold tracking-tight">90 533 671 14 63</span>
+                    <span className="text-[10px] text-white/60 font-bold tracking-tight">90 533 671 14 63</span>
                   </div>
                 </a>
               </div>
@@ -98,7 +104,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <a href="https://whatsapp.com/channel/0029Vb74jmJEquiXSAHseL2Y" target="_blank" rel="noreferrer" className="flex items-center space-x-4 text-white/60 hover:text-white transition-colors group">
-                    <Send size={18} className="group-hover:scale-110 transition-all text-[#25D366]" />
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp Channel" className="w-5 h-5 group-hover:scale-110 transition-all" referrerPolicy="no-referrer" />
                     <span className="text-xs font-black uppercase">WhatsApp Kanalı</span>
                   </a>
                 </li>

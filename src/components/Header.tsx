@@ -94,21 +94,12 @@ export default function Header() {
                     href="https://wa.me/905336711463" 
                     target="_blank" 
                     rel="noreferrer"
-                    className="bg-[#25D366] p-1 rounded-full text-white hover:scale-110 transition-transform shadow-md"
+                    className="p-1 rounded-full text-white hover:scale-110 transition-transform shadow-md"
                     title="WhatsApp"
                   >
-                    <MessageCircle size={14} fill="currentColor" />
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" className="w-5 h-5 md:w-6 md:h-6" referrerPolicy="no-referrer" />
                   </a>
                   <div className="hidden sm:flex items-center space-x-1">
-                    <a 
-                      href="https://whatsapp.com/channel/0029Vb74jmJEquiXSAHseL2Y" 
-                      target="_blank" 
-                      rel="noreferrer"
-                      className="bg-[#25D366] p-1 rounded-full text-white hover:scale-110 transition-transform shadow-md"
-                      title="WhatsApp Kanalı"
-                    >
-                      <Send size={14} className="ml-[1px]" />
-                    </a>
                     <a 
                       href="https://x.com/aya_canpolat?s=11&t=pi0jHu5kSA-MgDWBDRCMBg" 
                       target="_blank" 

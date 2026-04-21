@@ -74,7 +74,7 @@ export default function FloatingButtons() {
                 title="WhatsApp Destek"
             >
                 <div className="absolute inset-0 bg-[#25D366]/20 rounded-[24px] animate-ping" />
-                <MessageCircle size={32} fill="currentColor" className="relative z-10" />
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" className="w-10 h-10 relative z-10" referrerPolicy="no-referrer" />
                 
                 {/* Notification Badge */}
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-600 text-[10px] font-black flex items-center justify-center rounded-full border-2 border-white shadow-lg animate-bounce z-20">1</span>
