@@ -11,8 +11,7 @@ import { APP_LOGO_URL } from './constants';
 
 // Components
 import Header from './components/Header';
-import Slider from './components/Slider';
-import FeatureCards from './components/FeatureCards';
+import HeroBanner from './components/HeroBanner';
 import SuccessTable from './components/SuccessTable';
 import LatestPosts from './components/LatestPosts';
 import Testimonials from './components/Testimonials';
@@ -31,6 +30,7 @@ import PredictionDetail from './pages/PredictionDetail';
 import Dashboard from './pages/Dashboard';
 import Admin from './pages/Admin';
 import VipPage from './pages/VipPage';
+import Biography from './pages/Biography';
 import CompliancePage from './pages/CompliancePage';
 import LegalPage from './pages/LegalPage';
 
@@ -119,11 +119,10 @@ function HomePage() {
 
   return (
     <>
-      <Slider />
-      <FeatureCards />
+      <HeroBanner />
       <SuccessTable />
       
-      <section className="bg-[#0f0f0f] py-24 px-4 overflow-hidden relative">
+      <section id="guncel-tahminler" className="bg-[#0f0f0f] py-24 px-4 overflow-hidden relative">
         <div 
           className="absolute right-0 top-0 bottom-0 w-2/3 bg-cover bg-left opacity-20 blur-sm brightness-50" 
           style={{ backgroundImage: 'url("https://picsum.photos/seed/horseracing/1920/1080")' }} 
@@ -389,6 +388,7 @@ export default function App() {
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogDetail />} />
           <Route path="/iletisim" element={<Contact />} />
+          <Route path="/kimdir" element={<Biography />} />
           <Route path="/vip" element={<VipPage />} />
           <Route path="/program" element={<><Header /><main><Program /></main><Footer /></>} />
           <Route path="/hurda-piyasasi" element={<HurdaPiyasasi />} />

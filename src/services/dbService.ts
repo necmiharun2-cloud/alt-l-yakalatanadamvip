@@ -42,7 +42,7 @@ export const dbService = {
       }
       
       const querySnapshot = await getDocs(q);
-      const docs = querySnapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as Record<string, any>) }));
+      const docs: any[] = querySnapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as Record<string, any>) }));
       // Sort client-side to avoid composite index requirements
       docs.sort((a, b) => {
          const tA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
@@ -116,7 +116,7 @@ export const dbService = {
     try {
       const q = query(collection(db, 'slider'), where('active', '==', true));
       const querySnapshot = await getDocs(q);
-      const items = querySnapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as Record<string, any>) }));
+      const items: any[] = querySnapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as Record<string, any>) }));
       items.sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
       return items;
     } catch (err) {
