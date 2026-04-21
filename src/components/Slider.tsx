@@ -63,7 +63,7 @@ export default function Slider() {
            transition={{ duration: 0.6, delay: 0.2 }}
            className="relative z-10 max-w-2xl h-full flex flex-col justify-center pb-20"
          >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 tracking-tighter leading-[1.1] drop-shadow-xl">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-white mb-4 tracking-tighter leading-[1.1] drop-shadow-xl uppercase">
                 {items[index].title}
             </h1>
             <p className="text-white/80 text-lg md:text-xl font-medium mb-8">

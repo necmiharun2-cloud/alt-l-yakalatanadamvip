@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { Mail, LayoutGrid, LogIn, UserPlus, CreditCard, ChevronDown, User, Star, MessageSquare, LogOut, Settings, Tv, Menu, X, Bell, HelpCircle, MessageCircle } from 'lucide-react';
+import { Mail, LayoutGrid, LogIn, UserPlus, CreditCard, ChevronDown, User, Star, MessageSquare, LogOut, Settings, Tv, Menu, X, Bell, HelpCircle, MessageCircle, Twitter, Instagram, Facebook, Youtube, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -17,12 +17,28 @@ const getDaysRemaining = (expiryStr?: string) => {
 };
 
 export default function Header() {
-  const { user, profile, loading, signOut } = useAuth();
+  const { user, profile, loading, signOut, signIn } = useAuth();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPass, setLoginPass] = useState('');
   const [scrolled, setScrolled] = useState(false);
+  const [headerLoading, setHeaderLoading] = useState(false);
+
+  const handleHeaderLogin = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!loginEmail || !loginPass) return;
+    
+    setHeaderLoading(true);
+    try {
+      await signIn(loginEmail, loginPass);
+      navigate('/bilgilerim');
+    } catch (err: any) {
+      alert('Giriş başarısız: ' + (err.message || 'Lütfen bilgilerinizi kontrol edin.'));
+    } finally {
+      setHeaderLoading(false);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,12 +64,12 @@ export default function Header() {
   return (
     <header className="w-full flex flex-col font-sans sticky top-0 z-50">
       {/* Nesine Style Top Bar */}
-      <div className={`bg-[#010a26] py-2 px-4 border-b border-white/10 transition-all duration-300 ${scrolled ? 'shadow-md py-1' : ''}`}>
+      <div className={`bg-[#010a26] py-2 px-2 md:px-4 border-b border-white/10 transition-all duration-300 ${scrolled ? 'shadow-md py-1' : ''}`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           {/* Identity Section */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-1.5 md:space-x-3 min-w-0">
             {/* Logo Link */}
-            <Link to="/" className="relative w-12 h-12 rounded-full p-[2px] overflow-hidden flex items-center justify-center bg-[#010a26] shadow-lg shadow-black/20 group">
+            <Link to="/" className="relative w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full p-[2px] overflow-hidden flex items-center justify-center bg-[#010a26] shadow-lg shadow-black/20 group shrink-0">
               {/* Rotating Neon Overlay */}
               <div className="absolute w-[200%] h-[200%] bg-[conic-gradient(transparent,#ffcc00,#ff3300,#00ffcc,transparent_30%)] animate-neon-rotate opacity-80"></div>
               
@@ -69,18 +85,68 @@ export default function Header() {
             </Link>
 
             <div className="flex flex-col">
-              <div className="flex items-center space-x-2">
-                <Link to="/" className="text-sm md:text-xl font-black text-white italic tracking-tighter uppercase leading-none hover:opacity-80 transition-opacity">
+              <div className="flex items-center space-x-1 md:space-x-2">
+                <Link to="/" className="text-[10px] sm:text-base md:text-xl font-black text-white italic tracking-tighter uppercase leading-none hover:opacity-80 transition-opacity whitespace-nowrap">
                   ALTILIYAKALA<span className="text-white/60">TANADAM</span>
                 </Link>
-                <a 
-                  href="https://wa.me/905336711463" 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="bg-[#25D366] p-1 rounded-full text-white hover:scale-110 transition-transform shadow-md"
-                >
-                  <MessageCircle size={14} fill="currentColor" />
-                </a>
+                <div className="flex items-center space-x-1 shrink-0">
+                  <a 
+                    href="https://wa.me/905336711463" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    className="bg-[#25D366] p-1 rounded-full text-white hover:scale-110 transition-transform shadow-md"
+                    title="WhatsApp"
+                  >
+                    <MessageCircle size={14} fill="currentColor" />
+                  </a>
+                  <div className="hidden sm:flex items-center space-x-1">
+                    <a 
+                      href="https://whatsapp.com/channel/0029Vb74jmJEquiXSAHseL2Y" 
+                      target="_blank" 
+                      rel="noreferrer"
+                      className="bg-[#25D366] p-1 rounded-full text-white hover:scale-110 transition-transform shadow-md"
+                      title="WhatsApp Kanalı"
+                    >
+                      <Send size={14} className="ml-[1px]" />
+                    </a>
+                    <a 
+                      href="https://x.com/aya_canpolat?s=11&t=pi0jHu5kSA-MgDWBDRCMBg" 
+                      target="_blank" 
+                      rel="noreferrer"
+                      className="bg-black p-1 rounded-full text-white hover:scale-110 transition-transform shadow-md border border-white/20"
+                      title="X (Twitter)"
+                    >
+                      <Twitter size={14} fill="currentColor" />
+                    </a>
+                    <a 
+                      href="https://www.instagram.com/altiliyakalatanadam?igsh=Z3E0OWxndjVnYjUx&utm_source=qr" 
+                      target="_blank" 
+                      rel="noreferrer"
+                      className="bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] p-1 rounded-full text-white hover:scale-110 transition-transform shadow-md"
+                      title="Instagram"
+                    >
+                      <Instagram size={14} />
+                    </a>
+                    <a 
+                      href="https://www.facebook.com/share/1FtoneYKcR/?mibextid=wwXIfr" 
+                      target="_blank" 
+                      rel="noreferrer"
+                      className="bg-[#1877F2] p-1 rounded-full text-white hover:scale-110 transition-transform shadow-md"
+                      title="Facebook"
+                    >
+                      <Facebook size={14} fill="currentColor" />
+                    </a>
+                    <a 
+                      href="https://youtube.com/@altiliyakalatanadamcanpolat?si=kjTRAmnEweAjkpyk" 
+                      target="_blank" 
+                      rel="noreferrer"
+                      className="bg-[#FF0000] p-1 rounded-full text-white hover:scale-110 transition-transform shadow-md"
+                      title="YouTube"
+                    >
+                      <Youtube size={14} fill="currentColor" />
+                    </a>
+                  </div>
+                </div>
               </div>
               <Link to="/" className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em] mt-0.5 hidden sm:block hover:text-white/60 transition-colors">
                 Türkiye'nin En İyisi
@@ -107,57 +173,62 @@ export default function Header() {
               <span className="uppercase">YARDIM</span>
             </Link>
 
-            {!user ? (
-               <div className="flex items-center space-x-2">
-                  {/* Pseudo Login Fields for Nesine Look */}
-                  <div className="flex bg-white rounded-md border border-gray-300 overflow-hidden h-9">
-                    <div className="flex items-center px-2 bg-gray-100 border-r border-gray-300">
-                      <User size={14} className="text-gray-400" />
-                    </div>
-                    <input 
-                      type="text" 
-                      placeholder="E-posta veya Telefon No" 
-                      className="px-3 text-[10px] w-44 focus:outline-none text-black"
-                    />
-                  </div>
-                  <div className="flex bg-white rounded-md border border-gray-300 overflow-hidden h-9">
-                    <div className="flex items-center px-2 bg-gray-100 border-r border-gray-300">
-                      <X size={14} className="text-gray-400" />
-                    </div>
-                    <input 
-                      type="password" 
-                      placeholder="Şifre" 
-                      className="px-3 text-[10px] w-24 focus:outline-none text-black"
-                    />
-                    <Link 
-                      to="/giris-yap" 
-                      state={{ showReset: true }}
-                      className="bg-[#020f3a] text-white/70 text-[9px] px-2 font-bold hover:bg-[#ffcc00] hover:text-[#010a26] border-l border-white/10 transition-colors flex items-center"
-                    >
-                      Unuttum
-                    </Link>
-                  </div>
-                  
-                  <div className="flex items-center space-x-1 text-[10px] font-bold text-white/70 px-1">
-                    <input type="checkbox" id="remember" className="w-3 h-3 border-white/20 bg-white/5 rounded" />
-                    <label htmlFor="remember">Beni Hatırla</label>
-                  </div>
+             {!user ? (
+                <form onSubmit={handleHeaderLogin} className="flex items-center space-x-2">
+                   {/* Pseudo Login Fields for Nesine Look */}
+                   <div className="flex bg-white rounded-md border border-gray-300 overflow-hidden h-9">
+                     <div className="flex items-center px-2 bg-gray-100 border-r border-gray-300">
+                       <User size={14} className="text-gray-400" />
+                     </div>
+                     <input 
+                       type="text" 
+                       placeholder="E-posta veya Telefon No" 
+                       value={loginEmail}
+                       onChange={(e) => setLoginEmail(e.target.value)}
+                       className="px-3 text-[10px] w-44 focus:outline-none text-black"
+                     />
+                   </div>
+                   <div className="flex bg-white rounded-md border border-gray-300 overflow-hidden h-9">
+                     <div className="flex items-center px-2 bg-gray-100 border-r border-gray-300">
+                       <X size={14} className="text-gray-400" />
+                     </div>
+                     <input 
+                       type="password" 
+                       placeholder="Şifre" 
+                       value={loginPass}
+                       onChange={(e) => setLoginPass(e.target.value)}
+                       className="px-3 text-[10px] w-24 focus:outline-none text-black"
+                     />
+                     <Link 
+                       to="/giris-yap" 
+                       state={{ showReset: true }}
+                       className="bg-[#020f3a] text-white/70 text-[9px] px-2 font-bold hover:bg-[#ffcc00] hover:text-[#010a26] border-l border-white/10 transition-colors flex items-center"
+                     >
+                       Unuttum
+                     </Link>
+                   </div>
+                   
+                   <div className="flex items-center space-x-1 text-[10px] font-bold text-white/70 px-1">
+                     <input type="checkbox" id="remember" className="w-3 h-3 border-white/20 bg-white/5 rounded" />
+                     <label htmlFor="remember">Beni Hatırla</label>
+                   </div>
 
-                  <button 
-                    onClick={() => navigate('/giris-yap')}
-                    className="h-9 px-4 bg-[#ffcc00] text-[#010a26] font-black text-xs rounded-md shadow-sm hover:opacity-90 transition-all flex items-center space-x-1"
-                  >
-                    <span>GİRİŞ</span>
-                    <div className="w-0 h-0 border-t-4 border-t-transparent border-b-4 border-b-transparent border-l-4 border-l-[#010a26] ml-1"></div>
-                  </button>
+                   <button 
+                     type="submit"
+                     disabled={headerLoading}
+                     className="h-9 px-4 bg-[#ffcc00] text-[#010a26] font-black text-xs rounded-md shadow-sm hover:opacity-90 transition-all flex items-center space-x-1 disabled:opacity-50"
+                   >
+                     <span>{headerLoading ? '...' : 'GİRİŞ'}</span>
+                     <div className="w-0 h-0 border-t-4 border-t-transparent border-b-4 border-b-transparent border-l-4 border-l-[#010a26] ml-1"></div>
+                   </button>
 
-                  <Link 
-                    to="/kayit-ol" 
-                    className="h-9 px-4 bg-[#23a317] text-white font-black text-[11px] rounded-md shadow-sm flex items-center justify-center hover:opacity-90 transition-all"
-                  >
-                    HEMEN ÜYE OL
-                  </Link>
-               </div>
+                   <Link 
+                     to="/kayit-ol" 
+                     className="h-9 px-4 bg-[#23a317] text-white font-black text-[11px] rounded-md shadow-sm flex items-center justify-center hover:opacity-90 transition-all"
+                   >
+                     HEMEN ÜYE OL
+                   </Link>
+                </form>
             ) : (
               <div className="flex items-center space-x-4">
                  <div className="flex flex-col items-end">
@@ -265,6 +336,34 @@ export default function Header() {
                   </Link>
                 </li>
               ))}
+              <li className="pt-4 border-t border-white/5">
+                <div className="flex flex-wrap items-center gap-3 justify-center">
+                  <a href="https://wa.me/905336711463" target="_blank" rel="noreferrer" className="flex items-center space-x-2 bg-[#25D366] px-4 py-2 rounded-xl text-xs font-bold text-white">
+                    <MessageCircle size={16} fill="white" />
+                    <span>WhatsApp</span>
+                  </a>
+                  <a href="https://whatsapp.com/channel/0029Vb74jmJEquiXSAHseL2Y" target="_blank" rel="noreferrer" className="flex items-center space-x-2 bg-[#25D366] px-4 py-2 rounded-xl text-xs font-bold text-white">
+                    <Send size={16} className="ml-[1px]" />
+                    <span>WhatsApp Kanalı</span>
+                  </a>
+                  <a href="https://x.com/aya_canpolat?s=11&t=pi0jHu5kSA-MgDWBDRCMBg" target="_blank" rel="noreferrer" className="flex items-center space-x-2 bg-black px-4 py-2 rounded-xl text-xs font-bold text-white border border-white/20">
+                    <Twitter size={16} fill="white" />
+                    <span>X (Twitter)</span>
+                  </a>
+                  <a href="https://www.instagram.com/altiliyakalatanadam?igsh=Z3E0OWxndjVnYjUx&utm_source=qr" target="_blank" rel="noreferrer" className="flex items-center space-x-2 bg-gradient-to-tr from-[#f9ce34] via-[#ee2a7b] to-[#6228d7] px-4 py-2 rounded-xl text-xs font-bold text-white">
+                    <Instagram size={16} />
+                    <span>Instagram</span>
+                  </a>
+                  <a href="https://www.facebook.com/share/1FtoneYKcR/?mibextid=wwXIfr" target="_blank" rel="noreferrer" className="flex items-center space-x-2 bg-[#1877F2] px-4 py-2 rounded-xl text-xs font-bold text-white">
+                    <Facebook size={16} fill="white" />
+                    <span>Facebook</span>
+                  </a>
+                  <a href="https://youtube.com/@altiliyakalatanadamcanpolat?si=kjTRAmnEweAjkpyk" target="_blank" rel="noreferrer" className="flex items-center space-x-2 bg-[#FF0000] px-4 py-2 rounded-xl text-xs font-bold text-white">
+                    <Youtube size={16} fill="white" />
+                    <span>YouTube</span>
+                  </a>
+                </div>
+              </li>
               <li className="pt-4 space-y-3">
                 <Link 
                   to="/program"

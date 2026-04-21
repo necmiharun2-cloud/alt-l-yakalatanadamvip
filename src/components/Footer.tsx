@@ -73,27 +73,33 @@ export default function Footer() {
               <h4 className="text-lg font-black text-[#ffcc00] italic mb-8 border-b-2 border-[#ffcc00]/20 inline-block pb-2 pr-4 uppercase">Sosyal Medya</h4>
               <ul className="space-y-4">
                 <li>
-                  <a href="#" className="flex items-center space-x-4 text-white/60 hover:text-white transition-colors group">
-                    <Facebook size={18} className="group-hover:scale-110 transition-all" />
+                  <a href="https://www.facebook.com/share/1FtoneYKcR/?mibextid=wwXIfr" target="_blank" rel="noreferrer" className="flex items-center space-x-4 text-white/60 hover:text-white transition-colors group">
+                    <Facebook size={18} className="group-hover:scale-110 transition-all text-[#1877F2]" />
                     <span className="text-xs font-black uppercase">Facebook</span>
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="flex items-center space-x-4 text-white/60 hover:text-white transition-colors group">
-                    <Twitter size={18} className="group-hover:scale-110 transition-all" />
+                  <a href="https://x.com/aya_canpolat?s=11&t=pi0jHu5kSA-MgDWBDRCMBg" target="_blank" rel="noreferrer" className="flex items-center space-x-4 text-white/60 hover:text-white transition-colors group">
+                    <Twitter size={18} className="group-hover:scale-110 transition-all text-white" />
                     <span className="text-xs font-black uppercase">Twitter</span>
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="flex items-center space-x-4 text-white/60 hover:text-white transition-colors group">
-                    <Youtube size={18} className="group-hover:scale-110 transition-all" />
+                  <a href="https://youtube.com/@altiliyakalatanadamcanpolat?si=kjTRAmnEweAjkpyk" target="_blank" rel="noreferrer" className="flex items-center space-x-4 text-white/60 hover:text-white transition-colors group">
+                    <Youtube size={18} className="group-hover:scale-110 transition-all text-[#FF0000]" />
                     <span className="text-xs font-black uppercase">Youtube</span>
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="flex items-center space-x-4 text-white/60 hover:text-white transition-colors group">
-                    <Instagram size={18} className="group-hover:scale-110 transition-all" />
+                  <a href="https://www.instagram.com/altiliyakalatanadam?igsh=Z3E0OWxndjVnYjUx&utm_source=qr" target="_blank" rel="noreferrer" className="flex items-center space-x-4 text-white/60 hover:text-white transition-colors group">
+                    <Instagram size={18} className="group-hover:scale-110 transition-all text-[#ee2a7b]" />
                     <span className="text-xs font-black uppercase">Instagram</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="https://whatsapp.com/channel/0029Vb74jmJEquiXSAHseL2Y" target="_blank" rel="noreferrer" className="flex items-center space-x-4 text-white/60 hover:text-white transition-colors group">
+                    <Send size={18} className="group-hover:scale-110 transition-all text-[#25D366]" />
+                    <span className="text-xs font-black uppercase">WhatsApp Kanalı</span>
                   </a>
                 </li>
               </ul>

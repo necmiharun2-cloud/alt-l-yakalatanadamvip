@@ -13,21 +13,24 @@ export default function FeatureCards() {
     {
       title: "Vip Üye Olun",
       desc: "Türkiye'nin En İyi At Yarışı Sitesi ALTILIYAKALATANADAM.com'a Hemen Üye Olun",
-      image: APP_LOGO_URL,
+      image: "https://cdn.resimupload.org/2026/04/21/e222fecb-3ebb-4f1b-8cdb-b96b4c938aa8.jpg",
+      bgImage: "https://cdnuploads.aa.com.tr/uploads/Contents/2015/01/21/thumbs_b_c_5871de960c1d6349842c86f3f01c8a6c.jpg",
       hasRightArrow: true,
       hasBottomYellow: false,
     },
     {
       title: "Cazip Bankoları Alın",
       desc: "Banko Tahminleri Alın Sıradışı Teklerle Ayrıcalığı Yaşayın",
-      image: APP_LOGO_URL,
+      image: "https://cdn.resimupload.org/2026/04/21/e222fecb-3ebb-4f1b-8cdb-b96b4c938aa8.jpg",
+      bgImage: "https://cdnuploads.aa.com.tr/uploads/Contents/2015/01/21/thumbs_b_c_5871de960c1d6349842c86f3f01c8a6c.jpg",
       hasRightArrow: false,
       hasBottomYellow: true,
     },
     {
       title: "ALTILIYAKALATANADAM",
       desc: "ALTILIYAKALATANADAM.com Farkı İle Altılı Ganyanı Yakalama Oranınızı Artırın",
-      image: APP_LOGO_URL,
+      image: "https://cdn.resimupload.org/2026/04/21/e222fecb-3ebb-4f1b-8cdb-b96b4c938aa8.jpg",
+      bgImage: "https://cdnuploads.aa.com.tr/uploads/Contents/2015/01/21/thumbs_b_c_5871de960c1d6349842c86f3f01c8a6c.jpg",
       hasRightArrow: false,
       hasBottomYellow: false,
     }
@@ -48,12 +51,12 @@ export default function FeatureCards() {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Title and Description Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-20 gap-8 lg:gap-16">
-          <div className="flex items-center whitespace-nowrap">
-            <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight flex items-end">
+          <div className="flex items-center">
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white tracking-tight flex items-end">
               <span className="font-extrabold relative pb-1 mr-2 inline-block">
                 Kazanmanın
                 {/* Yellow underline just under "Kazanmanın" */}
-                <span className="absolute bottom-0 left-0 w-full h-[4px] bg-[#ffcc00]"></span>
+                <span className="absolute bottom-0 left-0 w-full h-[3px] md:h-[4px] bg-[#ffcc00]"></span>
               </span>
               <span className="font-light">Gidiş Hattı</span>
             </h2>
@@ -73,8 +76,22 @@ export default function FeatureCards() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.2 }}
-              className="relative flex flex-col items-center text-center px-6 py-12 bg-[#0c121c] rounded-2xl shadow-2xl group border border-transparent hover:border-white/5 transition-all"
+              className="relative flex flex-col items-center text-center px-6 py-12 bg-[#0c121c] rounded-2xl shadow-2xl group border border-transparent hover:border-white/5 transition-all overflow-hidden"
             >
+              {/* Card Background Image with Higher Visibility */}
+              <div 
+                className="absolute inset-0 z-0 pointer-events-none"
+              >
+                <img 
+                  src={card.bgImage} 
+                  alt=""
+                  className="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-opacity duration-700 contrast-125"
+                  style={{ filter: 'brightness(0.4)' }}
+                />
+                {/* Bottom shading only for text contrast, not full covering */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0c121c] via-transparent to-black/20" />
+              </div>
+              
               {/* Optional Right Arrow Element (CSS Triangle) */}
               {card.hasRightArrow && (
                 <div className="hidden md:block absolute -right-7 top-1/2 -translate-y-1/2 z-20">
@@ -90,7 +107,7 @@ export default function FeatureCards() {
               )}
 
               {/* Irregular Blob Image Mask */}
-              <div className="relative w-40 h-40 mb-10 overflow-hidden transform group-hover:scale-105 transition-transform duration-500 shadow-inner" 
+              <div className="relative z-10 w-40 h-40 mb-10 overflow-hidden transform group-hover:scale-105 transition-transform duration-500 shadow-inner ring-4 ring-white/5" 
                 style={{ borderRadius: '48% 52% 43% 57% / 46% 51% 49% 54%' }}
               >
                 <img 
@@ -101,8 +118,8 @@ export default function FeatureCards() {
                 />
               </div>
               
-              <h3 className="text-xl md:text-2xl font-bold text-white mb-4 tracking-tight">{card.title}</h3>
-              <p className="text-gray-400 text-xs md:text-sm max-w-[240px] leading-relaxed font-medium">
+              <h3 className="relative z-10 text-xl md:text-2xl font-bold text-white mb-4 tracking-tight group-hover:text-[#ffcc00] transition-colors">{card.title}</h3>
+              <p className="relative z-10 text-gray-400 text-xs md:text-sm max-w-[240px] leading-relaxed font-medium">
                 {card.desc}
               </p>
             </motion.div>

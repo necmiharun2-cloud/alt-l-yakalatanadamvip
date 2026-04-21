@@ -36,12 +36,12 @@ export default function SuccessTable() {
         {/* Header Area */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
           <div className="flex items-center">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight flex items-end">
-              <span className="font-extrabold relative pb-1 mr-2 inline-block">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight flex items-end">
+              <span className="font-extrabold relative pb-1 mr-2 inline-block whitespace-nowrap">
                 Başarılı
-                <span className="absolute bottom-0 left-0 w-full h-[4px] bg-[#ffcc00]"></span>
+                <span className="absolute bottom-0 left-0 w-full h-[3px] md:h-[4px] bg-[#ffcc00]"></span>
               </span>
-              <span className="font-light">Tahminler</span>
+              <span className="font-light whitespace-nowrap">Tahminler</span>
             </h2>
           </div>
           

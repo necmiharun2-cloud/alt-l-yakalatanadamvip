@@ -36,6 +36,7 @@ import LegalPage from './pages/LegalPage';
 
 import Program from './pages/Program';
 import FloatingButtons from './components/FloatingButtons';
+import HurdaPiyasasi from './pages/HurdaPiyasasi';
 
 // Services & Context
 import { dbService } from './services/dbService';
@@ -129,20 +130,20 @@ function HomePage() {
         />
         <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-[#0f0f0f] to-transparent" />
 
-        <div className="max-w-7xl mx-auto flex flex-col items-center relative z-10 mb-8">
-           <div className="w-full flex-wrap md:flex-nowrap flex justify-center md:justify-between gap-2 border-b border-white/5 pb-8 mb-8">
+        <div className="max-w-7xl mx-auto flex flex-col items-center relative z-10 mb-8 w-full">
+           <div className="w-full flex overflow-x-auto no-scrollbar snap-x snap-mandatory md:flex-nowrap md:overflow-visible justify-start md:justify-between gap-2 border-b border-white/5 pb-6 mb-8 scroll-smooth">
               {TRACKS.map(track => {
                  const hasPrediction = predictions.some(p => (p.track || 'İstanbul') === track);
                  return (
                    <button
                      key={track}
                      onClick={() => setSelectedTrack(track)}
-                     className={`flex-1 px-4 py-4 rounded-2xl text-[10px] lg:text-xs font-black uppercase tracking-widest transition-all text-center whitespace-nowrap border-b-2 ${
+                     className={`flex-none md:flex-1 px-6 py-4 rounded-2xl text-[10px] lg:text-xs font-black uppercase tracking-widest transition-all text-center whitespace-nowrap border-b-2 snap-center ${
                        selectedTrack === track
                          ? 'bg-[#ffcc00]/10 text-[#ffcc00] border-[#ffcc00]'
                          : hasPrediction 
-                           ? 'bg-transparent text-black border-white/20 hover:bg-white/5 hover:border-white/40'
-                           : 'bg-transparent text-gray-600 border-transparent hover:bg-white/5 opacity-50'
+                           ? 'bg-transparent text-white border-white/20 hover:bg-white/5 hover:border-white/40'
+                           : 'bg-transparent text-gray-700 border-transparent hover:bg-white/5 opacity-30 select-none cursor-default'
                      }`}
                    >
                      {track}
@@ -208,18 +209,18 @@ function HomePage() {
 
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start gap-16 relative z-10">
           <div className="w-full md:w-1/2 relative z-10">
-            <div className="border-l-4 border-[#ffcc00] pl-8 mb-10 flex items-center space-x-6">
+            <div className="border-l-4 border-[#ffcc00] pl-6 md:pl-8 mb-10 flex items-center space-x-4 md:space-x-6">
               <img 
                 src={APP_LOGO_URL} 
                 alt="Güncel Tahminler" 
-                className="w-16 h-16 object-contain"
+                className="w-12 h-12 md:w-16 md:h-16 object-contain"
                 referrerPolicy="no-referrer"
               />
               <div>
-                <h2 className="text-5xl md:text-6xl font-black italic tracking-tighter leading-none mb-2">
+                <h2 className="text-3xl sm:text-4xl md:text-6xl font-black italic tracking-tighter leading-none mb-2">
                   Güncel <span className="text-gray-400">Tahminler</span>
                 </h2>
-                <p className="text-gray-500 font-bold uppercase text-[10px] tracking-[0.2em]">Profesyonel Yarış Analizleri</p>
+                <p className="text-gray-500 font-bold uppercase text-[9px] md:text-[10px] tracking-[0.2em]">Profesyonel Yarış Analizleri</p>
               </div>
             </div>
 
@@ -343,9 +344,9 @@ function HomePage() {
                   transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
                 >
                   <img 
-                    src="https://picsum.photos/seed/tipster/800/800" 
-                    alt="Analist" 
-                    className="w-full max-w-md mx-auto rounded-[60px] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] border border-white/10"
+                    src="https://cdn.resimupload.org/2026/04/21/e222fecb-3ebb-4f1b-8cdb-b96b4c938aa8.jpg" 
+                    alt="Altılı Yakalatan Adam - Baş Analist" 
+                    className="w-full max-w-sm mx-auto rounded-[40px] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] border border-[#ffcc00]/20 object-cover aspect-[3/4]"
                     referrerPolicy="no-referrer"
                   />
                 </motion.div>
@@ -390,6 +391,7 @@ export default function App() {
           <Route path="/iletisim" element={<Contact />} />
           <Route path="/vip" element={<VipPage />} />
           <Route path="/program" element={<><Header /><main><Program /></main><Footer /></>} />
+          <Route path="/hurda-piyasasi" element={<HurdaPiyasasi />} />
           <Route path="/yasal/:slug" element={<LegalPageWrapper />} />
           <Route path="/kurumsal/:slug" element={<CompliancePage />} />
           <Route path="*" element={<><Header /><main><HomePage /></main><Footer /></>} />
