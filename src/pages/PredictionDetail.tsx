@@ -204,8 +204,8 @@ export default function PredictionDetail() {
                     {showContent && prediction.ayaklar && prediction.ayaklar.length > 0 && (
                       <div className="mb-8 w-full overflow-x-auto rounded-[30px] border border-[#ffcc00]/30 relative bg-[#000000] custom-scrollbar shadow-2xl">
                         {/* Background Watermark */}
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.03] overflow-hidden">
-                           <span className="text-white font-black text-6xl md:text-8xl -rotate-12 whitespace-nowrap">ALTILIYAKALATANADAM.COM</span>
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-[0.06] overflow-hidden">
+                           <span className="text-white font-black text-6xl md:text-9xl -rotate-12 whitespace-nowrap repeated-watermark">ALTILIYAKALATANADAM.COM • ALTILIYAKALATANADAM.COM</span>
                         </div>
 
                         <div className="relative z-10">

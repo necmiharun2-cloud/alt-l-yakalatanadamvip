@@ -316,6 +316,7 @@ export default function Admin() {
   const [predictions, setPredictions] = useState<any[]>([]);
   const [blogs, setBlogs] = useState<any[]>([]);
   const [banks, setBanks] = useState<any[]>([]);
+  const [allUsers, setAllUsers] = useState<any[]>([]);
 
   React.useEffect(() => {
     fetchAdminData();
@@ -348,6 +349,11 @@ export default function Admin() {
         const banksSnap = await getDocs(collection(db, 'banks'));
         setBanks(banksSnap.docs.map(d => ({ id: d.id, ...d.data() })));
       } catch (e: any) { console.error("Error banks", e); }
+
+      try {
+        const usersSnap = await getDocs(collection(db, 'users'));
+        setAllUsers(usersSnap.docs.map(d => ({ id: d.id, ...d.data() })));
+      } catch (e: any) { console.error("Error users", e); }
       
     } catch (err) {
       console.error("Error fetching admin data", err);
@@ -431,6 +437,52 @@ export default function Admin() {
     }
   };
 
+  const handleUserAction = async (userId: string, action: 'makeVip' | 'ban' | 'unban' | 'delete') => {
+    setLoading(true);
+    try {
+      if (action === 'delete') {
+        setConfirmDialog({
+          isOpen: true,
+          title: "Bu kullanıcıyı silmek istediğinize emin misiniz?",
+          onConfirm: async () => {
+            setConfirmDialog(null);
+            await deleteDoc(doc(db, 'users', userId));
+            await fetchAdminData();
+            setMessage('Kullanıcı silindi.');
+          }
+        });
+        return;
+      }
+
+      const userDoc = doc(db, 'users', userId);
+      if (action === 'makeVip') {
+        const now = new Date();
+        const expiry = new Date();
+        expiry.setDate(now.getDate() + 30);
+        await updateDoc(userDoc, {
+          isVip: true,
+          role: 'vip',
+          vipStatus: 'active',
+          vipStartDate: now.toISOString(),
+          vipExpiry: expiry.toISOString(),
+          vipPackage: 'Manual VIP (30 Gün)'
+        });
+        setMessage('Kullanıcı VIP yapıldı.');
+      } else if (action === 'ban') {
+        await updateDoc(userDoc, { isBanned: true });
+        setMessage('Kullanıcı yasaklandı.');
+      } else if (action === 'unban') {
+        await updateDoc(userDoc, { isBanned: false });
+        setMessage('Kullanıcı yasağı kaldırıldı.');
+      }
+      await fetchAdminData();
+    } catch (err: any) {
+      console.error(err);
+      setMessage('Hata: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   const seedData = async () => {
     setLoading(true);
     try {
@@ -553,8 +605,7 @@ export default function Admin() {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-12">
-          {/* Sidebar Tabs & Lists */}
-          <aside className="w-full lg:w-1/3 xl:w-1/4 space-y-8">
+           <aside className="w-full lg:w-1/3 xl:w-1/4 space-y-8">
             <div className="bg-[#0a0a0a] border border-white/5 rounded-3xl md:rounded-[32px] overflow-hidden shadow-2xl p-2 md:p-4 space-y-1 md:space-y-2 flex flex-row lg:flex-col overflow-x-auto lg:overflow-visible scrollbar-hide">
               {sections.map((section) => (
                 <button
@@ -677,36 +728,54 @@ export default function Admin() {
                     ))}
 
                     {activeSection === 'users' && (
-                      <div className="space-y-6">
-                         <div className="space-y-3">
-                            {payments.map(p => (
+                      <div className="space-y-8">
+                         <div className="space-y-4">
+                            <h3 className="text-[10px] font-black uppercase tracking-widest text-[#ffcc00] flex items-center">BEKLEYEN ÖDEMELER</h3>
+                            {payments.filter(p => p.status === 'pending').map(p => (
                                <div key={p.id} className="bg-white/5 rounded-2xl p-3 border border-white/5">
                                   <div className="text-[10px] font-bold truncate text-white mb-1">{p.fullName}</div>
                                   <div className="text-[9px] text-gray-500 mb-2 truncate">
                                      {p.package} - {p.amount}₺
-                                     <div className="mt-1 flex items-center space-x-2">
-                                        <Clock size={10} />
-                                        <span>{p.createdAt?.toDate ? p.createdAt.toDate().toLocaleDateString('tr-TR') : '...'}</span>
-                                        {p.receiptUrl && (
-                                           <a href={p.receiptUrl} target="_blank" rel="noreferrer" className="flex items-center space-x-1 text-[#ffcc00] hover:underline ml-2">
-                                              <ExternalLink size={10} />
-                                              <span>DEKONT</span>
-                                           </a>
-                                        )}
-                                     </div>
                                   </div>
-                                  {p.status === 'pending' ? (
-                                     <div className="grid grid-cols-2 gap-2">
-                                <button onClick={() => handlePaymentAction(p.id, 'approved', p.userId, p.package)} className="bg-green-500/20 text-green-500 py-1.5 rounded-lg text-[8px] font-black uppercase hover:bg-green-500 hover:text-black transition-all">ONAY</button>
-                                        <button onClick={() => handlePaymentAction(p.id, 'rejected', p.userId)} className="bg-red-500/20 text-red-500 py-1.5 rounded-lg text-[8px] font-black uppercase hover:bg-red-500 hover:text-white transition-all">RED</button>
-                                     </div>
-                                  ) : (
-                                     <div className={`text-center py-1 rounded-lg text-[8px] font-black uppercase ${p.status === 'approved' ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'}`}>
-                                        {p.status === 'approved' ? 'ONAYLANDI' : 'REDDEDİLDİ'}
-                                     </div>
-                                  )}
+                                  <div className="grid grid-cols-2 gap-2">
+                                     <button onClick={() => handlePaymentAction(p.id, 'approved', p.userId, p.package)} className="bg-green-500/20 text-green-500 py-1.5 rounded-lg text-[8px] font-black uppercase hover:bg-green-500 hover:text-black transition-all">ONAY</button>
+                                     <button onClick={() => handlePaymentAction(p.id, 'rejected', p.userId)} className="bg-red-500/20 text-red-500 py-1.5 rounded-lg text-[8px] font-black uppercase hover:bg-red-500 hover:text-white transition-all">RED</button>
+                                  </div>
                                </div>
                             ))}
+                            {payments.filter(p => p.status === 'pending').length === 0 && <p className="text-[9px] text-gray-700 italic">Bekleyen ödeme yok.</p>}
+                         </div>
+
+                         <div className="space-y-4 pt-6 border-t border-white/10">
+                            <h3 className="text-[10px] font-black uppercase tracking-widest text-gray-400 flex items-center">TÜM KULLANICILAR ({allUsers.length})</h3>
+                            <div className="space-y-3">
+                               {allUsers.map(u => (
+                                  <div key={u.id} className={`bg-white/5 rounded-2xl p-4 border transition-all ${u.isBanned ? 'border-red-500/30 opacity-60' : 'border-white/5'}`}>
+                                     <div className="flex justify-between items-start mb-2">
+                                        <div className="min-w-0 flex-1">
+                                           <div className="text-xs font-black truncate text-white">{u.fullName || u.email}</div>
+                                           <div className="text-[9px] text-gray-500 truncate">{u.email}</div>
+                                        </div>
+                                        <div className={`px-2 py-0.5 rounded text-[8px] font-black uppercase shrink-0 ${u.role === 'admin' ? 'bg-purple-500 text-white' : u.isVip ? 'bg-[#ffcc00] text-black' : 'bg-gray-700 text-white'}`}>
+                                           {u.isBanned ? 'YASAKLI' : u.role}
+                                        </div>
+                                     </div>
+                                     <div className="grid grid-cols-3 gap-1.5 pt-2 border-t border-white/5">
+                                        {!u.isVip && u.role !== 'admin' && (
+                                           <button onClick={() => handleUserAction(u.id, 'makeVip')} className="bg-[#ffcc00]/10 text-[#ffcc00] py-1 rounded text-[8px] font-black uppercase hover:bg-[#ffcc00] hover:text-black">VİP YAP</button>
+                                        )}
+                                        {u.role !== 'admin' && (
+                                           u.isBanned ? (
+                                              <button onClick={() => handleUserAction(u.id, 'unban')} className="bg-green-500/10 text-green-500 py-1 rounded text-[8px] font-black uppercase hover:bg-green-500 hover:text-black">YASAĞI AÇ</button>
+                                           ) : (
+                                              <button onClick={() => handleUserAction(u.id, 'ban')} className="bg-red-500/10 text-red-500 py-1 rounded text-[8px] font-black uppercase hover:bg-red-500 hover:text-white">BANLA</button>
+                                           )
+                                        )}
+                                        <button onClick={() => handleUserAction(u.id, 'delete')} className="bg-white/5 text-gray-500 py-1 rounded text-[8px] font-black uppercase hover:bg-white/10">SİL</button>
+                                     </div>
+                                  </div>
+                               ))}
+                            </div>
                          </div>
                       </div>
                     )}
