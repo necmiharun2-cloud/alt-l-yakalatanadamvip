@@ -35,12 +35,18 @@ export default function PaymentNotification() {
            const banksSnap = await getDocs(collection(db, 'banks'));
            const paymentsSnap = await getDocs(query(
              collection(db, 'payments'), 
-             where('userId', '==', user.uid),
-             orderBy('createdAt', 'desc')
+             where('userId', '==', user.uid)
            ));
            
            setBanks(banksSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-           setMyPayments(paymentsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+           
+           const payments = paymentsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() as any }));
+           payments.sort((a, b) => {
+             const tA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+             const tB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+             return tB - tA;
+           });
+           setMyPayments(payments);
         } catch (err) {
            console.log("Error fetching data:", err);
         }

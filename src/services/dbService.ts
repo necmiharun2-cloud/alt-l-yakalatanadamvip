@@ -24,28 +24,32 @@ export const dbService = {
       if (role === 'admin') {
         q = query(
           collection(db, 'predictions'), 
-          where('type', '==', type),
-          orderBy('createdAt', 'desc')
+          where('type', '==', type)
         );
       } else if (isVip) {
         q = query(
           collection(db, 'predictions'), 
           where('type', '==', type),
-          where('status', '==', statusToQuery),
-          orderBy('createdAt', 'desc')
+          where('status', '==', statusToQuery)
         );
       } else {
         q = query(
           collection(db, 'predictions'), 
           where('type', '==', type),
           where('status', '==', statusToQuery),
-          where('visibility', 'in', ['public', 'sample']),
-          orderBy('createdAt', 'desc')
+          where('visibility', 'in', ['public', 'sample'])
         );
       }
       
       const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as Record<string, any>) }));
+      const docs = querySnapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as Record<string, any>) }));
+      // Sort client-side to avoid composite index requirements
+      docs.sort((a, b) => {
+         const tA = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+         const tB = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+         return tB - tA;
+      });
+      return docs;
     } catch (err) {
       console.error('getPredictions error:', err);
       return [];
@@ -110,9 +114,11 @@ export const dbService = {
 
   async getSliderItems() {
     try {
-      const q = query(collection(db, 'slider'), where('active', '==', true), orderBy('orderIndex', 'asc'));
+      const q = query(collection(db, 'slider'), where('active', '==', true));
       const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const items = querySnapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as Record<string, any>) }));
+      items.sort((a, b) => (a.orderIndex || 0) - (b.orderIndex || 0));
+      return items;
     } catch (err) {
       console.error('getSliderItems error:', err);
       return [];
