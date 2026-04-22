@@ -13,6 +13,7 @@ A modern, high-performance web application for professional horse racing predict
 
 ## Key Features
 
+
 - **VIP Prediction System:** Secure, restricted access to premium horse racing analysis.
 - **Admin Dashboard:** Full management of predictions, blog posts, sliders, bank info, and user payments.
 - **Payment Notifications:** Users can upload payment receipts (Havale/EFT) for admin approval.
