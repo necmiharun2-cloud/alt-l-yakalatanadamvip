@@ -10,17 +10,20 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { auth } from '../lib/firebase';
-import { signInWithEmailAndPassword, sendPasswordResetEmail } from 'firebase/auth';
+import { sendPasswordResetEmail } from 'firebase/auth';
+import { useAuth } from '../context/AuthContext';
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [isResetMode, setIsResetMode] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { signIn } = useAuth();
 
   const [resetMessage, setResetMessage] = useState('');
 
@@ -41,7 +44,7 @@ export default function Login() {
     setError('');
     setResetMessage('');
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      await signIn(email, password, rememberMe);
       navigate('/');
     } catch (err: any) {
       console.error('Login error:', err);
@@ -151,6 +154,19 @@ export default function Login() {
                   <span className="border-b border-white/10">{isResetMode ? 'Giriş Yapmaya Dön' : 'Şifremi Unuttum'}</span>
                 </button>
 
+                {!isResetMode && (
+                  <div className="flex items-center space-x-2 text-xs font-bold text-gray-400">
+                    <input 
+                      type="checkbox" 
+                      id="rememberLogin"
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                      className="w-4 h-4 rounded border-gray-600 bg-white/5 accent-[#ffcc00] cursor-pointer" 
+                    />
+                    <label htmlFor="rememberLogin" className="cursor-pointer">Beni Hatırla</label>
+                  </div>
+                )}
+                
                 {!isResetMode && (
                   <Link 
                     to="/kayit-ol" 

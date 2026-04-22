@@ -33,10 +33,10 @@ export default function HeroBanner() {
     <section className="relative w-full pt-32 pb-20 overflow-hidden bg-[#0a0a0a] flex items-center justify-center min-h-[90vh]">
       {/* Background with blur and dark gradient */}
       <div 
-        className="absolute inset-0 z-0 bg-cover bg-center opacity-30 mix-blend-screen"
-        style={{ backgroundImage: 'url("https://picsum.photos/seed/horserace/1920/1080")' }}
+        className="absolute inset-0 z-0 bg-cover bg-center opacity-60"
+        style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1598583492576-963d3fb4d257?q=80&w=1920&auto=format&fit=crop")' }}
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a] via-[#0a0a0a]/80 to-[#0a0a0a]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0a0a0a]/80 via-transparent to-[#0a0a0a]" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 w-full flex flex-col items-center text-center">

@@ -857,86 +857,101 @@ export default function Admin() {
                             <div className="h-[1px] flex-1 bg-white/5"></div>
                          </div>
 
-                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                            {allUsers.map(u => (
-                               <motion.div 
-                                 initial={{ opacity: 0 }}
-                                 animate={{ opacity: 1 }}
-                                 key={u.id} 
-                                 className={`bg-[#0a0a0a] border rounded-[32px] p-6 transition-all group ${u.isBanned ? 'border-red-500/20 opacity-50' : 'border-white/5 hover:border-white/10 shadow-xl'}`}
-                               >
-                                  <div className="flex items-center space-x-4 mb-6">
-                                     <div className="relative">
-                                        <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-xl font-black ${u.role === 'admin' ? 'bg-purple-500/20 text-purple-500' : u.isVip ? 'bg-[#ffcc00]/20 text-[#ffcc00]' : 'bg-gray-800 text-gray-500'}`}>
-                                           {u.fullName?.charAt(0) || u.email?.charAt(0) || 'U'}
-                                        </div>
-                                        {u.isVip && (
-                                           <div className="absolute -top-1 -right-1 w-5 h-5 bg-[#ffcc00] rounded-lg flex items-center justify-center shadow-lg border-2 border-black">
-                                              <Star size={10} className="text-black fill-black" />
-                                           </div>
-                                        )}
-                                     </div>
-                                     <div className="flex-1 min-w-0">
-                                        <div className="flex items-center space-x-2 mb-0.5">
-                                           <h4 className="text-sm font-black text-white truncate">{u.fullName || 'İsimsiz Kullanıcı'}</h4>
-                                           {u.role === 'admin' && <div className="bg-purple-500 text-[8px] px-1.5 py-0.5 rounded font-black text-white uppercase tracking-widest">ADMIN</div>}
-                                        </div>
-                                        <p className="text-[10px] text-gray-500 font-medium truncate">{u.email}</p>
-                                     </div>
-                                  </div>
-
-                                  <div className="grid grid-cols-2 gap-3 mb-6">
-                                     <div className="bg-[#111111] p-3 rounded-2xl border border-white/5">
-                                        <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest block mb-1">Yetki</span>
-                                        <span className={`text-[10px] font-black uppercase italic ${u.isVip ? 'text-[#ffcc00]' : 'text-gray-400'}`}>
-                                           {u.isBanned ? 'YASAKLI' : u.role.toUpperCase()}
-                                        </span>
-                                     </div>
-                                     <div className="bg-[#111111] p-3 rounded-2xl border border-white/5">
-                                        <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest block mb-1">Durum</span>
-                                        <span className={`text-[10px] font-black uppercase italic ${u.isVip ? 'text-green-500' : 'text-gray-600'}`}>
-                                           {u.isVip ? 'AKTİF VİP' : 'STANDART'}
-                                        </span>
-                                     </div>
-                                  </div>
-
-                                  <div className="flex items-center space-x-2 pt-4 border-t border-white/5">
-                                     {!u.isVip && u.role !== 'admin' && (
-                                        <button 
-                                          onClick={() => handleUserAction(u.id, 'makeVip')}
-                                          className="flex-1 bg-[#ffcc00]/10 text-[#ffcc00] border border-[#ffcc00]/20 py-2.5 rounded-xl text-[9px] font-black uppercase hover:bg-[#ffcc00] hover:text-black transition-all active:scale-95"
-                                        >
-                                           Vip Yap
-                                        </button>
-                                     )}
-                                     {u.role !== 'admin' && (
-                                        u.isBanned ? (
-                                           <button 
-                                             onClick={() => handleUserAction(u.id, 'unban')}
-                                             className="flex-1 bg-green-500/10 text-green-500 border border-green-500/20 py-2.5 rounded-xl text-[9px] font-black uppercase hover:bg-green-500 hover:text-black transition-all active:scale-95"
-                                           >
-                                              Yasağı Kaldır
-                                           </button>
-                                        ) : (
-                                           <button 
-                                             onClick={() => handleUserAction(u.id, 'ban')}
-                                             className="flex-1 bg-red-500/10 text-red-500 border border-red-500/20 py-2.5 rounded-xl text-[9px] font-black uppercase hover:bg-red-500 hover:text-white transition-all active:scale-95"
-                                           >
-                                              Banla
-                                           </button>
-                                        )
-                                     )}
-                                     {u.role !== 'admin' && (
-                                       <button 
-                                          onClick={() => handleUserAction(u.id, 'delete')}
-                                          className="w-10 h-10 bg-white/5 flex items-center justify-center rounded-xl text-gray-500 hover:text-red-500 transition-colors"
-                                       >
-                                          <Database size={16} />
-                                       </button>
-                                     )}
-                                  </div>
-                               </motion.div>
-                            ))}
+                         <div className="bg-[#0a0a0a] border border-white/5 rounded-3xl overflow-hidden shadow-2xl">
+                            <div className="overflow-x-auto custom-scrollbar">
+                               <table className="w-full text-left border-collapse">
+                                  <thead>
+                                     <tr className="bg-black/50 border-b border-white/5 text-[9px] font-black tracking-widest text-gray-500 uppercase">
+                                        <th className="p-5 pl-8">Kullanıcı</th>
+                                        <th className="p-5">Rol / Yetki</th>
+                                        <th className="p-5">Durum</th>
+                                        <th className="p-5">Tarih</th>
+                                        <th className="p-5 pr-8 text-right">İşlemler</th>
+                                     </tr>
+                                  </thead>
+                                  <tbody className="divide-y divide-white/5">
+                                     {allUsers.map((u, i) => (
+                                        <tr key={u.id} className={`hover:bg-white/[0.02] transition-colors ${u.isBanned ? 'opacity-50 blur-[0.5px]' : ''}`}>
+                                           <td className="p-5 pl-8">
+                                              <div className="flex items-center space-x-4">
+                                                 <div className="relative">
+                                                    <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm ${u.role === 'admin' ? 'bg-purple-500/20 text-purple-500' : u.isVip ? 'bg-[#ffcc00]/20 text-[#ffcc00]' : 'bg-gray-800 text-gray-500'}`}>
+                                                       {u.fullName?.charAt(0) || u.email?.charAt(0) || 'U'}
+                                                    </div>
+                                                    {u.isVip && (
+                                                       <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#ffcc00] rounded-full shadow-lg border border-black flex items-center justify-center">
+                                                          <Star size={6} className="text-black fill-black" />
+                                                       </div>
+                                                    )}
+                                                 </div>
+                                                 <div>
+                                                    <div className="flex items-center space-x-2">
+                                                       <span className="text-xs font-black text-white">{u.fullName || 'İsimsiz'}</span>
+                                                       {u.role === 'admin' && <span className="text-[8px] bg-purple-500 text-white px-1.5 py-0.5 rounded font-black uppercase tracking-widest">ADM</span>}
+                                                    </div>
+                                                    <span className="text-[10px] text-gray-500 font-medium">{u.email}</span>
+                                                 </div>
+                                              </div>
+                                           </td>
+                                           <td className="p-5">
+                                              <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-1 rounded-md ${u.isVip || u.role === 'admin' ? 'bg-[#ffcc00]/10 text-[#ffcc00]' : 'bg-white/5 text-gray-400'}`}>
+                                                 {u.role}
+                                              </span>
+                                           </td>
+                                           <td className="p-5">
+                                              {u.isBanned ? (
+                                                 <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-red-500/10 text-red-500 rounded-md">Yasaklı</span>
+                                              ) : u.isVip ? (
+                                                 <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-green-500/10 text-green-500 rounded-md">VIP Aktif</span>
+                                              ) : (
+                                                 <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-gray-500/10 text-gray-400 rounded-md">Standart</span>
+                                              )}
+                                           </td>
+                                           <td className="p-5 text-[10px] font-bold text-gray-500 italic">
+                                              {u.createdAt?.toDate ? u.createdAt.toDate().toLocaleDateString('tr-TR') : '...'}
+                                           </td>
+                                           <td className="p-5 pr-8">
+                                              <div className="flex items-center justify-end space-x-2">
+                                                {!u.isVip && u.role !== 'admin' && (
+                                                   <button 
+                                                     onClick={() => handleUserAction(u.id, 'makeVip')}
+                                                     className="px-3 py-1.5 bg-[#ffcc00]/10 text-[#ffcc00] hover:bg-[#ffcc00] hover:text-black rounded-lg text-[9px] font-black uppercase tracking-widest transition-all"
+                                                   >
+                                                      Vip Yap
+                                                   </button>
+                                                )}
+                                                {u.role !== 'admin' && (
+                                                   u.isBanned ? (
+                                                      <button 
+                                                        onClick={() => handleUserAction(u.id, 'unban')}
+                                                        className="px-3 py-1.5 bg-green-500/10 text-green-500 hover:bg-green-500 hover:text-black rounded-lg text-[9px] font-black uppercase tracking-widest transition-all"
+                                                      >
+                                                         Aç
+                                                      </button>
+                                                   ) : (
+                                                      <button 
+                                                        onClick={() => handleUserAction(u.id, 'ban')}
+                                                        className="px-3 py-1.5 bg-orange-500/10 text-orange-500 hover:bg-orange-500 hover:text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all"
+                                                      >
+                                                         Ban
+                                                      </button>
+                                                   )
+                                                )}
+                                                {u.role !== 'admin' && (
+                                                  <button 
+                                                     onClick={() => handleUserAction(u.id, 'delete')}
+                                                     className="w-8 h-8 flex items-center justify-center bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white rounded-lg transition-all"
+                                                  >
+                                                     <Database size={12} />
+                                                  </button>
+                                                )}
+                                              </div>
+                                           </td>
+                                        </tr>
+                                     ))}
+                                  </tbody>
+                               </table>
+                            </div>
                          </div>
                       </div>
                    </div>
@@ -1278,103 +1293,7 @@ export default function Admin() {
                 }
               </div>
             
-              {/* Right Column: Live Preview */}
-                    {(activeSection === 'guncel' || activeSection === 'basarili') && (
-                       <div className="xl:w-[450px] bg-[#050505] p-8 lg:max-h-[1200px] overflow-y-auto custom-scrollbar">
-                          <div className="sticky top-0 space-y-8">
-                             <div className="flex items-center justify-between">
-                                <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-[#ffcc00]">CANLI ÖNİZLEME</h3>
-                                <div className="flex items-center space-x-2">
-                                   <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                                   <span className="text-[8px] font-black text-gray-500 uppercase tracking-widest">REAL-TIME SYNC</span>
-                                </div>
-                             </div>
-
-                             {/* Premium Coupon Card Preview */}
-                             <div className="bg-[#111111] border border-white/10 rounded-[32px] overflow-hidden shadow-2xl relative group">
-                                {/* Header / Badge */}
-                                <div className="p-6 pb-4 flex justify-between items-start">
-                                   <div>
-                                      <div className="inline-flex items-center space-x-2 bg-[#ffcc00] text-black px-3 py-1 rounded-full text-[9px] font-black italic uppercase mb-3">
-                                         <Star size={10} fill="currentColor" />
-                                         <span>{formData.badge || 'VIP ÖZEL SEÇİM'}</span>
-                                      </div>
-                                      <h4 className="text-xl font-black italic tracking-tight uppercase leading-tight">
-                                         {formData.title || 'KUPON BAŞLIĞI'}
-                                      </h4>
-                                   </div>
-                                   <div className="bg-black/50 border border-white/5 p-3 rounded-2xl flex flex-col items-center">
-                                      <Info size={16} className="text-[#ffcc00] mb-1" />
-                                      <span className="text-[8px] font-black text-gray-400 uppercase leading-none">{formData.track || 'PİST'}</span>
-                                   </div>
-                                </div>
-
-                                {/* Confidence Bar */}
-                                <div className="px-6 mb-6">
-                                   <div className="bg-black/50 rounded-2xl p-4 border border-white/5">
-                                      <div className="flex justify-between items-center mb-2">
-                                         <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">GÜVEN ENDEKSİ</span>
-                                         <span className="text-[10px] font-black text-[#ffcc00] italic">%{formData.confidenceScore}</span>
-                                      </div>
-                                      <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
-                                         <motion.div 
-                                           initial={{ width: 0 }}
-                                           animate={{ width: `${formData.confidenceScore}%` }}
-                                           className="h-full bg-gradient-to-r from-[#ffcc00] to-[#ffa200]"
-                                         />
-                                      </div>
-                                   </div>
-                                </div>
-
-                                {/* Ayaklar Preview List */}
-                                <div className="px-6 space-y-3 mb-6">
-                                   {formData.ayaklar.map((ayak, i) => (
-                                      <div key={i} className="flex items-center p-3 bg-white/5 rounded-2xl border border-white/5 group-hover:bg-white/[0.08] transition-colors">
-                                         <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black italic ${ayak.banko ? 'bg-[#ffcc00] text-black shadow-lg shadow-[#ffcc00]/20' : 'bg-black text-gray-400 border border-white/10'}`}>
-                                            {i + 1}
-                                         </div>
-                                         <div className="flex-1 ml-4 overflow-hidden">
-                                            <div className="flex items-center justify-between">
-                                               <span className="text-[11px] font-black text-[#ffcc00] tracking-wider truncate">{ayak.horses || '---'}</span>
-                                               {ayak.banko && <span className="text-[8px] font-black bg-black text-[#ffcc00] px-1.5 py-0.5 rounded border border-[#ffcc00]/30 italic ml-2">BANKO</span>}
-                                            </div>
-                                            {ayak.analysis && <p className="text-[9px] text-gray-500 font-bold truncate mt-0.5 uppercase italic">{ayak.analysis}</p>}
-                                         </div>
-                                      </div>
-                                   ))}
-                                </div>
-
-                                {/* Footer Price/Meta */}
-                                <div className="bg-black/40 p-6 flex justify-between items-center border-t border-white/5">
-                                   <div>
-                                      <p className="text-[8px] font-black text-gray-500 uppercase tracking-[0.2em] mb-1">{formData.priceLabel || 'VIP ERİŞİM PLANI'}</p>
-                                      <p className="text-xl font-black italic tracking-tighter text-[#ffcc00]">₺{formData.kuponBedeli || '---'}</p>
-                                   </div>
-                                   <div className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest ${formData.couponType === 'economic' ? 'bg-green-500/10 text-green-500' : formData.couponType === 'aggressive' ? 'bg-red-500/10 text-red-500' : 'bg-[#ffcc00]/10 text-[#ffcc00]'}`}>
-                                      {formData.couponType}
-                                   </div>
-                                </div>
-
-                                {/* ROI/Winning Badge if settled */}
-                                {formData.status === 'settled' && (
-                                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rotate-[15deg]">
-                                      <div className="bg-[#ffcc00] text-black px-8 py-3 rounded-2xl shadow-2xl shadow-[#ffcc00]/40 border-4 border-black font-black italic text-2xl tracking-tighter uppercase whitespace-nowrap">
-                                         +{formData.roi}% ROI
-                                      </div>
-                                   </div>
-                                )}
-                             </div>
-
-                             {/* Sales Messaging Preview */}
-                             <div className="bg-[#ffcc00]/5 border border-[#ffcc00]/10 rounded-2xl p-6 italic">
-                                <p className="text-[11px] font-bold text-[#ffcc00] leading-relaxed uppercase tracking-tight">
-                                   {formData.shortNote || 'Lütfen kupon için kısa bir dikkat çekici metin girin...'}
-                                </p>
-                             </div>
-                          </div>
-                       </div>
-                  )}
-                </div>
+              </div>
               )}
         </motion.div>
             </AnimatePresence>

@@ -22,6 +22,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPass, setLoginPass] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [loginError, setLoginError] = useState('');
   const [scrolled, setScrolled] = useState(false);
   const [headerLoading, setHeaderLoading] = useState(false);
@@ -36,7 +37,7 @@ export default function Header() {
     setHeaderLoading(true);
     setLoginError('');
     try {
-      await signIn(loginEmail, loginPass);
+      await signIn(loginEmail, loginPass, rememberMe);
       navigate('/bilgilerim');
     } catch (err: any) {
       setLoginError('Giriş başarısız. Bilgilerinizi kontrol ediniz.');
@@ -92,7 +93,7 @@ export default function Header() {
             <div className="flex flex-col">
               <div className="flex items-center space-x-1 md:space-x-2">
                 <Link to="/" className="text-[10px] sm:text-base md:text-xl font-black text-white italic tracking-tighter uppercase leading-none hover:opacity-80 transition-opacity whitespace-nowrap">
-                  ALTILIYAKALA<span className="text-white/60">TANADAM</span>
+                  ALTILIYAKALATAN<span className="text-white/60">ADAM</span>
                 </Link>
                 <div className="flex items-center space-x-1 shrink-0">
                   <a 
@@ -207,8 +208,14 @@ export default function Header() {
                    </div>
                    
                    <div className="flex items-center space-x-1 text-[10px] font-bold text-white/70 px-1">
-                     <input type="checkbox" id="remember" className="w-3 h-3 border-white/20 bg-white/5 rounded" />
-                     <label htmlFor="remember">Beni Hatırla</label>
+                     <input 
+                       type="checkbox" 
+                       id="remember" 
+                       checked={rememberMe}
+                       onChange={(e) => setRememberMe(e.target.checked)}
+                       className="w-3 h-3 border-white/20 bg-white/5 rounded" 
+                     />
+                     <label htmlFor="remember" className="cursor-pointer">Beni Hatırla</label>
                    </div>
 
                    <button 

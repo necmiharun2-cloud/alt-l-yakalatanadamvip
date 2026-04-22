@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { auth, db } from '../lib/firebase';
-import { onAuthStateChanged, signOut as firebaseSignOut, signInWithEmailAndPassword, User } from 'firebase/auth';
+import { onAuthStateChanged, signOut as firebaseSignOut, signInWithEmailAndPassword, User, setPersistence, browserLocalPersistence, browserSessionPersistence } from 'firebase/auth';
 import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 
 interface UserProfile {
@@ -26,7 +26,7 @@ interface AuthContextType {
   profile: UserProfile | null;
   loading: boolean;
   signOut: () => Promise<void>;
-  signIn: (email: string, pass: string) => Promise<void>;
+  signIn: (email: string, pass: string, rememberMe?: boolean) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -101,7 +101,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     await firebaseSignOut(auth);
   };
 
-  const signIn = async (email: string, pass: string) => {
+  const signIn = async (email: string, pass: string, rememberMe: boolean = false) => {
+    // Set persistence type before logging in
+    await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
     await signInWithEmailAndPassword(auth, email, pass);
   };
 
