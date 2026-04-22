@@ -122,27 +122,21 @@ function HomePage() {
       <HeroBanner />
       <SuccessTable />
       
-      <section id="guncel-tahminler" className="bg-[#0f0f0f] py-24 px-4 overflow-hidden relative">
-        <div 
-          className="absolute right-0 top-0 bottom-0 w-2/3 bg-cover bg-left opacity-20 blur-sm brightness-50" 
-          style={{ backgroundImage: 'url("https://picsum.photos/seed/horseracing/1920/1080")' }} 
-        />
-        <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-[#0f0f0f] to-transparent" />
-
-        <div className="max-w-7xl mx-auto flex flex-col items-center relative z-10 mb-8 w-full">
-           <div className="w-full flex overflow-x-auto no-scrollbar snap-x snap-mandatory md:flex-nowrap md:overflow-visible justify-start md:justify-between gap-2 border-b border-white/5 pb-6 mb-8 scroll-smooth">
+      <section id="guncel-tahminler" className="bg-[#050505] py-24 px-4 overflow-hidden relative">
+        <div className="max-w-7xl mx-auto flex flex-col items-center relative z-10 mb-12 w-full">
+           <div className="w-full flex overflow-x-auto no-scrollbar justify-start md:justify-center gap-4 border-b border-white/10 pb-6 mb-8">
               {TRACKS.map(track => {
                  const hasPrediction = predictions.some(p => (p.track || 'İstanbul') === track);
                  return (
                    <button
                      key={track}
                      onClick={() => setSelectedTrack(track)}
-                     className={`flex-none md:flex-1 px-6 py-4 rounded-2xl text-[10px] lg:text-xs font-black uppercase tracking-widest transition-all text-center whitespace-nowrap border-b-2 snap-center ${
+                     className={`flex-none px-6 py-3 rounded-full text-[11px] font-medium uppercase tracking-widest transition-all text-center whitespace-nowrap ${
                        selectedTrack === track
-                         ? 'bg-[#ffcc00]/10 text-[#ffcc00] border-[#ffcc00]'
+                         ? 'bg-white text-black border border-white'
                          : hasPrediction 
-                           ? 'bg-transparent text-white border-white/20 hover:bg-white/5 hover:border-white/40'
-                           : 'bg-transparent text-gray-700 border-transparent hover:bg-white/5 opacity-30 select-none cursor-default'
+                           ? 'bg-transparent text-white border border-white/30 hover:border-white/60'
+                           : 'bg-transparent text-gray-600 border border-transparent opacity-50 cursor-pointer hover:text-gray-400'
                      }`}
                    >
                      {track}
@@ -156,33 +150,27 @@ function HomePage() {
           <div className="max-w-7xl mx-auto w-full mb-12 relative z-10">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {latestPrediction.dailyBanko && (
-                <div className="bg-[#191919]/80 backdrop-blur-md border border-[#ffcc00]/30 p-6 rounded-[32px] hover:shadow-[0_0_30px_rgba(255, 199, 0,0.1)] transition-all relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#ffcc00]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-[#ffcc00] mb-2 flex items-center space-x-2 relative z-10">
-                    <Star size={12} />
+                <div className="bg-[#0a0a0a] border border-white/10 p-8 rounded-2xl transition-all group">
+                  <h4 className="text-[10px] font-medium uppercase tracking-widest text-gray-500 mb-4 flex items-center space-x-2">
                     <span>Günün Bankosu</span>
                   </h4>
-                  <div className="font-bold text-xl italic text-white drop-shadow-md relative z-10">{latestPrediction.dailyBanko}</div>
+                  <div className="font-light text-2xl text-white">{latestPrediction.dailyBanko}</div>
                 </div>
               )}
               {latestPrediction.dailySurpriz && (
-                <div className="bg-[#191919]/80 backdrop-blur-md border border-[#ffcc00]/30 p-6 rounded-[32px] hover:shadow-[0_0_30px_rgba(255,204,0,0.1)] transition-all relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#ffcc00]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-[#ffcc00] mb-2 flex items-center space-x-2 relative z-10">
-                    <Star size={12} />
+                <div className="bg-[#0a0a0a] border border-white/10 p-8 rounded-2xl transition-all group">
+                  <h4 className="text-[10px] font-medium uppercase tracking-widest text-gray-500 mb-4 flex items-center space-x-2">
                     <span>Günün Sürprizi</span>
                   </h4>
-                  <div className="font-bold text-xl italic text-white drop-shadow-md relative z-10">{latestPrediction.dailySurpriz}</div>
+                  <div className="font-light text-2xl text-white">{latestPrediction.dailySurpriz}</div>
                 </div>
               )}
               {latestPrediction.dailyTemplate && (
-                <div className="bg-[#191919]/80 backdrop-blur-md border border-[#ffcc00]/30 p-6 rounded-[32px] hover:shadow-[0_0_30px_rgba(255,204,0,0.1)] transition-all relative overflow-hidden group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#ffcc00]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-[#ffcc00] mb-2 flex items-center space-x-2 relative z-10">
-                    <CheckCircle size={12} />
+                <div className="bg-[#0a0a0a] border border-white/10 p-8 rounded-2xl transition-all group">
+                  <h4 className="text-[10px] font-medium uppercase tracking-widest text-gray-500 mb-4 flex items-center space-x-2">
                     <span>Hazır Şablon</span>
                   </h4>
-                  <div className="font-black text-xl italic text-white tracking-widest drop-shadow-md relative z-10">{latestPrediction.dailyTemplate}</div>
+                  <div className="font-light text-xl text-white tracking-wider">{latestPrediction.dailyTemplate}</div>
                 </div>
               )}
             </div>
@@ -190,75 +178,79 @@ function HomePage() {
         )}
 
         {latestPrediction?.isFreeSample && latestPrediction.sampleContent && (
-             <div className="max-w-7xl mx-auto w-full mb-16 relative z-10 bg-[#191919]/90 backdrop-blur-md border border-[#ffcc00]/20 shadow-2xl p-8 rounded-[40px] flex flex-col md:flex-row items-center md:items-start gap-8">
-                <div className="w-16 h-16 bg-[#ffcc00]/10 rounded-full flex items-center justify-center shrink-0 border border-[#ffcc00]/30">
-                  <Star size={32} className="text-[#ffcc00] animate-pulse" />
-                </div>
-                <div className="flex-1">
-                  <h4 className="text-2xl font-black italic tracking-tighter uppercase text-white mb-4">Bugünün <span className="text-[#ffcc00]">Ücretsiz</span> Örneği</h4>
-                  <p className="text-gray-300 font-bold whitespace-pre-wrap leading-relaxed break-all">{latestPrediction.sampleContent}</p>
+             <div className="max-w-7xl mx-auto w-full mb-16 relative z-10 bg-[#0a0a0a] border border-white/10 p-10 rounded-3xl flex flex-col items-center text-center gap-6">
+                <div>
+                  <h4 className="text-xl font-light tracking-wide uppercase text-white mb-4">Bugünün Ücretsiz Örneği</h4>
+                  <p className="text-gray-400 font-light whitespace-pre-wrap leading-relaxed max-w-3xl mx-auto">{latestPrediction.sampleContent}</p>
                 </div>
                 {!showContent && (
-                  <button onClick={() => navigate('/vip')} className="px-8 py-4 bg-[#ffcc00] text-black font-black uppercase tracking-widest text-[10px] rounded-full hover:bg-white transition-all shadow-lg shadow-[#ffcc00]/20 shrink-0">
+                  <button onClick={() => navigate('/vip')} className="mt-4 px-8 py-3 bg-white text-black font-medium uppercase tracking-widest text-[11px] rounded-full hover:bg-gray-200 transition-all">
                     Tamamını Gör
                   </button>
                 )}
              </div>
         )}
 
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start gap-16 relative z-10">
-          <div className="w-full md:w-1/2 relative z-10">
-            <div className="border-l-4 border-[#ffcc00] pl-6 md:pl-8 mb-10 flex items-center space-x-4 md:space-x-6">
-              <img 
-                src={APP_LOGO_URL} 
-                alt="Güncel Tahminler" 
-                className="w-12 h-12 md:w-16 md:h-16 object-contain"
-                referrerPolicy="no-referrer"
-              />
-              <div>
-                <h2 className="text-3xl sm:text-4xl md:text-6xl font-black italic tracking-tighter leading-none mb-2">
-                  Güncel <span className="text-gray-400">Tahminler</span>
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-stretch gap-12 relative z-10">
+          <div className="w-full md:w-5/12 relative flex items-center">
+             <div className="text-left w-full pl-0 md:pl-8">
+                <img 
+                  src={APP_LOGO_URL} 
+                  alt="Güncel Tahminler" 
+                  className="w-12 h-12 object-contain mb-8 opacity-80"
+                  referrerPolicy="no-referrer"
+                />
+                <h2 className="text-4xl md:text-5xl font-light tracking-tight leading-tight mb-4">
+                  Güncel Analizler
                 </h2>
-                <p className="text-gray-500 font-bold uppercase text-[9px] md:text-[10px] tracking-[0.2em]">Profesyonel Yarış Analizleri</p>
-              </div>
-            </div>
+                <div className="w-12 h-[1px] bg-white/20 mb-8"></div>
+                <p className="text-gray-400 font-light text-sm md:text-base leading-relaxed mb-12 max-w-md">
+                  Alanında uzman yorumcularımız tarafından hazırlanan detaylı istatistikler ve güncel koşu verileri ile kazanma şansınızı artırın.
+                </p>
+                
+                <div className="hidden md:block">
+                  <img 
+                    src="https://cdn.resimupload.org/2026/04/21/e222fecb-3ebb-4f1b-8cdb-b96b4c938aa8.jpg" 
+                    alt="Baş Analist" 
+                    className="w-48 h-64 object-cover rounded-2xl grayscale opacity-50 shadow-lg border border-white/10"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+             </div>
+          </div>
 
+          <div className="w-full md:w-7/12 relative z-10 flex flex-col justify-center">
             {latestPrediction ? (
-              <motion.div 
+              <div 
                 key={latestPrediction.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-[#0a0a0a] rounded-[40px] p-8 md:p-12 border border-white/5 shadow-2xl relative group"
+                className="bg-[#0a0a0a] rounded-3xl p-8 md:p-12 border border-white/10 shadow-2xl relative"
               >
-                <div className="absolute top-0 right-12 translate-y-[-50%] bg-[#ffcc00] text-black px-6 py-2 rounded-full font-black text-[10px] uppercase tracking-widest shadow-xl">
+                <div className="absolute top-8 right-8 text-gray-500 font-medium text-[10px] uppercase tracking-widest">
                   {latestPrediction.date || 'BUGÜN'}
                 </div>
 
-                <div className="flex flex-col md:flex-row justify-between mb-8 pb-8 border-b border-white/5">
-                  <div>
-                    <h3 className="text-3xl font-black italic mb-1">{latestPrediction.track}</h3>
-                    <p className="text-[#ffcc00] font-bold text-xs uppercase tracking-widest">Günün Başlama Saati: {latestPrediction.startTime || '14:00'}</p>
-                  </div>
+                <div className="mb-10">
+                  <h3 className="text-3xl font-light mb-2">{latestPrediction.track}</h3>
+                  <p className="text-gray-500 font-medium text-[11px] uppercase tracking-widest">Günün Başlama Saati: {latestPrediction.startTime || '14:00'}</p>
                 </div>
 
                 <div className="relative mb-8 min-h-[300px]">
-                  <div className={`transition-all duration-700 ${showContent ? 'blur-0 opacity-100' : 'blur-xl opacity-20 pointer-events-none'}`}>
+                  <div className={`transition-all duration-500 ${showContent ? 'blur-0 opacity-100' : 'blur-xl opacity-20 pointer-events-none'}`}>
                      <div className="space-y-6">
                         {latestPrediction.content?.split('\n').map((line: string, i: number) => (
-                           <p key={i} className="text-gray-400 leading-relaxed font-medium break-all">{line}</p>
+                           <p key={i} className="text-gray-300 leading-relaxed font-light">{line}</p>
                         ))}
-                        {/* If formatted content exists */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
                            {[1,2,3,4,5,6].map(raceNum => {
                               const raceKey = `race${raceNum}`;
                               const raceData = latestPrediction[raceKey];
                               if (!raceData) return null;
                               return (
-                                 <div key={raceNum} className="bg-[#222222] p-4 rounded-2xl border border-white/5">
-                                    <span className="text-[10px] font-black text-[#ffcc00] uppercase mb-2 block">{raceNum}. AYAK</span>
+                                 <div key={raceNum} className="border-b border-white/10 pb-4">
+                                    <span className="text-[10px] font-medium text-gray-500 uppercase mb-2 block">{raceNum}. AYAK</span>
                                     <div className="flex flex-wrap gap-2">
                                        {raceData.split(/[,\s]+/).map((horse: string, hi: number) => (
-                                          <span key={hi} className="bg-black/40 px-3 py-1 rounded-lg text-xs font-bold border border-white/5">{horse}</span>
+                                          <span key={hi} className="text-sm font-light text-white">{horse}{hi !== raceData.split(/[,\s]+/).length -1 ? ',' : ''}</span>
                                        ))}
                                     </div>
                                  </div>
@@ -270,15 +262,15 @@ function HomePage() {
 
                   {!showContent && (
                     <div className="absolute inset-0 flex items-center justify-center p-4 z-20">
-                      <div className="bg-black/90 p-10 rounded-3xl border border-[#ffcc00]/20 text-center shadow-2xl backdrop-blur-md">
-                          <div className="w-16 h-16 bg-[#ffcc00]/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                            <Lock size={32} className="text-[#ffcc00]" />
+                      <div className="bg-[#050505]/95 p-12 rounded-3xl border border-white/10 text-center shadow-2xl backdrop-blur-xl">
+                          <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center mx-auto mb-6">
+                            <Lock size={20} className="text-gray-400" />
                           </div>
-                          <h4 className="text-2xl font-black italic mb-4">İçerik Kilitli</h4>
-                          <p className="text-gray-400 text-sm mb-8 max-w-[240px]">Bu analizin tamamını görmek için VIP üyeliğinizin olması gerekmektedir.</p>
+                          <h4 className="text-xl font-light mb-4">İçerik Kilitli</h4>
+                          <p className="text-gray-500 text-sm mb-8 font-light max-w-[240px]">Analizi tümüyle görüntülemek için VIP üyesi olmalısınız.</p>
                           <button 
                             onClick={(e) => { e.stopPropagation(); navigate('/vip'); }} 
-                            className="bg-[#ffcc00] text-black px-8 py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:scale-105 transition-transform"
+                            className="bg-white text-black px-8 py-3 rounded-full font-medium uppercase text-[11px] tracking-widest hover:bg-gray-200 transition-colors"
                           >
                             VIP Üye Ol
                           </button>
@@ -287,75 +279,26 @@ function HomePage() {
                   )}
                 </div>
 
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-8 border-t border-white/5">
-                  <div className="flex items-center space-x-6">
-                    <div className="flex flex-col">
-                      <span className="text-[10px] text-gray-500 uppercase font-black tracking-widest mb-1">Yorumcu</span>
-                      <span className="text-lg md:text-xl font-black italic">{latestPrediction.authorName || 'ALTILIYAKALATANADAM'}</span>
-                    </div>
-                    <div className="h-10 w-px bg-white/5 hidden sm:block"></div>
-                    <div className="flex items-center space-x-2">
-                      <img 
-                        src={APP_LOGO_URL} 
-                        alt="Logo" 
-                        className="w-6 h-6 object-contain opacity-20"
-                        referrerPolicy="no-referrer"
-                      />
-                    </div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-8 border-t border-white/10">
+                  <div className="flex flex-col">
+                    <span className="text-[10px] text-gray-500 uppercase font-medium tracking-widest mb-1">Yorumcu</span>
+                    <span className="text-lg font-light">{latestPrediction.authorName || 'Uzman Analist'}</span>
                   </div>
                   
-                  <button onClick={() => navigate(`/tahmin/${latestPrediction.id}`)} className="mt-4 sm:mt-0 text-[#ffcc00] text-xs font-black uppercase tracking-widest hover:underline underline-offset-8 transition-all">
-                    Detaylı Analiz
+                  <button onClick={() => navigate(`/tahmin/${latestPrediction.id}`)} className="mt-4 sm:mt-0 text-white border border-white/20 px-6 py-2 rounded-full text-[10px] font-medium uppercase tracking-widest hover:bg-white hover:text-black transition-all">
+                    Detaylı İncele
                   </button>
                 </div>
-              </motion.div>
+              </div>
             ) : (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="bg-[#0a0a0a] rounded-[40px] p-16 border border-white/5 shadow-2xl relative flex flex-col items-center justify-center text-center"
-              >
-                  <div className="relative w-32 h-32 rounded-full p-[4px] overflow-hidden flex items-center justify-center bg-black mb-8 shadow-[0_0_50px_rgba(255,204,0,0.2)]">
-                    {/* Rotating Neon Overlay */}
-                    <div className="absolute w-[200%] h-[200%] bg-[conic-gradient(transparent,#ffcc00,#ff3300,#00ffcc,transparent_30%)] animate-neon-rotate"></div>
-                    
-                    {/* Image Container */}
-                    <div className="relative z-10 w-full h-full rounded-full bg-white flex items-center justify-center overflow-hidden">
-                      <img 
-                        src={APP_LOGO_URL} 
-                        alt="Logo" 
-                        className="w-[75%] h-[75%] object-contain"
-                        referrerPolicy="no-referrer"
-                      />
-                    </div>
+              <div className="bg-[#0a0a0a] rounded-3xl p-16 border border-white/10 shadow-2xl relative flex flex-col items-center justify-center text-center">
+                  <div className="w-20 h-20 rounded-full border border-white/10 flex items-center justify-center mb-8">
+                     <span className="text-gray-600 font-light text-2xl">?</span>
                   </div>
-                  <h3 className="text-2xl font-black italic text-gray-400 mb-3">Tahmin Bekleniyor</h3>
-                  <p className="text-gray-500 text-sm max-w-sm leading-relaxed">Bu pist ({selectedTrack}) için şu an güncel bir tahmin girişi yapılmamıştır. Diğer pistleri inceleyebilir veya daha sonra tekrar kontrol edebilirsiniz.</p>
-              </motion.div>
+                  <h3 className="text-xl font-light text-gray-400 mb-4">Tahmin Bekleniyor</h3>
+                  <p className="text-gray-500 text-sm font-light max-w-sm leading-relaxed">Bu pist ({selectedTrack}) için henüz güncel analiz yüklenmemiştir. Lütfen ilerleyen saatlerde tekrar kontrol edin.</p>
+              </div>
             )}
-          </div>
-
-          <div className="w-full md:w-1/2 relative hidden md:block">
-             <div className="absolute inset-0 bg-[#ffcc00]/5 blur-[120px] rounded-full" />
-             <div className="relative z-10">
-                <motion.div
-                  animate={{ y: [0, -20, 0] }}
-                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  <img 
-                    src="https://cdn.resimupload.org/2026/04/21/e222fecb-3ebb-4f1b-8cdb-b96b4c938aa8.jpg" 
-                    alt="Altılı Yakalatan Adam - Baş Analist" 
-                    className="w-full max-w-sm mx-auto rounded-[40px] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] border border-[#ffcc00]/20 object-cover aspect-[3/4]"
-                    referrerPolicy="no-referrer"
-                  />
-                </motion.div>
-                
-                {/* Float Card */}
-                <div className="absolute -bottom-6 -right-6 bg-[#ffcc00] p-8 rounded-[32px] text-black shadow-2xl max-w-[200px]">
-                   <span className="text-4xl font-black italic block mb-1">98%</span>
-                   <span className="text-[10px] font-black uppercase tracking-widest">İsabet Oranı İle Analiz</span>
-                </div>
-             </div>
           </div>
         </div>
       </section>
