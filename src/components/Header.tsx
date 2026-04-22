@@ -291,6 +291,8 @@ export default function Header() {
         </div>
       </div>
 
+      <div className="w-full h-1 bg-gradient-to-r from-transparent via-[#ffcc00] to-transparent opacity-50"></div>
+
       {/* Nesine Style Sub Nav (Bottom Bar) */}
       <div className="bg-[#010a26] border-b border-white/5 py-1 hidden lg:block">
         <div className="max-w-7xl mx-auto flex items-center justify-between">

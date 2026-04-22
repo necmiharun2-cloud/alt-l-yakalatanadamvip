@@ -437,24 +437,23 @@ export default function Admin() {
     }
   };
 
-  const handleUserAction = async (userId: string, action: 'makeVip' | 'ban' | 'unban' | 'delete') => {
+  const handleUserAction = async (userId: string, action: 'makeVip' | 'ban' | 'unban' | 'delete' | 'extendVip') => {
     setLoading(true);
     try {
       if (action === 'delete') {
-        setConfirmDialog({
-          isOpen: true,
-          title: "Bu kullanıcıyı silmek istediğinize emin misiniz?",
-          onConfirm: async () => {
-            setConfirmDialog(null);
-            await deleteDoc(doc(db, 'users', userId));
-            await fetchAdminData();
-            setMessage('Kullanıcı silindi.');
-          }
-        });
+        const confirmed = window.confirm("Bu kullanıcıyı silmek istediğinize emin misiniz? (Tüm verileri kaybolacak)");
+        if (confirmed) {
+           await deleteDoc(doc(db, 'users', userId));
+           await fetchAdminData();
+           setMessage('Kullanıcı başarıyla silindi.');
+        }
+        setLoading(false);
         return;
       }
 
       const userDoc = doc(db, 'users', userId);
+      const userToUpdate = allUsers.find(u => u.id === userId);
+
       if (action === 'makeVip') {
         const now = new Date();
         const expiry = new Date();
@@ -468,6 +467,14 @@ export default function Admin() {
           vipPackage: 'Manual VIP (30 Gün)'
         });
         setMessage('Kullanıcı VIP yapıldı.');
+      } else if (action === 'extendVip' && userToUpdate) {
+        const currentExpiry = new Date(userToUpdate.vipExpiry || new Date());
+        currentExpiry.setDate(currentExpiry.getDate() + 30);
+        await updateDoc(userDoc, {
+           vipExpiry: currentExpiry.toISOString(),
+           vipPackage: 'Süre Uzatıldı (+30 Gün)'
+        });
+        setMessage('VIP süresi 30 gün uzatıldı.');
       } else if (action === 'ban') {
         await updateDoc(userDoc, { isBanned: true });
         setMessage('Kullanıcı yasaklandı.');
@@ -604,8 +611,8 @@ export default function Admin() {
           </div>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-12">
-           <aside className="w-full lg:w-1/3 xl:w-1/4 space-y-8">
+        <div className="flex flex-col lg:flex-row gap-12 relative items-start">
+           <aside className="w-full lg:w-1/3 xl:w-1/4 space-y-8 sticky top-24">
             <div className="bg-[#0a0a0a] border border-white/5 rounded-3xl md:rounded-[32px] overflow-hidden shadow-2xl p-2 md:p-4 space-y-1 md:space-y-2 flex flex-row lg:flex-col overflow-x-auto lg:overflow-visible scrollbar-hide">
               {sections.map((section) => (
                 <button
@@ -864,8 +871,8 @@ export default function Admin() {
                                      <tr className="bg-black/50 border-b border-white/5 text-[9px] font-black tracking-widest text-gray-500 uppercase">
                                         <th className="p-5 pl-8">Kullanıcı</th>
                                         <th className="p-5">Rol / Yetki</th>
-                                        <th className="p-5">Durum</th>
-                                        <th className="p-5">Tarih</th>
+                                        <th className="p-5">Durum & Süre</th>
+                                        <th className="p-5">Kayıt Tarihi</th>
                                         <th className="p-5 pr-8 text-right">İşlemler</th>
                                      </tr>
                                   </thead>
@@ -899,13 +906,20 @@ export default function Admin() {
                                               </span>
                                            </td>
                                            <td className="p-5">
-                                              {u.isBanned ? (
-                                                 <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-red-500/10 text-red-500 rounded-md">Yasaklı</span>
-                                              ) : u.isVip ? (
-                                                 <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-green-500/10 text-green-500 rounded-md">VIP Aktif</span>
-                                              ) : (
-                                                 <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-gray-500/10 text-gray-400 rounded-md">Standart</span>
-                                              )}
+                                              <div className="flex flex-col items-start space-y-1">
+                                                 {u.isBanned ? (
+                                                    <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-red-500/10 text-red-500 rounded-md">Yasaklı</span>
+                                                 ) : u.isVip ? (
+                                                    <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-green-500/10 text-green-500 rounded-md">VIP Aktif</span>
+                                                 ) : (
+                                                    <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-gray-500/10 text-gray-400 rounded-md">Standart</span>
+                                                 )}
+                                                 {u.isVip && u.vipExpiry && (
+                                                    <span className="text-[9px] text-[#ffcc00] font-bold">
+                                                       {Math.max(0, Math.ceil((new Date(u.vipExpiry).getTime() - new Date().getTime()) / (1000 * 3600 * 24)))} Gün Kaldı
+                                                    </span>
+                                                 )}
+                                              </div>
                                            </td>
                                            <td className="p-5 text-[10px] font-bold text-gray-500 italic">
                                               {u.createdAt?.toDate ? u.createdAt.toDate().toLocaleDateString('tr-TR') : '...'}
@@ -918,6 +932,14 @@ export default function Admin() {
                                                      className="px-3 py-1.5 bg-[#ffcc00]/10 text-[#ffcc00] hover:bg-[#ffcc00] hover:text-black rounded-lg text-[9px] font-black uppercase tracking-widest transition-all"
                                                    >
                                                       Vip Yap
+                                                   </button>
+                                                )}
+                                                {u.isVip && u.role !== 'admin' && (
+                                                   <button 
+                                                     onClick={() => handleUserAction(u.id, 'extendVip')}
+                                                     className="px-3 py-1.5 bg-blue-500/10 text-blue-500 hover:bg-blue-500 hover:text-white rounded-lg text-[9px] font-black uppercase tracking-widest transition-all"
+                                                   >
+                                                      +30 Gün Uzat
                                                    </button>
                                                 )}
                                                 {u.role !== 'admin' && (

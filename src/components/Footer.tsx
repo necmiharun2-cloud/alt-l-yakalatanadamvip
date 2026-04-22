@@ -114,6 +114,8 @@ export default function Footer() {
         </div>
       </div>
 
+      <div className="w-full h-[2px] bg-gradient-to-r from-[#010a26] via-[#ffcc00] to-[#010a26] opacity-30"></div>
+
       {/* Bottom Dark Section (Copyright & Stores) */}
       <div className="bg-[#010a26] py-12 px-4 shadow-2xl">
         <div className="max-w-7xl mx-auto">
