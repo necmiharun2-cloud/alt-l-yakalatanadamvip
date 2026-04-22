@@ -3,7 +3,7 @@ name: Auto Deploy Vite Site
 on:
   push:
     branches:
-      - main   # DİKKAT: Eğer GitHub'daki ana dalının adı 'master' ise, burayı 'master' olarak değiştir!
+      - main   # branch'in farklıysa değiştir
 
 jobs:
   build-and-deploy:
@@ -30,8 +30,8 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftp
+          protocol: ftps
           port: 21
-          local-dir: ./dist/           # Vite projeyi buraya build eder
-          server-dir: /public_html/    # Hostingindeki sitenin ana dizini
-          dangerous-clean-slate: true  # Eski dosyaları silip yenilerini tertemiz kurar
+          local-dir: ./dist/
+          server-dir: /public_html/
+          dangerous-clean-slate: true
