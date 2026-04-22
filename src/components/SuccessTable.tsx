@@ -32,49 +32,46 @@ export default function SuccessTable() {
   }, []);
 
   return (
-    <section className="bg-[#010a26] py-20 px-4 overflow-hidden relative">
+    <section className="bg-[#050505] py-20 px-4 overflow-hidden relative">
       <div className="max-w-7xl mx-auto relative z-10">
         
         {/* Header Area */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
-          <div className="flex items-center">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight flex items-end">
-              <span className="font-extrabold relative pb-1 mr-2 inline-block whitespace-nowrap">
-                Başarılı
-                <span className="absolute bottom-0 left-0 w-full h-[3px] md:h-[4px] bg-[#ffcc00]"></span>
-              </span>
-              <span className="font-light whitespace-nowrap">Tahminler</span>
-            </h2>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8 border-b border-white/10 pb-8">
+          <div className="flex flex-col">
+             <span className="text-[10px] text-gray-500 uppercase tracking-widest mb-2 font-medium">Başarı İstatistikleri</span>
+             <h2 className="text-3xl md:text-5xl font-light tracking-tight text-white m-0">
+               Kazandıran Tahminler
+             </h2>
           </div>
           
-          <div className="md:max-w-md border-l-[3px] border-[#ffcc00] pl-6 py-1 h-full flex items-center">
-            <p className="text-[#647c9f] text-[13px] md:text-sm font-medium leading-relaxed">
-              ALTILIYAKALATANADAM.com Vip üyelerine bugüne kadar toplam <span className="text-[#ffcc00] font-black">5.791</span> koşuda<br/>
-              <span className="text-[#ffcc00] font-black">6.177.230,75</span> TL kazandırdı
+          <div className="md:max-w-md pl-6 border-l border-white/20 h-full flex flex-col justify-center">
+            <p className="text-gray-400 text-sm font-light leading-relaxed">
+               Bugüne kadar <span className="text-white font-medium">5.791</span> koşuda isabet sağlandı.
+               Toplam <span className="text-white font-medium">6.177.230,75 TL</span> ikramiye dağıtıldı.
             </p>
           </div>
         </div>
 
         {/* Table Area */}
-        <div className="w-full rounded-2xl shadow-2xl border border-white/5 bg-[#020f3a] overflow-hidden">
+        <div className="w-full bg-[#0a0a0a] rounded-2xl border border-white/10 overflow-hidden shadow-2xl relative">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[700px] text-left text-sm md:text-base border-collapse">
-              <thead className="bg-[#0a1b5d] text-white/90 font-semibold border-b border-white/10">
-                <tr className="divide-x divide-white/10">
-                  <th className="px-6 py-5 font-semibold">Tarih</th>
-                  <th className="px-6 py-5 font-semibold">Yorumcu</th>
-                  <th className="px-6 py-5 font-semibold">Koşu Adı</th>
-                  <th className="px-6 py-5 font-semibold text-center">İkramiye</th>
+            <table className="w-full min-w-[700px] text-left text-sm whitespace-nowrap">
+              <thead>
+                <tr className="border-b border-white/10 text-[10px] uppercase tracking-widest text-gray-500 font-medium">
+                  <th className="px-8 py-6">Tarih</th>
+                  <th className="px-8 py-6">Yorumcu</th>
+                  <th className="px-8 py-6">Koşu Adı</th>
+                  <th className="px-8 py-6 text-right">İkramiye</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5 text-[#7393b8]">
+              <tbody className="divide-y divide-white/5">
               {loading ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-10 text-center italic">Yükleniyor...</td>
+                  <td colSpan={4} className="px-8 py-12 text-center text-gray-500 font-light">Veriler yükleniyor...</td>
                 </tr>
               ) : successList.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-6 py-10 text-center italic">Kayıtlı veri bulunamadı.</td>
+                  <td colSpan={4} className="px-8 py-12 text-center text-gray-500 font-light">Kayıtlı veri bulunamadı.</td>
                 </tr>
               ) : (
                 successList.map((p, i) => (
@@ -84,31 +81,31 @@ export default function SuccessTable() {
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ delay: i * 0.05 }}
                     onClick={() => navigate(`/tahmin/${p.slug}`)}
-                    className="hover:bg-[#102677] cursor-pointer transition-colors divide-x divide-white/5 even:bg-[#010a26] odd:bg-[#020f3a]"
+                    className="hover:bg-white/5 cursor-pointer transition-colors group"
                   >
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-8 py-6 font-light text-gray-300">
                        {formatDate(p.createdAt)}
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-8 py-6">
                       <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 rounded-full overflow-hidden border border-white/20 bg-black">
-                          <img src={p.image || APP_LOGO_URL} alt={p.authorName} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                        <div className="w-6 h-6 rounded-full overflow-hidden bg-[#111]">
+                          <img src={p.image || APP_LOGO_URL} alt={p.authorName} referrerPolicy="no-referrer" className="w-full h-full object-cover opacity-80" />
                         </div>
-                        <span className="font-medium">{p.authorName || 'ALTILIYAKALATANADAM'}</span>
+                        <span className="font-light text-gray-200">{p.authorName || 'Uzman Analist'}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center space-x-2">
-                        <span className="flex-1">{p.title}</span>
+                    <td className="px-8 py-6">
+                      <div className="flex items-center space-x-3">
+                        <span className="font-light text-gray-200">{p.title}</span>
                         {p.resultStatus === 'won' && (
-                          <span className="bg-green-500/20 text-green-500 text-[9px] font-black uppercase px-2 py-1 rounded-full border border-green-500/20 whitespace-nowrap">Tuttu</span>
+                          <span className="bg-white/10 text-white text-[9px] font-medium uppercase px-2 py-1 rounded-sm tracking-wider">Tuttu</span>
                         )}
                         {p.resultStatus === 'partial' && (
-                          <span className="bg-orange-500/20 text-orange-500 text-[9px] font-black uppercase px-2 py-1 rounded-full border border-orange-500/20 whitespace-nowrap">Kısmen</span>
+                          <span className="bg-white/5 text-gray-400 text-[9px] font-medium uppercase px-2 py-1 rounded-sm tracking-wider">Kısmen</span>
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-center font-bold tracking-wide text-[#ffcc00]">
+                    <td className="px-8 py-6 text-right font-medium text-white tracking-wide">
                       {p.winnings || '0,00 TL'}
                     </td>
                   </motion.tr>
