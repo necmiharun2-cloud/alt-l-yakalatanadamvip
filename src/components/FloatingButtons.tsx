@@ -1,35 +1,40 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronUp, ChevronDown, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { ChevronUp, ChevronDown } from 'lucide-react';
 
 export default function FloatingButtons() {
     const [isVisible, setIsVisible] = useState(false);
 
-    useEffect(() => {
-        const toggleVisibility = () => {
-            if (window.pageYOffset > 300) {
-                setIsVisible(true);
-            } else {
-                setIsVisible(false);
-            }
-        };
-        window.addEventListener('scroll', toggleVisibility);
-        return () => window.removeEventListener('scroll', toggleVisibility);
-    }, []);
+    // Show button when page is scrolled up to given distance
+    const toggleVisibility = () => {
+        if (window.scrollY > 300) {
+            setIsVisible(true);
+        } else {
+            setIsVisible(false);
+        }
+    };
 
+    // Set the top cordinate to 0
+    // make scrolling smooth
     const scrollToTop = () => {
         window.scrollTo({
             top: 0,
-            behavior: 'smooth',
+            behavior: "smooth"
         });
     };
 
+    // Scroll to bottom
     const scrollToBottom = () => {
         window.scrollTo({
             top: document.documentElement.scrollHeight,
-            behavior: 'smooth',
+            behavior: "smooth"
         });
     };
+
+    useEffect(() => {
+        window.addEventListener("scroll", toggleVisibility);
+        return () => window.removeEventListener("scroll", toggleVisibility);
+    }, []);
 
     const handleWhatsAppClick = () => {
         window.open('https://wa.me/905336711463', '_blank');
