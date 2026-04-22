@@ -1,0 +1,37 @@
+name: Auto Deploy Vite Site
+
+on:
+  push:
+    branches:
+      - main   # DİKKAT: Eğer GitHub'daki ana dalının adı 'master' ise, burayı 'master' olarak değiştir!
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repo cek
+        uses: actions/checkout@v4
+
+      - name: Node kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Paketleri yukle
+        run: npm install
+
+      - name: Build al
+        run: npm run build
+
+      - name: FTP ile public_html'ye yukle
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftp
+          port: 21
+          local-dir: ./dist/           # Vite projeyi buraya build eder
+          server-dir: /public_html/    # Hostingindeki sitenin ana dizini
+          dangerous-clean-slate: true  # Eski dosyaları silip yenilerini tertemiz kurar
