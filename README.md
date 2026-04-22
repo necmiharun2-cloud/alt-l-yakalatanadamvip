@@ -21,6 +21,7 @@ A modern, high-performance web application for professional horse racing predict
 
 ## Getting Started
 
+
 1. **Setup Firebase:**
    Ensure `firebase-applet-config.json` is present in the root directory.
 
